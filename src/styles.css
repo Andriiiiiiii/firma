@@ -1,0 +1,657 @@
+/* === базовые размеры для full-viewport контейнера === */
+html, body, #root { height: 100%; }
+body { overflow: hidden; } /* скроллим внутренний контейнер со снапом */
+
+/* === фиксируем header поверх контента, не меняя вид === */
+header {
+  position: fixed;       /* было: relative */
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  /* фон прозрачный — дизайн как в макете */
+}
+
+/* === snap-контейнер и секции === */
+.snap-container {
+  position: relative;
+  height: 100vh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* каждый пункт = целый экран */
+.snap-section {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  /* чтобы контент не прятался под фикс-хедером */
+  padding-top: 120px; /* визуально совпадает с исходным отступом шапки */
+}
+
+/* обложка — полноценный экран, без доп. верхнего паддинга */
+.cover.snap-section { padding-top: 0; }
+
+/* конец ленты (footer) — без снапа */
+.snap-end { scroll-snap-align: none; }
+
+/* === обложка (почти без изменений, только 100vh) === */
+.cover {
+  position: relative;
+  height: 100vh;         /* было 90vh */
+  min-height: 420px;
+  border-bottom: 1px solid rgba(232, 230, 225, 0.1);
+  overflow: hidden;
+}
+.cover-inner { position: relative; width: 100%; height: 100%; }
+.cover .container { height: 100%; display: flex; align-items: center; }
+
+/* канвас решётки */
+.grid-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  filter: drop-shadow(0 16px 40px rgba(255,255,255,0.04));
+}
+
+/* логотип по центру */
+.cover-logo {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  pointer-events: none;
+}
+.cover-logo img, .cover-logo svg {
+  width: min(22vw, 240px);
+  height: auto;
+  opacity: 0.95;
+}
+
+/* адаптив: на планшете/мобиле снап остаётся */
+@media (max-width: 1024px) {
+  .snap-section { padding-top: 110px; }
+}
+@media (max-width: 768px) {
+  .snap-section { padding-top: 96px; }
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: #000000;
+  color: #e8e6e1;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+
+/* Header */
+header {
+  padding: 40px 0;
+  position: relative;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: #e8e6e1;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
+
+.nav-links a:hover {
+  opacity: 1;
+}
+
+.menu-icon {
+  width: 30px;
+  height: 2px;
+  background-color: #e8e6e1;
+  position: relative;
+}
+
+.menu-icon::before,
+.menu-icon::after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 2px;
+  background-color: #e8e6e1;
+}
+
+.menu-icon::before {
+  top: -8px;
+}
+
+.menu-icon::after {
+  top: 8px;
+}
+
+/* Hero Section */
+.hero {
+  padding: 120px 0 200px;
+  position: relative;
+}
+
+.section-label {
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  margin-bottom: 60px;
+  opacity: 0.7;
+}
+
+.hero-title {
+  font-size: 96px;
+  font-weight: 300;
+  line-height: 1.1;
+  margin-bottom: 60px;
+  letter-spacing: -2px;
+}
+
+.hero-subtitle {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.8;
+  max-width: 600px;
+  opacity: 0.8;
+}
+
+.starburst {
+  position: absolute;
+  right: 200px;
+  top: 50%;
+  width: 120px;
+  height: 120px;
+}
+
+.starburst svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Services Section */
+.services {
+  padding: 100px 0;
+  border-top: 1px solid rgba(232, 230, 225, 0.1);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+  margin-top: 80px;
+}
+
+.service-card {
+  padding: 40px 0;
+}
+
+.service-number {
+  font-size: 14px;
+  opacity: 0.5;
+  margin-bottom: 20px;
+}
+
+.service-title {
+  font-size: 28px;
+  font-weight: 300;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+}
+
+.service-description {
+  font-size: 16px;
+  opacity: 0.7;
+  line-height: 1.7;
+}
+
+/* (Бывший) Landings Section — используются стили сетки/карточек для Team */
+.section-title {
+  font-size: 48px;
+  font-weight: 300;
+  margin-bottom: 80px;
+  letter-spacing: -1px;
+}
+
+.landings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 60px;
+}
+
+.landing-card {
+  border: 1px solid rgba(232, 230, 225, 0.1);
+  padding: 60px 40px;
+  cursor: default;
+}
+
+.landing-card:hover {
+  border-color: rgba(232, 230, 225, 0.3);
+}
+
+.landing-type {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-bottom: 20px;
+}
+
+.landing-name {
+  font-size: 36px;
+  font-weight: 300;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+
+.landing-description {
+  font-size: 16px;
+  opacity: 0.7;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+.landing-features {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.feature-tag {
+  font-size: 13px;
+  padding: 8px 16px;
+  border: 1px solid rgba(232, 230, 225, 0.2);
+  border-radius: 20px;
+}
+
+/* About Section */
+.about {
+  padding: 100px 0;
+  border-top: 1px solid rgba(232, 230, 225, 0.1);
+}
+
+.about-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  margin-top: 80px;
+}
+
+.about-text {
+  font-size: 18px;
+  line-height: 1.8;
+  opacity: 0.8;
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.stat-item {
+  border-left: 2px solid #e8e6e1;
+  padding-left: 30px;
+}
+
+.stat-number {
+  font-size: 48px;
+  font-weight: 300;
+  margin-bottom: 10px;
+}
+
+.stat-label {
+  font-size: 14px;
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Contact Section */
+.contact {
+  padding: 100px 0;
+  border-top: 1px solid rgba(232, 230, 225, 0.1);
+}
+
+.contact-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  margin-top: 80px;
+}
+
+.contact-info {
+  font-size: 18px;
+  line-height: 2;
+}
+
+.contact-info a {
+  color: #e8e6e1;
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.contact-info a:hover {
+  opacity: 1;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(232, 230, 225, 0.2);
+  color: #e8e6e1;
+  padding: 15px 0;
+  margin-bottom: 30px;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.contact-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-bottom-color: #e8e6e1;
+}
+
+.submit-btn {
+  background-color: #e8e6e1;
+  color: #000;
+  border: none;
+  padding: 15px 40px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  opacity: 0.9;
+}
+
+/* Footer */
+footer {
+  padding: 60px 0;
+  border-top: 1px solid rgba(232, 230, 225, 0.1);
+  text-align: center;
+  opacity: 0.5;
+  font-size: 14px;
+}
+
+/* ====== АДАПТИВ (как в макете) ====== */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 40px;
+  }
+
+  .hero-title {
+    font-size: 64px;
+  }
+
+  .services-grid,
+  .landings-grid,
+  .about-content,
+  .contact-content {
+    grid-template-columns: 1fr;
+  }
+
+  .starburst {
+    right: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 48px;
+  }
+
+  .section-title {
+    font-size: 36px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+}
+
+/* ====== ДОБАВЛЕНИЯ ПОД ТЕБЯ (без изменения визуального языка) ====== */
+
+/* 1) Cover (обложка с облаком) */
+.cover {
+  position: relative;
+  height: 90vh;
+  min-height: 420px;
+  border-bottom: 1px solid rgba(232, 230, 225, 0.1);
+  overflow: hidden;
+}
+.cover-inner { position: relative; width: 100%; height: 100%; }
+.cover .container { height: 100%; display: flex; align-items: center; }
+
+/* Центровка логотипа поверх решётки */
+.cover-logo {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none; /* курсор взаимодействует с решёткой */
+}
+.cover-logo img, .cover-logo svg {
+  width: min(22vw, 240px);
+  height: auto;
+  opacity: 0.95;
+}
+
+.cloud-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  /* нежная тень, чтобы точки чуть светились */
+  filter: drop-shadow(0 16px 40px rgba(255,255,255,0.04));
+  cursor: none; /* ощущение "погружения"; можно убрать */
+}
+
+/* белое облако */
+.cloud-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* чтобы мышь ловили только контейнер */
+}
+.cloud-blob {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 720px;
+  max-width: 90vw;
+  transform: translate(-50%, -50%);
+  transition: transform 600ms cubic-bezier(.22,1,.36,1);
+  filter: drop-shadow(0 20px 60px rgba(255,255,255,0.05));
+}
+
+/* 4) Team — используем стили landings-grid/landing-card */
+.team {
+  padding: 100px 0;
+  border-top: 1px solid rgba(232, 230, 225, 0.1);
+}
+
+.team-photo {
+  width: 100%;
+  height: 260px;
+  margin-bottom: 24px;
+  background: radial-gradient(circle at 50% 40%, #ffffff 0 40%, #e8e6e1 41% 42%, transparent 43%),
+              radial-gradient(circle at 35% 60%, #ffffff 0 24%, transparent 25%),
+              radial-gradient(circle at 65% 62%, #ffffff 0 22%, transparent 23%);
+  background-color: #111; /* для контраста вокруг */
+  border: 1px solid rgba(232, 230, 225, 0.15);
+}
+
+.team-name {
+  font-size: 28px;
+  font-weight: 300;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.team-role {
+  font-size: 14px;
+  opacity: 0.6;
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* --- Снап-контейнер (как ранее) + блокировка при открытом меню --- */
+.snap-container.locked { overflow: hidden; }
+
+/* --- Кнопка меню (правый верх), появляется со 2-го экрана --- */
+.menu-btn {
+  position: fixed;
+  top: 40px;
+  right: 80px;
+  width: 38px;
+  height: 26px;
+  display: grid;
+  gap: 6px;
+  z-index: 60;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .28s ease, transform .28s ease;
+}
+.menu-btn.show { opacity: .95; pointer-events: auto; }
+.menu-btn:hover { transform: translateY(-1px); }
+.menu-btn .bar {
+  display: block;
+  height: 2px;
+  background: #e8e6e1;
+  width: 100%;
+}
+
+/* --- Фуллскрин-меню --- */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background:
+    radial-gradient(1200px 800px at 70% 20%, rgba(255,255,255,0.06), transparent 60%),
+    #000;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.02);
+  transition: opacity .35s ease, transform .35s ease;
+}
+.menu-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+/* Верхняя полоса меню (логотип + крестик) */
+.menu-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px 80px;
+}
+.menu-logo {
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  color: #e8e6e1;
+  opacity: .9;
+}
+.menu-close {
+  width: 32px; height: 32px;
+  position: relative;
+  background: transparent; border: none; padding: 0; cursor: pointer;
+}
+.menu-close .bar {
+  position: absolute; left: 0; right: 0; top: 50%;
+  height: 2px; background: #e8e6e1;
+}
+.menu-close .bar:first-child { transform: translateY(-50%) rotate(45deg); }
+.menu-close .bar:last-child  { transform: translateY(-50%) rotate(-45deg); }
+
+/* Центр меню с крупными пунктами */
+.menu-center {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  padding: 120px 80px;
+}
+.menu-grid {
+  width: min(1400px, 92vw);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 3vw, 48px) clamp(32px, 6vw, 80px);
+}
+.menu-item a {
+  text-decoration: none;
+  color: #e8e6e1;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 16px;
+  line-height: 1.05;
+}
+.menu-text {
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  /* большой кегль как у hero */
+  font-size: clamp(36px, 9vw, 120px);
+}
+.menu-sup {
+  font-size: clamp(12px, 1.6vw, 18px);
+  opacity: .6;
+  letter-spacing: 1px;
+}
+.menu-item a:hover .menu-text { opacity: 1; }
+.menu-item a .menu-text { opacity: .92; }
+
+/* Адаптив */
+@media (max-width: 1024px) {
+  .menu-top { padding: 32px 40px; }
+  .menu-btn { top: 32px; right: 40px; }
+  .menu-center { padding: 96px 40px; }
+}
+@media (max-width: 768px) {
+  .menu-grid { grid-template-columns: 1fr; }
+  .menu-btn { top: 24px; right: 24px; }
+  .menu-top { padding: 24px; }
+  .menu-center { padding: 88px 24px; }
+}
