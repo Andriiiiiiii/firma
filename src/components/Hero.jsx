@@ -1,31 +1,112 @@
 import React from 'react'
-export default function Hero() {
+
+/**
+ * progress — общий прогресс входа секции (0..1)
+ * spin     — локальный прогресс прокрутки внутри секции (0..1 на один экран)
+ * textDelay — задержка появления текста (доля 0..1). По умолчанию 0.15
+ * turns    — обороты wheel.png за «пролёт» секции (по умолчанию 1)
+ */
+export default function Hero({ progress = 0, spin = 0, textDelay = 0.15, turns = 3 }) {
+  const clamp01 = (v) => Math.max(0, Math.min(1, v))
+  const p = clamp01(progress)
+  const s = clamp01(spin)
+
+  // откладываем старт появления текста
+  const delayed = clamp01((p - textDelay) / Math.max(0.0001, 1 - textDelay))
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3)
+  const o = easeOutCubic(delayed)
+  const ty = (1 - o) * 26
+  const angle = s * 360 * turns
+
   return (
-    <section className="hero snap-section" id="intro">
-      <div className="container">
-        <div className="section-label">/ Введение</div>
-        <h1 className="hero-title">Ускоряем развитие<br/>бизнеса — на годы вперёд.</h1>
-        <p className="hero-subtitle">
+    <section
+      className="page-section hero"
+      id="intro"
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        background: '#000',
+        color: '#e8e6e1',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        className="container"
+        style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: '0 clamp(20px, 6vw, 80px)',
+          opacity: o,
+          transform: `translateY(${ty}px)`,
+          willChange: 'opacity, transform',
+        }}
+      >
+        <div
+          className="section-label"
+          style={{
+            color: '#9c9b97',
+            fontSize: 14,
+            letterSpacing: '0.1em',
+            marginBottom: 20,
+            userSelect: 'none',
+          }}
+        >
+          / Введение
+        </div>
+
+        <h1
+          className="hero-title"
+          style={{
+            fontSize: 'clamp(32px, 6vw, 68px)',
+            lineHeight: 1.05,
+            margin: 0,
+            color: '#f2f2f2',
+          }}
+        >
+          Ускоряем развитие<br />бизнеса — на годы вперёд.
+        </h1>
+
+        <p
+          className="hero-subtitle"
+          style={{
+            marginTop: 20,
+            maxWidth: 780,
+            fontSize: 'clamp(16px, 2.2vw, 22px)',
+            lineHeight: 1.5,
+            color: '#cfcfcf',
+          }}
+        >
           Мы — команда профессионалов мирового класса, которая постоянно расширяет границы новых технологий.
         </p>
-        <div className="starburst" aria-hidden>
-          <svg viewBox="0 0 100 100">
-            <g stroke="#e8e6e1" strokeWidth="0.5" fill="none">
-              <line x1="50" y1="0" x2="50" y2="100"/>
-              <line x1="0" y1="50" x2="100" y2="50"/>
-              <line x1="15" y1="15" x2="85" y2="85"/>
-              <line x1="85" y1="15" x2="15" y2="85"/>
-              <line x1="30" y1="5" x2="70" y2="95"/>
-              <line x1="70" y1="5" x2="30" y2="95"/>
-              <line x1="5" y1="30" x2="95" y2="70"/>
-              <line x1="95" y1="30" x2="5" y2="70"/>
-              <line x1="7" y1="20" x2="93" y2="80"/>
-              <line x1="93" y1="20" x2="7" y2="80"/>
-              <line x1="20" y1="7" x2="80" y2="93"/>
-              <line x1="80" y1="7" x2="20" y2="93"/>
-            </g>
-          </svg>
-        </div>
+      </div>
+
+      {/* вращающееся колесо */}
+      <div
+        className="hero-wheel"
+        aria-hidden
+        style={{
+          position: 'absolute',
+          right: 'clamp(20px, 6vw, 100px)',
+          bottom: 'clamp(20px, 6vw, 90px)',
+          width: 'clamp(90px, 12vw, 180px)',
+          height: 'auto',
+          opacity: Math.max(0, Math.min(1, 0.85 * o)),
+          transform: `rotate(${angle}deg)`,
+          transformOrigin: '50% 50%',
+          willChange: 'transform',
+          pointerEvents: 'none',
+          filter: 'drop-shadow(0 0 4px rgba(0,0,0,0.4))',
+        }}
+      >
+        <img
+          src="/wheel.png"
+          alt=""
+          decoding="async"
+          fetchpriority="high"
+          style={{ display: 'block', width: '100%', height: 'auto' }}
+        />
       </div>
     </section>
   )
