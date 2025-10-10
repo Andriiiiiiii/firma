@@ -1,16 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 
-/**
- * Фоновая 3D-капля за формой обратной связи:
- * - Взаимодействие ТОЛЬКО при наведении на саму каплю (hover-hit).
- * - Вне капли курсор не влияет.
- * - После отталкивания капля ВСЕГДА возвращается к "якорю"
- *   — якорь автоматически ставится за форму (центр .contact-form),
- *   можно сместить через ANCHOR_OFFSET_PX.
- * - Форма капли фиксирована (пред-деформация 1 раз и по клику регенерация).
- */
-
 export default function DropletBackground() {
   const mountRef = useRef(null)
   const rendererRef = useRef(null)
@@ -24,17 +14,14 @@ export default function DropletBackground() {
     const SEG_W = 80
     const SEG_H = 60
 
-    // Смещение якоря относительно центра формы (в пикселях)
-    const ANCHOR_OFFSET_PX = { x: 0, y: 30 } // например, чуть ниже центра формы
+    const ANCHOR_OFFSET_PX = { x: 0, y: 30 }
 
-    // Физика смещения центра
     const PHYS_SPRING       = 4.8
     const PHYS_DAMP         = 0.88
     const PHYS_REPULSE      = 3
     const PHYS_FIELD_RADIUS = 1.25
     const PHYS_MAX_OFFSET   = 1
 
-    // Вращение
     const ROT_SPEED_Y = 0.32
     const ROT_SPEED_X = 0.08
 
@@ -42,20 +29,10 @@ export default function DropletBackground() {
     const scene = new THREE.Scene()
     scene.background = new THREE.Color(0x000000)
 
-    const camera = new THREE.PerspectiveCamera(
-      35,
-      mount.clientWidth / mount.clientHeight,
-      0.1,
-      100
-    )
+    const camera = new THREE.PerspectiveCamera(35, mount.clientWidth / mount.clientHeight, 0.1, 100)
     camera.position.set(0, 0, 2.0)
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: false,
-      alpha: false,
-      powerPreference: 'high-performance',
-      premultipliedAlpha: false,
-    })
+    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, powerPreference: 'high-performance', premultipliedAlpha: false })
     let currentDPR = Math.min(window.devicePixelRatio || 1, 1.5)
     renderer.setPixelRatio(currentDPR)
     renderer.setSize(mount.clientWidth, mount.clientHeight, false)
@@ -72,10 +49,9 @@ export default function DropletBackground() {
     dir.position.set(2.2, 1.6, 2.6)
     scene.add(dir)
 
-    // ---------- КАПЛЯ (сфера высокой детализации) ----------
+    // ---------- КАПЛЯ ----------
     let geometry = new THREE.SphereGeometry(RADIUS, SEG_W, SEG_H)
 
-    // Пред-деформация (неровности) — фиксированная форма
     const LUMP_AMP = 2 * RADIUS
     const F1 = 2.3, F2 = 3.7, F3 = 4.1
     const MIN_R = RADIUS * 0.001
@@ -112,38 +88,29 @@ export default function DropletBackground() {
       }
       pos.needsUpdate = true
       geometry.computeVertexNormals()
-      geometry.computeBoundingSphere() // важно для быстрой проверки hover
+      geometry.computeBoundingSphere()
     }
     applyShape()
 
-    const material = new THREE.MeshPhongMaterial({
-      color: 0xffffff,
-      specular: 0x888888,
-      shininess: 64,
-    })
-
+    const material = new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0x888888, shininess: 64 })
     const droplet = new THREE.Mesh(geometry, material)
     droplet.matrixAutoUpdate = true
     scene.add(droplet)
 
-    // ---------- ВЕКТОРА/СОСТОЯНИЯ ----------
-    const anchor = new THREE.Vector3(0, 0, 0) // будет выставлен за форму
-    const vel    = new THREE.Vector3(0, 0, 0)
+    const anchor = new THREE.Vector3(0, 0, 0) // целевая точка (за формой)
+    const vel    = new THREE.Vector3(0, 0, 0) // <-- ОСТАЛОСЬ ЕДИНСТВЕННОЕ ОБЪЯВЛЕНИЕ
     const tmpV1  = new THREE.Vector3()
     const tmpV2  = new THREE.Vector3()
 
-    // Луч/координаты курсора и плоскость z=0
     const ray = new THREE.Ray()
     const ndc = new THREE.Vector2()
     const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)
     const planePoint = new THREE.Vector3()
 
-    // Hover-флаги (репульсия — только если действительно навели на каплю)
     let havePointer = false
     let hoverDroplet = false
     const raycaster = new THREE.Raycaster()
 
-    // ---------- ФУНКЦИИ ----------
     const screenToWorldOnPlane = (clientX, clientY, out) => {
       const rect = renderer.domElement.getBoundingClientRect()
       ndc.x = ((clientX - rect.left) / rect.width) * 2 - 1
@@ -154,37 +121,25 @@ export default function DropletBackground() {
     }
 
     const updateAnchorFromForm = () => {
-      // Пытаемся найти форму внутри секции #contact
       const contact = mount.closest('#contact') || document.getElementById('contact') || document
       const form = contact.querySelector('.contact-form') || document.querySelector('.contact-form')
       if (!form) { anchor.set(0, 0, 0); return }
-
       const rect = form.getBoundingClientRect()
-      const cx = rect.left + rect.width * 0.5 + ANCHOR_OFFSET_PX.x
-      const cy = rect.top  + rect.height * 0.5 + ANCHOR_OFFSET_PX.y
-
-      if (screenToWorldOnPlane(cx, cy, tmpV1)) {
-        anchor.copy(tmpV1)
-      } else {
-        anchor.set(0, 0, 0)
-      }
+      const cx = rect.left + rect.width * 0.5 + 0
+      const cy = rect.top  + rect.height * 0.5 + 30
+      if (screenToWorldOnPlane(cx, cy, tmpV1)) anchor.copy(tmpV1)
+      else anchor.set(0, 0, 0)
     }
-
-    // Первичная установка якоря (за формой)
     updateAnchorFromForm()
 
     const setPointerFromEvent = (e) => {
       havePointer = screenToWorldOnPlane(e.clientX, e.clientY, planePoint)
       if (!havePointer) { hoverDroplet = false; return }
-
-      // Быстрый отбор: расстояние до центра меньше радиуса boundingSphere
       droplet.updateMatrixWorld()
       const centerW = droplet.getWorldPosition(tmpV1.set(0, 0, 0))
       const worldRadius = (geometry.boundingSphere?.radius || RADIUS) * droplet.scale.x
       const dist = planePoint.distanceTo(centerW)
-
       if (dist <= worldRadius * 1.05) {
-        // Точный тест пересечения только когда достаточно близко
         raycaster.ray.copy(ray)
         const hit = raycaster.intersectObject(droplet, false)
         hoverDroplet = hit.length > 0
@@ -194,8 +149,6 @@ export default function DropletBackground() {
     }
 
     const onPointerMove = (e) => setPointerFromEvent(e)
-
-    // Клик по капле => регенерация формы на месте
     const onPointerDown = (e) => {
       setPointerFromEvent(e)
       if (!hoverDroplet) return
@@ -204,29 +157,22 @@ export default function DropletBackground() {
       PH3 = Math.random() * Math.PI * 2
       applyShape()
     }
-
-    const onPointerLeave = () => {
-      havePointer = false
-      hoverDroplet = false
-    }
+    const onPointerLeave = () => { havePointer = false; hoverDroplet = false }
 
     window.addEventListener('pointermove', onPointerMove, { passive: true })
     window.addEventListener('pointerdown', onPointerDown, { passive: true })
     window.addEventListener('pointerleave', onPointerLeave)
 
-    // ---------- RESIZE / LAYOUT ----------
     const onResize = () => {
-      const w = mount.clientWidth
-      const h = mount.clientHeight
+      const w = mount.clientWidth, h = mount.clientHeight
       camera.aspect = w / h
       camera.updateProjectionMatrix()
       renderer.setSize(w, h, false)
-      updateAnchorFromForm() // при изменении размеров — вернуть якорь за форму
+      updateAnchorFromForm()
     }
     const ro = new ResizeObserver(onResize)
     ro.observe(mount)
 
-    // ---------- ПАУЗА РЕНДЕРА ВНЕ ВЬЮПОРТА ----------
     let inView = true
     const io = new IntersectionObserver((entries) => {
       inView = entries[0]?.isIntersecting ?? true
@@ -234,7 +180,6 @@ export default function DropletBackground() {
     }, { root: null, threshold: 0.0 })
     io.observe(mount)
 
-    // ---------- АДАПТИВНЫЙ DPR ----------
     let frameCount = 0
     let accMs = 0
     const HIGH_MS = 22.0
@@ -242,30 +187,27 @@ export default function DropletBackground() {
     const DPR_MIN = 0.8
     const DPR_MAX = Math.min(2, (window.devicePixelRatio || 1))
     const adjustDPR = (avgMs) => {
-      let newDPR = currentDPR
-      if (avgMs > HIGH_MS && currentDPR > DPR_MIN) newDPR = Math.max(DPR_MIN, currentDPR * 0.9)
-      else if (avgMs < LOW_MS && currentDPR < DPR_MAX) newDPR = Math.min(DPR_MAX, currentDPR * 1.1)
-      if (Math.abs(newDPR - currentDPR) > 0.02) {
-        currentDPR = newDPR
-        renderer.setPixelRatio(currentDPR)
+      let newDPR = renderer.getPixelRatio()
+      if (avgMs > HIGH_MS && newDPR > DPR_MIN) newDPR = Math.max(DPR_MIN, newDPR * 0.9)
+      else if (avgMs < LOW_MS && newDPR < DPR_MAX) newDPR = Math.min(DPR_MAX, newDPR * 1.1)
+      if (Math.abs(newDPR - renderer.getPixelRatio()) > 0.02) {
+        renderer.setPixelRatio(newDPR)
         const w = mount.clientWidth, h = mount.clientHeight
         renderer.setSize(w, h, false)
       }
     }
 
-    // ---------- АНИМАЦИЯ ----------
     const clock = new THREE.Clock()
     let raf = 0
+
     const tick = () => {
       const dt = Math.min(clock.getDelta(), 0.05)
       const ms = dt * 1000
 
       if (inView) {
-        // Вращение
         droplet.rotation.y += ROT_SPEED_Y * dt
         droplet.rotation.x += ROT_SPEED_X * dt
 
-        // Репульсия ТОЛЬКО при наведении на каплю
         if (hoverDroplet && havePointer) {
           const centerW = droplet.getWorldPosition(tmpV1.set(0, 0, 0))
           tmpV2.copy(centerW).sub(planePoint)
@@ -276,19 +218,15 @@ export default function DropletBackground() {
           }
         }
 
-        // Возврат к якорю (за формой) + демпфер
         tmpV1.copy(anchor).sub(droplet.position).multiplyScalar(PHYS_SPRING * dt)
         vel.add(tmpV1)
         vel.multiplyScalar(PHYS_DAMP)
 
         droplet.position.addScaledVector(vel, dt)
-        if (droplet.position.length() > PHYS_MAX_OFFSET) {
-          droplet.position.setLength(PHYS_MAX_OFFSET)
-        }
+        if (droplet.position.length() > PHYS_MAX_OFFSET) droplet.position.setLength(PHYS_MAX_OFFSET)
 
         renderer.render(scene, camera)
 
-        // Адаптивный DPR раз в 30 кадров
         accMs += ms
         frameCount++
         if (frameCount >= 30) {
@@ -302,7 +240,6 @@ export default function DropletBackground() {
     }
     raf = requestAnimationFrame(tick)
 
-    // ---------- ОЧИСТКА ----------
     return () => {
       cancelAnimationFrame(raf)
       io.disconnect()
@@ -313,23 +250,14 @@ export default function DropletBackground() {
       geometry.dispose()
       material.dispose()
       renderer.dispose()
-      if (renderer.domElement?.parentNode) {
-        renderer.domElement.parentNode.removeChild(renderer.domElement)
-      }
+      if (renderer.domElement?.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement)
     }
   }, [])
 
   return (
     <div
       ref={mountRef}
-      style={{
-        position: 'absolute',
-        inset: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 0,            // остается за формой
-        pointerEvents: 'none' // не блокирует элементы формы
-      }}
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none' }}
       aria-hidden
     />
   )
