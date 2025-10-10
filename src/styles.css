@@ -824,3 +824,22 @@ body {
 .is-visible .fade-text {
   will-change: auto;
 }
+/* ===== Кольца на слайде ABOUT ===== */
+.about-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.about-ripples-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;           /* под контентом */
+  pointer-events: none; /* не перехватывает курсор */
+  /* при желании можно добавить лёгкое размытие или прозрачность:
+     opacity: 0.35; */
+}
+
+.about-content-wrap {
+  position: relative;
+  z-index: 2;           /* поверх канваса */
+}
