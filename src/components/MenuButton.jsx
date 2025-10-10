@@ -4,12 +4,12 @@ export default function MenuButton({ visible, onClick }) {
   return (
     <button
       aria-label="Открыть меню"
-      className={`menu-btn ${visible ? 'show' : ''}`}
+      className={`hamburger-menu ${visible ? 'visible' : ''}`}
       onClick={onClick}
     >
-      <span className="bar" />
-      <span className="bar" />
-      <span className="bar" />
+      <span className="hamburger-line"></span>
+      <span className="hamburger-line"></span>
+      <span className="hamburger-line"></span>
     </button>
   )
 }

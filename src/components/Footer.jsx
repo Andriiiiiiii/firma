@@ -2,9 +2,9 @@ import React from 'react'
 
 export default function Footer() {
   return (
-    <footer>
+    <footer className="footer">
       <div className="container">
-        <p>© 2025 WebFlow Solutions. Все права защищены.</p>
+        <p className="footer-text">© 2025 firma'. Все права защищены.</p>
       </div>
     </footer>
   )
