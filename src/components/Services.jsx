@@ -33,25 +33,7 @@ export default function Services() {
       style={{ position: 'relative', overflow: 'hidden', background: '#000' }}
     >
       {/* 3D Сферическая решётка на фоне */}
-      <SphericalLattice
-        sizeRel={0.5}           // диаметр сферы = 50% от min(width,height)
-        pointsPerRow={70}
-        pointsPerCol={60}
-        pointSize={2.0}
-        stiffness={50}
-        originStiffness={50}
-        damping={0.35}
-        mouseForce={5000}
-        mouseFalloff={4}
-        mouseRadiusRel={0.55}
-        autoRotation={true}
-        rotationSpeed={0.08}    // базовая целевая скорость по Y
-        pointColor="#ffffff"
-        pointOpacity={0.4}
-        // Новые оси/инерция уже включены внутри компонента.
-        // По умолчанию pitch стремится к 0 (rotationSpeedX=0),
-        // но получает импульсы от вертикального «свайпа».
-      />
+      <SphericalLattice/>
 
       {/* Контент поверх фона */}
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>

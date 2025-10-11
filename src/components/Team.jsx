@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import TurbulenceBackground from './TurbulenceBackground.jsx'
 
 export default function Team() {
   const sectionRef = useRef(null)
@@ -38,11 +39,26 @@ export default function Team() {
       style={{
         position: 'relative',
         background: '#000',
-        color: '#e8e6e1'
+        color: '#e8e6e1',
+        overflow: 'hidden',
       }}
     >
-      
+      {/* Интерактивный фон */}
+      <TurbulenceBackground
+        active={isVisible}
+        // Можно тонко настроить поведение под железо/дизайн:
+        // speedThreshold={1300}
+        // particlesPerBurst={90}
+        // burstRadius={24}
+        // curlAmp={950}
+        // drag={0.986}
+        // strokeAlpha={0.12}
+        // fadeRate={0.2}
+        // maxParticles={3200}
+        // quality={0.9}
+      />
 
+      {/* Контент поверх */}
       <div className="container" style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>
         <div className="section-label" style={{ opacity: 1, pointerEvents: 'auto' }}>/ Команда</div>
         <h2 className="section-title" style={{ opacity: 1, pointerEvents: 'auto' }}>Наша команда</h2>
