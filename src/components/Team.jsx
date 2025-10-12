@@ -16,16 +16,14 @@ export default function Team() {
   }, [])
 
   const teamMembers = [
-    'Анна Сергеева',
-    'Иван Петров',
-    'Мария Ким',
-    'Дмитрий Орлов',
-    'Елена Волкова',
-    'Алексей Соколов',
-    'Ольга Морозова',
-    'Сергей Новиков',
-    'Татьяна Лебедева',
-    'Михаил Козлов'
+    { name: 'Карпенко Богдан', role: 'Fullstack разработчик' },
+    { name: 'Блохин Олег', role: 'ML Engineer' },
+    { name: 'Щербаков Андрей', role: 'UI/UX дизайнер' },
+    { name: 'Воронов Егор', role: 'Frontend разработчик' },
+    { name: 'Немировский Георгий', role: 'Backend разработчик' },
+    { name: 'Панов Дмитрий', role: 'DevOps инженер' },
+    { name: 'Козлов Даниил', role: 'Product Manager' },
+    { name: 'Живетьев Кирилл', role: 'Data Scientist' }
   ]
 
   return (
@@ -41,8 +39,13 @@ export default function Team() {
         </div>
 
         <div className="team-layout">
-          {/* Большое общее фото команды */}
-          <div className="team-photo-large" aria-hidden="true">
+          {/* Фото команды */}
+          <div className="team-photo-large">
+            <img 
+              src="/team.webp" 
+              alt="Команда firma'" 
+              className="team-photo-img"
+            />
             <div className="team-photo-overlay">
               <span className="team-count">{teamMembers.length} человек</span>
             </div>
@@ -52,10 +55,13 @@ export default function Team() {
           <div className="team-members-list">
             <h3 className="team-members-title">Участники</h3>
             <ul className="team-names">
-              {teamMembers.map((name, i) => (
-                <li key={i} className="team-member-name">
+              {teamMembers.map((member, i) => (
+                <li key={i} className="team-member-item">
                   <span className="member-number">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="member-name">{name}</span>
+                  <div className="member-info">
+                    <span className="member-name">{member.name}</span>
+                    <span className="member-role">{member.role}</span>
+                  </div>
                 </li>
               ))}
             </ul>

@@ -5,15 +5,12 @@ export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: '',
     message: '',
   })
 
   const sectionRef = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
 
-  // Регулировка стартовой скорости через URL:
-  //   ?spin=0.9&spinX=0.9
   const params =
     typeof window !== 'undefined'
       ? new URLSearchParams(window.location.search)
@@ -26,7 +23,6 @@ export default function Contact() {
     if (!node) return
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Секция считается активной, когда видна хотя бы наполовину
         setIsVisible(entry.isIntersecting && entry.intersectionRatio >= 0.5)
       },
       { threshold: [0, 0.25, 0.5, 0.75, 1] }
@@ -50,18 +46,14 @@ export default function Contact() {
       className={`contact-section snap-section ${isVisible ? 'is-visible' : ''}`}
       style={{ position: 'relative', overflow: 'hidden', background: '#000' }}
     >
-      {/* Диагональный «колёсный» поворот при входе в секцию */}
       {isVisible && (
         <SphericalLattice
-          rotationSpeed={SPIN_Y}    // целевая ω вокруг Y
-          rotationSpeedX={SPIN_X}   // целевая ω вокруг X (диагональ)
-
-          initialYawVel={20}      // стартовая по Y
-          initialPitchVel={20}    // стартовая по X
-            // трение + быстрая утяжка к нулю (оставьте как в примере)
+          rotationSpeed={SPIN_Y}
+          rotationSpeedX={SPIN_X}
+          initialYawVel={20}
+          initialPitchVel={20}
           rotFriction={0.1}
           rotSpring={0.8}
-          // важное: НЕ подтягивать к rotationSpeed -> сфера остановится
           pullToTarget={false}
         />
       )}
@@ -119,18 +111,6 @@ export default function Contact() {
               </div>
 
               <div className="form-group form-group-full">
-                <input
-                  type="text"
-                  name="subject"
-                  className="form-input"
-                  placeholder=" "
-                  value={formData.subject}
-                  onChange={handleChange}
-                />
-                <label className="form-label">Тема сообщения</label>
-              </div>
-
-              <div className="form-group form-group-full">
                 <textarea
                   name="message"
                   className="form-textarea"
@@ -146,7 +126,6 @@ export default function Contact() {
 
             <button type="submit" className="submit-button">
               <span>Отправить</span>
-              <span className="button-arrow">→</span>
             </button>
           </form>
         </div>

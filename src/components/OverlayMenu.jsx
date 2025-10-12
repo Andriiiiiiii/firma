@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 
 export default function OverlayMenu({ open, onClose, onNav }) {
-  // Закрытие по ESC
   useEffect(() => {
     if (!open) return
     
@@ -28,23 +27,22 @@ export default function OverlayMenu({ open, onClose, onNav }) {
 
   return (
     <div className={`menu-overlay ${open ? 'open' : ''}`} aria-hidden={!open}>
-      {/* Верхняя строка с логотипом и кнопкой закрытия */}
       <div className="menu-top">
         <div className="menu-logo">firma'</div>
         <button 
           aria-label="Закрыть меню" 
           className="menu-close" 
           onClick={onClose}
+          type="button"
         >
           <span className="close-line"></span>
           <span className="close-line"></span>
         </button>
       </div>
 
-      {/* Центральная часть с крупными пунктами меню */}
       <div className="menu-center">
         <nav className="menu-content">
-          <div className="menu-grid">
+          <div className="menu-grid-two-rows">
             {menuItems.map((item, index) => (
               <div 
                 key={item.id}
