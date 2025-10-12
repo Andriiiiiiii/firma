@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Cover from './components/Cover.jsx'
 import Hero from './components/Hero.jsx'
 import Services from './components/Services.jsx'
@@ -12,17 +12,63 @@ import OverlayMenu from './components/OverlayMenu.jsx'
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
+  const scrollingRef = useRef(false)
+  const lastScrollRef = useRef(0)
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY
       const firstSlideHeight = window.innerHeight
-      // Показываем меню после 50% первого слайда
       setShowMenu(scrollY > firstSlideHeight * 0.5)
     }
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Плавный скроллинг с правильным snap
+  useEffect(() => {
+    let scrollTimeout
+    let isSnapping = false
+    
+    const handleSmoothSnap = () => {
+      if (isSnapping) return
+      
+      clearTimeout(scrollTimeout)
+      scrollTimeout = setTimeout(() => {
+        const scrollY = window.scrollY
+        const windowHeight = window.innerHeight
+        
+        // Определяем ближайший слайд
+        const currentIndex = Math.round(scrollY / windowHeight)
+        const targetScroll = currentIndex * windowHeight
+        const distanceFromTarget = Math.abs(scrollY - targetScroll)
+        
+        // Snap только если находимся между слайдами
+        if (distanceFromTarget > 10 && distanceFromTarget < windowHeight * 0.4) {
+          isSnapping = true
+          
+          window.scrollTo({
+            top: targetScroll,
+            behavior: 'smooth'
+          })
+          
+          setTimeout(() => {
+            isSnapping = false
+          }, 800)
+        }
+      }, 150)
+    }
+
+    // Плавный скроллинг через CSS
+    document.documentElement.style.scrollBehavior = 'smooth'
+    
+    window.addEventListener('scroll', handleSmoothSnap, { passive: true })
+    
+    return () => {
+      window.removeEventListener('scroll', handleSmoothSnap)
+      clearTimeout(scrollTimeout)
+    }
   }, [])
 
   const scrollToSection = (sectionId) => {

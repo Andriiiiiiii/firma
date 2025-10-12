@@ -1,23 +1,41 @@
-import React, { useState } from 'react'
-import DropletBackground from './DropletBackground.jsx'
+import React, { useState, useEffect, useRef } from 'react'
+import SphericalLattice from './SphericalLattice.jsx'
 
 export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' })
+  const sectionRef = useRef(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting && entry.intersectionRatio >= 0.5)
+      },
+      { threshold: [0, 0.5, 1] }
+    )
+    if (sectionRef.current) observer.observe(sectionRef.current)
+    return () => observer.disconnect()
+  }, [])
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
   const handleSubmit = (e) => { e.preventDefault(); alert('Спасибо за сообщение! Форма демонстрационная.') }
 
   return (
-    <section id="contact" className="contact-section snap-section"
-      style={{ position: 'relative', overflow: 'hidden', background: '#000' }}>
-      <DropletBackground />
+    <section 
+      ref={sectionRef}
+      id="contact" 
+      className={`contact-section snap-section ${isVisible ? 'is-visible' : ''}`}
+      style={{ position: 'relative', overflow: 'hidden', background: '#000' }}
+    >
+      {/* 3D Сферическая решётка на фоне */}
+      <SphericalLattice />
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="section-label">/ Связаться с нами</div>
-        <h2 className="section-title">Начнём работу вместе</h2>
+        <div className="section-label fade-text">/ Связаться с нами</div>
+        <h2 className="section-title fade-text">Начнём работу вместе</h2>
 
         <div className="contact-wrapper">
-          <div className="contact-info">
+          <div className="contact-info fade-text">
             <div className="info-item">
               <h3 className="info-label">Email</h3>
               <a href="mailto:hello@webflow.solutions" className="info-link">hello@webflow.solutions</a>
@@ -32,7 +50,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <form className="contact-form" onSubmit={handleSubmit}>
+          <form className="contact-form fade-text" onSubmit={handleSubmit}>
             <div className="form-grid">
               <div className="form-group">
                 <input type="text" name="name" className="form-input" placeholder=" " value={formData.name} onChange={handleChange} required />

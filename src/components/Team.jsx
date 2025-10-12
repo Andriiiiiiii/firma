@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import TurbulenceBackground from './TurbulenceBackground.jsx'
 
 export default function Team() {
   const sectionRef = useRef(null)
@@ -16,72 +15,51 @@ export default function Team() {
     return () => observer.disconnect()
   }, [])
 
-  const members = [
-    { role: 'Frontend', name: 'Анна Сергеева',
-      desc: 'Инженер интерфейсов. Любит минимализм, типографику и аккуратные сетки.',
-      tags: ['React', 'Vite', 'Accessibility'] },
-    { role: 'Backend', name: 'Иван Петров',
-      desc: 'Проектирует надёжные API и масштабируемую архитектуру под высокую нагрузку.',
-      tags: ['Node.js', 'PostgreSQL', 'gRPC'] },
-    { role: 'Design', name: 'Мария Ким',
-      desc: 'Отвечает за визуальный язык, прототипы и систему компонентов.',
-      tags: ['UI Kit', 'Motion', 'Figma'] },
-    { role: 'PM', name: 'Дмитрий Орлов',
-      desc: 'Ведёт проекты от пресейла до запуска. Синхронизирует команду и цели.',
-      tags: ['Agile', 'Roadmap', 'QA'] },
+  const teamMembers = [
+    'Анна Сергеева',
+    'Иван Петров',
+    'Мария Ким',
+    'Дмитрий Орлов',
+    'Елена Волкова',
+    'Алексей Соколов',
+    'Ольга Морозова',
+    'Сергей Новиков',
+    'Татьяна Лебедева',
+    'Михаил Козлов'
   ]
 
   return (
     <section
       ref={sectionRef}
       id="team"
-      className={`team-section snap-section ${isVisible ? 'is-visible' : ''}`}
-      style={{
-        position: 'relative',
-        background: '#000',
-        color: '#e8e6e1',
-        overflow: 'hidden',
-      }}
+      className="team-section snap-section"
     >
-      {/* Интерактивный фон */}
-      <TurbulenceBackground
-        active={isVisible}
-        // Можно тонко настроить поведение под железо/дизайн:
-        // speedThreshold={1300}
-        // particlesPerBurst={90}
-        // burstRadius={24}
-        // curlAmp={950}
-        // drag={0.986}
-        // strokeAlpha={0.12}
-        // fadeRate={0.2}
-        // maxParticles={3200}
-        // quality={0.9}
-      />
+      <div className="container team-container">
+        <div className="team-header">
+          <div className="section-label">/ Команда</div>
+          <h2 className="section-title team-title">Наша команда</h2>
+        </div>
 
-      {/* Контент поверх */}
-      <div className="container" style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>
-        <div className="section-label" style={{ opacity: 1, pointerEvents: 'auto' }}>/ Команда</div>
-        <h2 className="section-title" style={{ opacity: 1, pointerEvents: 'auto' }}>Наша команда</h2>
-
-        <div className="team-grid" style={{ opacity: 1, pointerEvents: 'auto' }}>
-          {members.map((m, i) => (
-            <div
-              className={`team-card ${isVisible ? 'fade-text' : ''}`}
-              key={i}
-              style={{
-                opacity: isVisible ? undefined : 1,
-                transform: isVisible ? undefined : 'translateY(0)'
-              }}
-            >
-              <div className="team-photo" aria-hidden="true" />
-              <div className="team-role">{m.role}</div>
-              <h3 className="team-name">{m.name}</h3>
-              <p className="team-description">{m.desc}</p>
-              <div className="team-tags">
-                {m.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}
-              </div>
+        <div className="team-layout">
+          {/* Большое общее фото команды */}
+          <div className="team-photo-large" aria-hidden="true">
+            <div className="team-photo-overlay">
+              <span className="team-count">{teamMembers.length} человек</span>
             </div>
-          ))}
+          </div>
+
+          {/* Список участников команды */}
+          <div className="team-members-list">
+            <h3 className="team-members-title">Участники</h3>
+            <ul className="team-names">
+              {teamMembers.map((name, i) => (
+                <li key={i} className="team-member-name">
+                  <span className="member-number">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="member-name">{name}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </section>

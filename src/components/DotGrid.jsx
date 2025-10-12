@@ -277,7 +277,7 @@ export default function CrystalLattice({
       // Batch рендеринг всех точек одним путём
       ctx.globalCompositeOperation = "source-over";
       ctx.fillStyle = "#ffffff";
-      ctx.globalAlpha = 0.95;
+      ctx.globalAlpha = 0.5;
 
       ctx.beginPath();
       const count = state.count;

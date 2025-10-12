@@ -6,30 +6,25 @@ export default function About() {
 
   const [isVisible, setIsVisible] = useState(false)
 
-  // =========================
-  // НАСТРОЙКИ КОЛЕЦ (ВЯЗКАЯ СРЕДА)
-  // =========================
   const CONFIG = useRef({
-    emitIntervalMs: 14,     // минимальный интервал между кольцами при движении
-    ringInitialSpeed: 320,  // начальная скорость радиального роста (px/сек)
-    viscosity: 0.2,         // КЛЮЧЕВОЕ: вязкость (1/сек). Больше — сильнее тормозит
-    fadePerSec: 1.0,       // скорость затухания альфа-канала (больше — быстрее исчезают)
-    startAlpha: 0.5,        // начальная непрозрачность
-    lineWidth: 1,           // толщина окружности (CSS-пиксели)
-    maxRings: 160,          // максимум активных колец
-    dprMax: 2,              // ограничение devicePixelRatio (производительность)
-    minSpeed: 2,            // нижний порог скорости (px/сек), чтобы не дрожали на месте
+    emitIntervalMs: 14,
+    ringInitialSpeed: 320,
+    viscosity: 0.2,
+    fadePerSec: 1.0,
+    startAlpha: 0.5,
+    lineWidth: 1,
+    maxRings: 160,
+    dprMax: 2,
+    minSpeed: 2,
   })
 
-  // Рабочие рефы
-  const ringsRef = useRef([])        // [{x, y, r, a, v}]
+  const ringsRef = useRef([])
   const rafRef = useRef(null)
   const lastTRef = useRef(0)
   const lastEmitRef = useRef(0)
   const rectRef = useRef({ width: 0, height: 0, maxRadius: 0 })
   const runningRef = useRef(false)
 
-  // Включаем/выключаем анимацию по видимости секции
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -42,10 +37,8 @@ export default function About() {
     )
     if (sectionRef.current) observer.observe(sectionRef.current)
     return () => observer.disconnect()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Навешиваем события и первичную инициализацию
   useEffect(() => {
     const sec = sectionRef.current
     if (!sec) return
@@ -78,10 +71,8 @@ export default function About() {
       sec.removeEventListener('pointerenter', onPointerEnter)
       window.removeEventListener('resize', onResize)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // === Генерация кольца ===
   function emitRing(x, y) {
     const cfg = CONFIG.current
     if (ringsRef.current.length >= cfg.maxRings) ringsRef.current.shift()
@@ -89,11 +80,10 @@ export default function About() {
       x, y,
       r: 0,
       a: cfg.startAlpha,
-      v: cfg.ringInitialSpeed, // стартовая скорость расширения
+      v: cfg.ringInitialSpeed,
     })
   }
 
-  // === Канвас + DPI ===
   function resizeCanvas() {
     const sec = sectionRef.current
     const canvas = canvasRef.current
@@ -116,7 +106,6 @@ export default function About() {
     ctx.lineJoin = 'round'
   }
 
-  // === Цикл анимации ===
   function startAnimation() {
     if (runningRef.current) return
     runningRef.current = true
@@ -137,7 +126,7 @@ export default function About() {
 
   function tick(now) {
     if (!runningRef.current) return
-    const dt = Math.min((now - lastTRef.current) / 1000, 0.05) // сек
+    const dt = Math.min((now - lastTRef.current) / 1000, 0.05)
     lastTRef.current = now
     draw(dt)
     rafRef.current = requestAnimationFrame(tick)
@@ -158,14 +147,10 @@ export default function About() {
     for (let i = 0; i < ringsRef.current.length; i++) {
       const ring = ringsRef.current[i]
 
-      // --- вязкое торможение скорости: v(t) = v0 * exp(-viscosity * t)
       ring.v *= Math.exp(-cfg.viscosity * dt)
       if (ring.v < cfg.minSpeed) ring.v = cfg.minSpeed
 
-      // рост радиуса зависит от текущей скорости
       ring.r += ring.v * dt
-
-      // затухание прозрачности
       ring.a -= cfg.fadePerSec * dt
 
       if (ring.a > 0 && ring.r < maxRadius) {
@@ -185,44 +170,47 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
-      className={`about-section snap-section ${isVisible ? 'is-visible' : ''}`}
+      className="about-section snap-section"
     >
-      {/* Канвас с окружностями */}
       <canvas ref={canvasRef} className="about-ripples-canvas" />
 
-      {/* Контент поверх канваса */}
       <div className="container about-content-wrap">
         <div className="section-label">/ О компании</div>
-        <h2 className="section-title">Наша миссия</h2>
+        <h2 className="section-title">Выпускники МФТИ</h2>
 
         <div className="about-content">
-          <div className="about-text fade-text">
-            <p>
-              Мы создаём цифровые решения, которые помогают бизнесу расти и
-              развиваться в современном мире. Наша команда состоит из опытных
-              разработчиков, дизайнеров и маркетологов, которые объединяют свои
-              знания для создания выдающихся проектов.
+          <div className="about-main-text">
+            <p className="about-intro">
+              Мы — молодая команда разработчиков из Московского физико-технического института. 
+              Объединив фундаментальные знания в математике, физике и computer science, 
+              мы создаём технологические решения нового уровня.
             </p>
-            <br />
-            <p>
-              Каждый проект для нас — это возможность применить новейшие
-              технологии и лучшие практики индустрии. Мы не просто создаём
-              сайты, мы создаём инструменты для достижения бизнес-целей.
-            </p>
+            
+            <div className="about-goal">
+              <h3 className="about-goal-title">Наша цель</h3>
+              <p className="about-goal-text">
+                Применить научный подход и инженерную точность для создания веб-продуктов, 
+                которые решают реальные бизнес-задачи. Мы не просто пишем код — 
+                мы проектируем системы, используя алгоритмическое мышление и глубокое понимание технологий.
+              </p>
+            </div>
           </div>
 
-          <div className="stats fade-text">
-            <div className="stat-item">
-              <div className="stat-number">200+</div>
-              <div className="stat-label">Реализованных проектов</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">50+</div>
-              <div className="stat-label">Довольных клиентов</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">8</div>
-              <div className="stat-label">Лет на рынке</div>
+          <div className="about-values-box">
+            <h3 className="about-values-title">Наши принципы</h3>
+            <div className="about-values-list">
+              <div className="value-item">
+                <span className="value-icon">→</span>
+                <span className="value-text">Фундаментальный подход</span>
+              </div>
+              <div className="value-item">
+                <span className="value-icon">→</span>
+                <span className="value-text">Инженерная точность</span>
+              </div>
+              <div className="value-item">
+                <span className="value-icon">→</span>
+                <span className="value-text">Инновационные решения</span>
+              </div>
             </div>
           </div>
         </div>
