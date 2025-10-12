@@ -28,17 +28,21 @@ export default function Services() {
     <section
       ref={sectionRef}
       id="services"
-      className="services-section snap-section"
+      className={`services-section snap-section ${isVisible ? 'is-visible' : ''}`}
       style={{ position: 'relative', overflow: 'hidden', background: '#1a1a1a' }}
     >
       {/* Контент без фоновой анимации */}
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="section-label">/ Наши услуги</div>
-        <h2 className="section-title">Что мы делаем</h2>
+        <div className="section-label fade-text">/ Наши услуги</div>
+        <h2 className="section-title fade-text">Что мы делаем</h2>
 
         <div className="services-grid">
-          {services.map((service) => (
-            <div className="service-card" key={service.n}>
+          {services.map((service, index) => (
+            <div 
+              className={`service-card fade-text`}
+              key={service.n}
+              style={{ transitionDelay: `${0.1 + index * 0.05}s` }}
+            >
               <div className="service-number">{service.n}</div>
               <h3 className="service-title">{service.t}</h3>
               <p className="service-description">{service.d}</p>
