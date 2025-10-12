@@ -14,6 +14,7 @@ html {
   overflow-y: scroll;
   overscroll-behavior: contain;
   touch-action: pan-y;
+  font-size: 16px;
 }
 
 body {
@@ -45,7 +46,7 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  padding: 100px 0;
+  padding: 5vh 0;
 }
 
 /* ============================================
@@ -53,9 +54,9 @@ body {
    ============================================ */
 
 .container {
-  max-width: 1400px;
+  max-width: 90vw;
   margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 60px);
+  padding: 0 4vw;
   width: 100%;
   height: 100%;
   max-height: 100vh;
@@ -66,19 +67,19 @@ body {
 }
 
 .section-label {
-  font-size: clamp(11px, 1vw, 13px);
+  font-size: 0.8vw;
   font-weight: 300;
-  letter-spacing: 1px;
-  margin-bottom: clamp(12px, 1.5vh, 20px);
+  letter-spacing: 0.05vw;
+  margin-bottom: 1.5vh;
   opacity: 0.7;
   text-transform: uppercase;
 }
 
 .section-title {
-  font-size: clamp(28px, 4vw, 48px);
+  font-size: 3vw;
   font-weight: 300;
-  margin-bottom: clamp(20px, 3vh, 35px);
-  letter-spacing: -1px;
+  margin-bottom: 3vh;
+  letter-spacing: -0.05vw;
   line-height: 1.1;
 }
 
@@ -88,7 +89,7 @@ body {
 
 .fade-text {
   opacity: 0;
-  transform: translateY(45px);
+  transform: translateY(2.5vh);
   transition: opacity 0.9s cubic-bezier(0.645, 0.045, 0.355, 1.0),
               transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1.0);
 }
@@ -106,13 +107,13 @@ body {
 .is-visible .fade-text:nth-child(6) { transition-delay: 0.6s; }
 
 /* ============================================
-   COVER SECTION (БЕЗ ГРАДИЕНТА)
+   COVER SECTION
    ============================================ */
 
 .cover {
   position: relative;
   height: 100vh;
-  min-height: 600px;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,17 +138,17 @@ body {
 }
 
 .cover-logo svg {
-  width: min(22vw, 280px);
+  width: 20vw;
   height: auto;
   opacity: 0.95;
 }
 
 .cover-caption {
   position: absolute;
-  left: clamp(20px, 5vw, 80px);
-  bottom: clamp(20px, 5vw, 80px);
+  left: 5vw;
+  bottom: 5vh;
   color: #c7c7c7;
-  font-size: 14px;
+  font-size: 0.9vw;
   letter-spacing: 0.06em;
   opacity: 0.75;
   z-index: 10;
@@ -169,15 +170,15 @@ body {
   align-items: center;
   justify-content: space-between;
   height: 100%;
-  gap: clamp(30px, 5vw, 80px);
+  gap: 5vw;
   position: relative;
 }
 
 .hero-content {
   flex: 1;
-  max-width: 900px;
+  max-width: 60vw;
   opacity: 0;
-  transform: translateY(50px);
+  transform: translateY(3vh);
   transition: opacity 1s cubic-bezier(0.645, 0.045, 0.355, 1.0),
               transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1.0);
 }
@@ -189,14 +190,14 @@ body {
 }
 
 .hero-content .section-label {
-  margin-bottom: clamp(15px, 2vh, 20px);
+  margin-bottom: 2vh;
 }
 
 .hero-title {
-  font-size: clamp(32px, 5vw, 72px);
+  font-size: 4.5vw;
   font-weight: 300;
   line-height: 1.05;
-  margin-bottom: clamp(20px, 3vh, 30px);
+  margin-bottom: 3vh;
   letter-spacing: -0.02em;
 }
 
@@ -205,18 +206,18 @@ body {
 }
 
 .hero-subtitle {
-  font-size: clamp(14px, 1.8vw, 20px);
+  font-size: 1.3vw;
   font-weight: 300;
   line-height: 1.5;
   opacity: 0.85;
-  max-width: 600px;
+  max-width: 40vw;
 }
 
 .hero-wheel-wrapper {
   position: relative;
   flex-shrink: 0;
-  width: clamp(150px, 18vw, 280px);
-  height: clamp(150px, 18vw, 280px);
+  width: 18vw;
+  height: 18vw;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -226,7 +227,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.15));
+  filter: drop-shadow(0 0 1.5vw rgba(255, 255, 255, 0.15));
   transform-origin: center center;
   will-change: transform, opacity;
   opacity: 0;
@@ -243,11 +244,11 @@ body {
 
 .hamburger-menu {
   position: fixed;
-  top: 40px;
-  right: clamp(20px, 5vw, 80px);
+  top: 2.5vh;
+  right: 5vw;
   z-index: 1000;
-  width: 40px;
-  height: 24px;
+  width: 2.5vw;
+  height: 1.5vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -256,7 +257,7 @@ body {
   cursor: pointer;
   padding: 0;
   opacity: 0;
-  transform: translateY(-20px);
+  transform: translateY(-1vh);
   pointer-events: none;
   transition: opacity 0.6s cubic-bezier(0.645, 0.045, 0.355, 1.0),
               transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1.0);
@@ -270,21 +271,21 @@ body {
 
 .hamburger-line {
   width: 100%;
-  height: 2px;
+  height: 0.15vh;
   background-color: #e8e6e1;
   transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1.0);
 }
 
 .hamburger-menu:hover .hamburger-line:nth-child(1) {
-  transform: translateY(11px);
+  transform: translateY(0.7vh);
 }
 
 .hamburger-menu:hover .hamburger-line:nth-child(3) {
-  transform: translateY(-11px);
+  transform: translateY(-0.7vh);
 }
 
 /* ============================================
-   OVERLAY MENU (2 СТРОКИ ПО 3 КНОПКИ)
+   OVERLAY MENU
    ============================================ */
 
 .menu-overlay {
@@ -292,11 +293,11 @@ body {
   inset: 0;
   z-index: 2000;
   background: 
-    radial-gradient(ellipse 1400px 1000px at 30% 20%, rgba(50, 50, 50, 0.5), transparent 65%),
-    radial-gradient(ellipse 1100px 800px at 70% 60%, rgba(40, 40, 40, 0.4), transparent 70%),
-    radial-gradient(ellipse 900px 600px at 50% 80%, rgba(30, 30, 30, 0.3), transparent 75%),
+    radial-gradient(ellipse 70vw 50vh at 30% 20%, rgba(50, 50, 50, 0.5), transparent 65%),
+    radial-gradient(ellipse 55vw 40vh at 70% 60%, rgba(40, 40, 40, 0.4), transparent 70%),
+    radial-gradient(ellipse 45vw 30vh at 50% 80%, rgba(30, 30, 30, 0.3), transparent 75%),
     #000;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(0.6vw);
   opacity: 0;
   pointer-events: none;
   transform: scale(1.02);
@@ -314,20 +315,20 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 40px clamp(20px, 5vw, 80px);
+  padding: 2.5vh 5vw;
 }
 
 .menu-logo {
-  font-size: 20px;
+  font-size: 1.3vw;
   font-weight: 300;
-  letter-spacing: 1px;
+  letter-spacing: 0.05vw;
   color: #e8e6e1;
   opacity: 0.9;
 }
 
 .menu-close {
-  width: 32px;
-  height: 32px;
+  width: 2vw;
+  height: 2vw;
   position: relative;
   background: transparent;
   border: none;
@@ -341,7 +342,7 @@ body {
   left: 0;
   right: 0;
   top: 50%;
-  height: 2px;
+  height: 0.15vh;
   background: #e8e6e1;
   transition: background 0.3s ease;
 }
@@ -364,26 +365,26 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 120px clamp(20px, 5vw, 80px);
+  padding: 7vh 5vw;
 }
 
 .menu-content {
   width: 100%;
-  max-width: 1400px;
+  max-width: 90vw;
 }
 
 .menu-grid-two-rows {
   display: grid;
   grid-template-columns: repeat(3, auto);
   grid-template-rows: repeat(2, auto);
-  gap: clamp(15px, 2vh, 20px) clamp(25px, 4vw, 45px);
+  gap: 2vh 3vw;
   justify-content: start;
   align-items: start;
 }
 
 .menu-item {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(1.5vh);
   transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1.0);
 }
 
@@ -397,7 +398,7 @@ body {
   color: #e8e6e1;
   display: inline-flex;
   align-items: baseline;
-  gap: 12px;
+  gap: 0.8vw;
   line-height: 1;
   transition: opacity 0.3s ease;
   white-space: nowrap;
@@ -410,7 +411,7 @@ body {
 .menu-text {
   font-weight: 200;
   letter-spacing: -0.01em;
-  font-size: clamp(42px, 6vw, 80px);
+  font-size: 5vw;
   opacity: 0.92;
   transition: opacity 0.3s ease;
 }
@@ -420,86 +421,65 @@ body {
 }
 
 .menu-sup {
-  font-size: clamp(13px, 1.5vw, 18px);
+  font-size: 1.2vw;
   opacity: 0.5;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.03vw;
   font-weight: 300;
   align-self: flex-start;
-  margin-top: clamp(4px, 0.8vh, 8px);
+  margin-top: 0.5vh;
 }
 
 /* ============================================
-   SERVICES SECTION (УСИЛЕННЫЙ ГРАДИЕНТ)
+   SERVICES SECTION
    ============================================ */
 
 .services-section {
   border-top: 1px solid rgba(232, 230, 225, 0.1);
   background: 
-    radial-gradient(ellipse 1600px 1100px at 50% 25%, rgba(255, 255, 255, 0.08), transparent 60%),
-    radial-gradient(ellipse 1200px 900px at 30% 70%, rgba(255, 255, 255, 0.04), transparent 65%),
-    radial-gradient(ellipse 1000px 700px at 80% 50%, rgba(255, 255, 255, 0.03), transparent 70%),
+    radial-gradient(ellipse 80vw 55vh at 50% 25%, rgba(255, 255, 255, 0.08), transparent 60%),
+    radial-gradient(ellipse 60vw 45vh at 30% 70%, rgba(255, 255, 255, 0.04), transparent 65%),
+    radial-gradient(ellipse 50vw 35vh at 80% 50%, rgba(255, 255, 255, 0.03), transparent 70%),
     #000000 !important;
 }
 
 .services-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: clamp(15px, 2vh, 25px) clamp(12px, 1.5vw, 25px);
+  gap: 2vh 1.5vw;
   margin-top: 0;
   max-height: 60vh;
   overflow: hidden;
 }
 
 .service-card {
-  padding: clamp(12px, 1.5vh, 18px) 0;
+  padding: 1.5vh 0;
 }
 
 .service-number {
-  font-size: clamp(9px, 0.9vw, 11px);
+  font-size: 0.7vw;
   opacity: 0.5;
-  margin-bottom: clamp(6px, 0.8vh, 10px);
-  letter-spacing: 1px;
+  margin-bottom: 0.8vh;
+  letter-spacing: 0.05vw;
 }
 
 .service-title {
-  font-size: clamp(15px, 1.8vw, 22px);
+  font-size: 1.4vw;
   font-weight: 300;
-  margin-bottom: clamp(6px, 0.8vh, 10px);
-  letter-spacing: -0.5px;
+  margin-bottom: 0.8vh;
+  letter-spacing: -0.03vw;
   line-height: 1.2;
 }
 
 .service-description {
-  font-size: clamp(11px, 1.1vw, 14px);
+  font-size: 0.9vw;
   opacity: 0.7;
   line-height: 1.4;
 }
 
 /* ============================================
-   TEAM SECTION (С ДОЛЖНОСТЯМИ)
+   TEAM SECTION
    ============================================ */
 
-
-.team-photo-large {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: 300px;
-  max-height: 450px;
-  background-color: #111;
-  border: 1px solid rgba(232, 230, 225, 0.15);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.team-photo-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-   
 .team-section {
   border-top: 1px solid rgba(232, 230, 225, 0.1);
   background: #000;
@@ -507,9 +487,9 @@ body {
 }
 
 .team-container {
-  max-width: 1400px;
+  max-width: 90vw;
   margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 60px);
+  padding: 0 4vw;
   width: 100%;
   height: 100%;
   max-height: 100vh;
@@ -520,17 +500,17 @@ body {
 }
 
 .team-header {
-  margin-bottom: clamp(12px, 1.5vh, 18px);
+  margin-bottom: 1.5vh;
 }
 
 .team-title {
-  margin-bottom: clamp(18px, 2.5vh, 30px);
+  margin-bottom: 2.5vh;
 }
 
 .team-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(30px, 4vw, 60px);
+  gap: 4vw;
   align-items: start;
   max-height: 60vh;
 }
@@ -539,21 +519,20 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 300px;
-  max-height: 450px;
-  background: 
-    radial-gradient(circle at 30% 35%, #ffffff 0 8%, transparent 9%),
-    radial-gradient(circle at 50% 30%, #ffffff 0 9%, transparent 10%),
-    radial-gradient(circle at 70% 38%, #ffffff 0 7%, transparent 8%),
-    radial-gradient(circle at 25% 55%, #ffffff 0 8%, transparent 9%),
-    radial-gradient(circle at 48% 52%, #ffffff 0 10%, transparent 11%),
-    radial-gradient(circle at 72% 55%, #ffffff 0 8%, transparent 9%),
-    radial-gradient(circle at 32% 72%, #ffffff 0 7%, transparent 8%),
-    radial-gradient(circle at 55% 75%, #ffffff 0 9%, transparent 10%);
+  min-height: 30vh;
+  max-height: 45vh;
   background-color: #111;
   border: 1px solid rgba(232, 230, 225, 0.15);
-  border-radius: 8px;
+  border-radius: 0.5vw;
   overflow: hidden;
+}
+
+.team-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 .team-photo-overlay {
@@ -561,59 +540,58 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: clamp(12px, 1.8vh, 22px);
+  padding: 1.8vh 2.5vw;
   background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding-left: clamp(15px, 2.5vw, 30px);
 }
 
 .team-count {
-  font-size: clamp(13px, 1.4vw, 17px);
+  font-size: 1.1vw;
   font-weight: 300;
-  letter-spacing: 1px;
+  letter-spacing: 0.05vw;
   opacity: 0.9;
 }
 
 .team-members-list {
   display: flex;
   flex-direction: column;
-  gap: clamp(10px, 1.5vh, 16px);
+  gap: 1.5vh;
   height: 100%;
 }
 
 .team-members-title {
-  font-size: clamp(16px, 1.8vw, 22px);
+  font-size: 1.4vw;
   font-weight: 300;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.03vw;
   opacity: 0.85;
-  margin-bottom: clamp(8px, 1.2vh, 14px);
+  margin-bottom: 1.2vh;
 }
 
 .team-names {
   list-style: none;
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(8px, 1.2vh, 12px);
+  gap: 1.2vh;
   flex: 1;
   overflow-y: auto;
-  padding-right: 8px;
+  padding-right: 0.5vw;
   max-height: 50vh;
 }
 
 .team-names::-webkit-scrollbar {
-  width: 4px;
+  width: 0.25vw;
 }
 
 .team-names::-webkit-scrollbar-track {
   background: rgba(232, 230, 225, 0.05);
-  border-radius: 2px;
+  border-radius: 0.1vw;
 }
 
 .team-names::-webkit-scrollbar-thumb {
   background: rgba(232, 230, 225, 0.2);
-  border-radius: 2px;
+  border-radius: 0.1vw;
 }
 
 .team-names::-webkit-scrollbar-thumb:hover {
@@ -623,52 +601,52 @@ body {
 .team-member-item {
   display: flex;
   align-items: center;
-  gap: clamp(10px, 1.5vw, 18px);
-  padding: clamp(8px, 1.2vh, 14px) 0;
+  gap: 1.5vw;
+  padding: 1.2vh 0;
   border-bottom: 1px solid rgba(232, 230, 225, 0.08);
   transition: all 0.3s ease;
 }
 
 .team-member-item:hover {
   border-bottom-color: rgba(232, 230, 225, 0.2);
-  padding-left: 5px;
+  padding-left: 0.3vw;
 }
 
 .member-number {
-  font-size: clamp(9px, 1vw, 12px);
+  font-size: 0.8vw;
   opacity: 0.4;
   font-weight: 300;
-  min-width: 20px;
+  min-width: 1.5vw;
   text-align: right;
   align-self: flex-start;
-  margin-top: 2px;
+  margin-top: 0.2vh;
 }
 
 .member-info {
   display: flex;
   flex-direction: column;
-  gap: clamp(2px, 0.3vh, 4px);
+  gap: 0.3vh;
   flex: 1;
 }
 
 .member-name {
-  font-size: clamp(13px, 1.4vw, 17px);
+  font-size: 1.1vw;
   font-weight: 300;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.02vw;
   opacity: 0.92;
   line-height: 1.3;
 }
 
 .member-role {
-  font-size: clamp(10px, 1.1vw, 13px);
+  font-size: 0.85vw;
   font-weight: 300;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.01vw;
   opacity: 0.5;
   line-height: 1.2;
 }
 
 /* ============================================
-   ABOUT SECTION (С ГРАДИЕНТОМ)
+   ABOUT SECTION
    ============================================ */
 
 .about-section {
@@ -681,8 +659,8 @@ body {
   inset: 0;
   z-index: 1;
   background: 
-    radial-gradient(ellipse 1300px 900px at 60% 30%, rgba(255, 255, 255, 0.05), transparent 65%),
-    radial-gradient(ellipse 1000px 700px at 30% 60%, rgba(255, 255, 255, 0.03), transparent 70%);
+    radial-gradient(ellipse 65vw 45vh at 60% 30%, rgba(255, 255, 255, 0.05), transparent 65%),
+    radial-gradient(ellipse 50vw 35vh at 30% 60%, rgba(255, 255, 255, 0.03), transparent 70%);
   pointer-events: none;
 }
 
@@ -694,13 +672,13 @@ body {
 .about-content {
   display: grid;
   grid-template-columns: 1.3fr 1fr;
-  gap: clamp(30px, 5vw, 70px);
+  gap: 5vw;
   margin-top: 0;
   align-items: start;
 }
 
 .about-text {
-  font-size: clamp(14px, 1.5vw, 18px);
+  font-size: 1.2vw;
   line-height: 1.7;
   opacity: 0.85;
 }
@@ -708,7 +686,7 @@ body {
 .stats {
   display: flex;
   flex-direction: column;
-  gap: clamp(25px, 3.5vh, 35px);
+  gap: 3.5vh;
   align-self: stretch;
   padding-left: 0;
 }
@@ -716,20 +694,20 @@ body {
 .stat-item {
   display: flex;
   align-items: center;
-  gap: clamp(15px, 2vw, 20px);
+  gap: 2vw;
   padding: 0;
   transition: all 0.3s ease;
   position: relative;
 }
 
 .stat-item:hover {
-  padding-left: 5px;
+  padding-left: 0.3vw;
 }
 
 .stat-line {
-  width: 3px;
+  width: 0.2vw;
   height: 100%;
-  min-height: clamp(50px, 7vh, 70px);
+  min-height: 7vh;
   background: linear-gradient(
     to bottom,
     rgba(232, 230, 225, 0.7) 0%,
@@ -750,9 +728,9 @@ body {
 }
 
 .stat-label {
-  font-size: clamp(15px, 1.7vw, 20px);
+  font-size: 1.3vw;
   font-weight: 300;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.02vw;
   opacity: 0.95;
   line-height: 1.5;
   flex: 1;
@@ -769,7 +747,7 @@ body {
 .contact-wrapper {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
-  gap: clamp(25px, 4vw, 60px);
+  gap: 4vw;
   margin-top: 0;
   max-height: 70vh;
   overflow: hidden;
@@ -778,26 +756,26 @@ body {
 .contact-info {
   display: flex;
   flex-direction: column;
-  gap: clamp(15px, 2.5vh, 25px);
+  gap: 2.5vh;
   justify-content: center;
 }
 
 .info-item {
   display: flex;
   flex-direction: column;
-  gap: clamp(5px, 0.8vh, 8px);
+  gap: 0.8vh;
 }
 
 .info-label {
-  font-size: clamp(9px, 0.9vw, 11px);
+  font-size: 0.7vw;
   font-weight: 500;
-  letter-spacing: 1px;
+  letter-spacing: 0.05vw;
   text-transform: uppercase;
   opacity: 0.6;
 }
 
 .info-link {
-  font-size: clamp(14px, 1.6vw, 18px);
+  font-size: 1.2vw;
   color: #e8e6e1;
   text-decoration: none;
   opacity: 0.85;
@@ -809,7 +787,7 @@ body {
 }
 
 .info-text {
-  font-size: clamp(13px, 1.5vw, 17px);
+  font-size: 1.1vw;
   opacity: 0.85;
 }
 
@@ -821,8 +799,8 @@ body {
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: clamp(15px, 2.5vh, 25px) clamp(12px, 1.5vw, 20px);
-  margin-bottom: clamp(20px, 3vh, 30px);
+  gap: 2.5vh 1.5vw;
+  margin-bottom: 3vh;
 }
 
 .form-group {
@@ -841,8 +819,8 @@ body {
   background: transparent;
   border: none;
   border-bottom: 1px solid #333333;
-  padding: clamp(12px, 1.5vh, 18px) 0 clamp(8px, 1vh, 12px) 0;
-  font-size: clamp(13px, 1.4vw, 16px);
+  padding: 1.5vh 0 1vh 0;
+  font-size: 1vw;
   font-weight: 400;
   color: #ffffff;
   font-family: inherit;
@@ -852,15 +830,15 @@ body {
 
 .form-textarea {
   resize: vertical;
-  min-height: clamp(50px, 8vh, 80px);
-  max-height: clamp(80px, 12vh, 120px);
+  min-height: 8vh;
+  max-height: 12vh;
 }
 
 .form-label {
   position: absolute;
-  top: clamp(12px, 1.5vh, 18px);
+  top: 1.5vh;
   left: 0;
-  font-size: clamp(13px, 1.4vw, 16px);
+  font-size: 1vw;
   color: #666666;
   pointer-events: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -871,7 +849,7 @@ body {
 .form-textarea:focus ~ .form-label,
 .form-textarea:not(:placeholder-shown) ~ .form-label {
   top: 0;
-  font-size: clamp(9px, 0.9vw, 11px);
+  font-size: 0.7vw;
   color: #ffffff;
   font-weight: 500;
 }
@@ -886,14 +864,14 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(12px, 1.8vh, 18px) clamp(30px, 4vw, 50px);
+  padding: 1.8vh 4vw;
   background: transparent;
   color: #ffffff;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 60px;
-  font-size: clamp(13px, 1.4vw, 16px);
+  border-radius: 3vw;
+  font-size: 1vw;
   font-weight: 500;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.03vw;
   cursor: pointer;
   align-self: flex-start;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -918,8 +896,8 @@ body {
 .submit-button:hover {
   border-color: rgba(255, 255, 255, 0.6);
   background: rgba(255, 255, 255, 0.05);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+  transform: translateY(-0.3vh);
+  box-shadow: 0 0.8vh 1.5vw rgba(255, 255, 255, 0.1);
 }
 
 /* ============================================
@@ -927,7 +905,7 @@ body {
    ============================================ */
 
 .footer {
-  padding: clamp(30px, 5vh, 50px) 0;
+  padding: 5vh 0;
   border-top: 1px solid rgba(232, 230, 225, 0.1);
   text-align: center;
   background: #000;
@@ -935,129 +913,7 @@ body {
 
 .footer-text {
   opacity: 0.5;
-  font-size: clamp(11px, 1vw, 13px);
-}
-
-/* ============================================
-   АДАПТИВ
-   ============================================ */
-
-@media (max-width: 1024px) {
-  .hero-layout {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: clamp(20px, 3vh, 35px);
-    justify-content: center;
-  }
-
-  .hero-wheel-wrapper {
-    align-self: flex-end;
-    width: clamp(100px, 18vw, 160px);
-    height: clamp(100px, 18vw, 160px);
-  }
-
-  .services-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .about-content {
-    grid-template-columns: 1fr;
-    gap: clamp(20px, 3vh, 30px);
-  }
-
-  .team-layout {
-    grid-template-columns: 1fr;
-    gap: clamp(20px, 3vh, 30px);
-  }
-
-  .team-photo-large {
-    height: clamp(250px, 35vh, 350px);
-    min-height: 250px;
-    max-height: 350px;
-  }
-
-  .contact-wrapper {
-    grid-template-columns: 1fr;
-    gap: clamp(20px, 3vh, 30px);
-  }
-
-  .menu-grid-two-rows {
-    grid-template-columns: repeat(2, auto);
-    gap: clamp(12px, 1.8vh, 18px) clamp(20px, 3vw, 35px);
-  }
-
-  .menu-text {
-    font-size: clamp(36px, 7vw, 60px);
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
-    padding: 0 clamp(15px, 3vw, 25px);
-  }
-
-  .hero-title {
-    font-size: clamp(24px, 6vw, 40px);
-  }
-
-  .hero-wheel-wrapper {
-    width: 90px;
-    height: 90px;
-  }
-
-  .services-grid {
-    grid-template-columns: 1fr;
-    gap: clamp(12px, 1.5vh, 18px);
-    max-height: 65vh;
-    overflow-y: auto;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .team-names {
-    grid-template-columns: 1fr;
-    max-height: clamp(250px, 40vh, 350px);
-  }
-
-  .team-photo-large {
-    height: clamp(200px, 28vh, 280px);
-    min-height: 200px;
-    max-height: 280px;
-  }
-
-  .menu-grid-two-rows {
-    grid-template-columns: 1fr;
-    gap: clamp(10px, 1.5vh, 15px);
-  }
-
-  .menu-text {
-    font-size: clamp(32px, 9vw, 50px);
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-wheel-wrapper {
-    width: 80px;
-    height: 80px;
-  }
-
-  .container {
-    padding: 0 clamp(12px, 2.5vw, 18px);
-  }
-
-  .section-title {
-    font-size: clamp(24px, 6vw, 36px);
-  }
-
-  .team-layout {
-    gap: clamp(15px, 2.5vh, 25px);
-  }
-
-  .stats {
-    gap: clamp(20px, 2.5vh, 25px);
-  }
+  font-size: 0.8vw;
 }
 
 /* ============================================

@@ -48,6 +48,8 @@ export default function Contact() {
     >
       {isVisible && (
         <SphericalLattice
+          pointsPerRow={25}
+          pointsPerCol={70}
           rotationSpeed={SPIN_Y}
           rotationSpeedX={SPIN_X}
           initialYawVel={20}
