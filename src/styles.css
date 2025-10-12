@@ -419,7 +419,7 @@ body {
 
 .services-section {
   border-top: 1px solid rgba(232, 230, 225, 0.1);
-  background: #1a1a1a !important;
+  background: #000000 !important;
 }
 
 .services-grid {
@@ -614,6 +614,38 @@ body {
 /* ============================================
    ABOUT SECTION (МФТИ)
    ============================================ */
+
+/* Правая колонка About — 3 пункта */
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2vh, 18px);
+  align-self: start;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 16px);
+  padding: clamp(8px, 1.2vh, 12px) 0;
+  border-bottom: 1px solid rgba(232,230,225,0.08);
+}
+
+.stat-bullet {
+  width: clamp(8px, 1.2vw, 10px);
+  height: clamp(8px, 1.2vw, 10px);
+  border-radius: 50%;
+  background: #e8e6e1;
+  opacity: .7;
+  flex: 0 0 auto;
+}
+
+.stat-label {
+  font-size: clamp(13px, 1.4vw, 16px);
+  font-weight: 300;
+  letter-spacing: .3px;
+  opacity: .9;
+}
 
 .about-section {
   border-top: 1px solid rgba(232, 230, 225, 0.1);

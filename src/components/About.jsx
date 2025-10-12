@@ -1,3 +1,4 @@
+// src/components/About.jsx
 import React, { useEffect, useRef, useState } from 'react'
 
 export default function About() {
@@ -176,43 +177,39 @@ export default function About() {
 
       <div className="container about-content-wrap">
         <div className="section-label">/ О компании</div>
-        <h2 className="section-title">Выпускники МФТИ</h2>
+        <h2 className="section-title">Наша миссия</h2>
 
         <div className="about-content">
-          <div className="about-main-text">
-            <p className="about-intro">
-              Мы — молодая команда разработчиков из Московского физико-технического института. 
-              Объединив фундаментальные знания в математике, физике и computer science, 
-              мы создаём технологические решения нового уровня.
+          <div className="about-text">
+            <p>
+                Мы создаём цифровые решения, которые помогают бизнесу расти и
+                развиваться в современном мире. Наша команда состоит из опытных
+                разработчиков, дизайнеров и маркетологов, которые объединяют свои
+                знания для создания выдающихся проектов.
             </p>
-            
-            <div className="about-goal">
-              <h3 className="about-goal-title">Наша цель</h3>
-              <p className="about-goal-text">
-                Применить научный подход и инженерную точность для создания веб-продуктов, 
-                которые решают реальные бизнес-задачи. Мы не просто пишем код — 
-                мы проектируем системы, используя алгоритмическое мышление и глубокое понимание технологий.
-              </p>
+            <br />
+            <p>
+                Каждый проект для нас — это возможность применить новейшие
+                технологии и лучшие практики индустрии. Мы не просто создаём
+                сайты, мы создаём инструменты для достижения бизнес-целей.
+            </p>
             </div>
-          </div>
 
-          <div className="about-values-box">
-            <h3 className="about-values-title">Наши принципы</h3>
-            <div className="about-values-list">
-              <div className="value-item">
-                <span className="value-icon">→</span>
-                <span className="value-text">Фундаментальный подход</span>
-              </div>
-              <div className="value-item">
-                <span className="value-icon">→</span>
-                <span className="value-text">Инженерная точность</span>
-              </div>
-              <div className="value-item">
-                <span className="value-icon">→</span>
-                <span className="value-text">Инновационные решения</span>
-              </div>
+            {/* ПРАВАЯ колонка — 3 ключевых пункта */}
+            <div className="stats">
+            <div className="stat-item">
+                <div className="stat-bullet" />
+                <div className="stat-label">Фундаментальный подход</div>
             </div>
-          </div>
+            <div className="stat-item">
+                <div className="stat-bullet" />
+                <div className="stat-label">Инженерная точность</div>
+            </div>
+            <div className="stat-item">
+                <div className="stat-bullet" />
+                <div className="stat-label">Инновационные решения</div>
+            </div>
+            </div>
         </div>
       </div>
     </section>

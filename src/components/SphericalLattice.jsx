@@ -6,15 +6,16 @@ export default function SphericalLattice({
 
   // ===== Геометрия сетки =====
   pointsPerRow = 20,      // число «долгот»
-  pointsPerCol = 200,      // число «широт»
+  pointsPerCol = 200,     // число «широт»
 
   // ===== Физика точек =====
-  stiffness = 5,         // упругость пружин между соседями (жёсткость «ткани»)
-  originStiffness = 150,   // «якорь» к исходной позиции (держит форму сферы)
-  damping = 0.7,         // вязкость/затухание скоростей точек7
+  stiffness = 5,          // упругость пружин между соседями (жёсткость «ткани»)
+  originStiffness = 150,  // «якорь» к исходной позиции (держит форму сферы)
+  damping = 0.5,          // вязкость/затухание скоростей точек
+
   // ===== Курсор =====
-  mouseForce = 1000,       // базовая сила взаимодействия
-  mouseFalloff = 20,       // 0 = сила почти постоянна в пределах радиуса (быстрее)
+  mouseForce = 1000,      // базовая сила взаимодействия
+  mouseFalloff = 20,      // 0 = сила почти постоянна в пределах радиуса (быстрее)
   mouseRadius,            // опционально: радиус влияния в мировых единицах
   mouseRadiusRel = 5,     // иначе — доля от R (большое значение = почти вся сфера)
   mouseRepelGain = 0.02,  // слабое отталкивание как доля от mouseForce
@@ -24,9 +25,10 @@ export default function SphericalLattice({
   pointColor = '#ffffff',
   pointOpacity = 0.85,
 
-  // ===== Камера / автоповорот =====
+  // ===== Камера / «целевая» автокрутка =====
   autoRotation = true,
-  rotationSpeed = 2,   // целевая ω по Y (yaw)
+  rotationSpeed = 2,      // целевая ω по Y (yaw)
+  rotationSpeedX = 2,     // целевая ω по X (pitch)
   basePitch = -0.25,      // базовый наклон по X (добавляется к динамическому pitch)
 
   // ===== Освещение =====
@@ -39,13 +41,19 @@ export default function SphericalLattice({
   rimPower = 10.0,
   lightDirCam = [0.4, 0.6, 1.0],
 
-  // ===== Инерция вращения (двухосевая) =====
-  rotationSpeedX = 2,  // целевая ω по X (pitch)
-  rotSpring = 0.01,        // как быстро текущая ω тянется к целевой (1/с)
-  rotFriction = 2,      // экспоненциальное затухание ω (1/с)
-  rotDragGain = 20,      // чувствительность drag-жеста → приращение ω
+  // ===== Инерция вращения =====
+  rotSpring = 0.01,       // как быстро текущая ω тянется к целевой (1/с)
+  rotFriction = 2,        // экспоненциальное затухание ω (1/с)
+  rotDragGain = 20,       // чувствительность drag-жеста → приращение ω
   rotMaxSpeedY,           // лимит |yawVel|
   rotMaxSpeedX,           // лимит |pitchVel|
+
+  // ===== Стартовый бросок и режим подтягивания =====
+  initialYawVel,          // стартовая ω по Y; если не задана — 0
+  initialPitchVel,        // стартовая ω по X; если не задана — 0
+  // Если initial* заданы, по умолчанию НЕ тянем к rotationSpeed — сфера затухает и останавливается.
+  // Принудительно включить «тягу к цели» можно через pullToTarget={true}.
+  pullToTarget,
 
   className,
   style,
@@ -87,13 +95,13 @@ export default function SphericalLattice({
       // курсор/drag
       pointerInside: false,
       isPointerDown: false,
-      mx: 0, my: 0,         // текущие координаты (в local space блока)
-      prevMx: 0, prevMy: 0, // предыдущие
-      dAccumX: 0, dAccumY: 0, // накопленные deltas (нормированные), применяются в tick
-      hasHit: false,          // есть пересечение луча с сферой в текущем кадре
-      pick: [0,0,0],          // точка пересечения (object space)
-      pickDirN: [0,0,0],      // нормализованное направление (pick / R)
-      phiMax: 0.5, cosPhiMax: Math.cos(0.5), // радиус влияния в углах
+      mx: 0, my: 0,
+      prevMx: 0, prevMy: 0,
+      dAccumX: 0, dAccumY: 0,
+      hasHit: false,
+      pick: [0,0,0],
+      pickDirN: [0,0,0],
+      phiMax: 0.5, cosPhiMax: Math.cos(0.5),
 
       // вращение
       yaw: 0, pitch: 0,
@@ -113,17 +121,23 @@ export default function SphericalLattice({
       rotSpring, rotFriction, rotDragGain,
       rotMaxSpeedY: (typeof rotMaxSpeedY === 'number')
         ? Math.max(0.05, rotMaxSpeedY)
-        : Math.max(1.2, rotationSpeed * 3),
+        : Math.max(1.2, (rotationSpeed || 0.1) * 3),
       rotMaxSpeedX: (typeof rotMaxSpeedX === 'number')
         ? Math.max(0.05, rotMaxSpeedX)
-        : Math.max(0.6, Math.abs(rotationSpeedX) * 3),
+        : Math.max(0.6, Math.abs(rotationSpeedX || 0.1) * 3),
 
-      // матрицы поворота, обновляются в tick и переиспользуются
+      // матрицы
       rotM: new Float32Array(9),
       invRot: new Float32Array(9),
+
+      // режим подтягивания к целевой скорости
+      followTarget:
+        typeof pullToTarget === 'boolean'
+          ? pullToTarget
+          : !(typeof initialYawVel === 'number' || typeof initialPitchVel === 'number'),
     }
 
-    // ===== утилиты (без аллокаций) =====
+    // ===== утилиты =====
     const clamp = (v, a, b) => (v < a ? a : (v > b ? b : v))
     const buildRotation = (yaw, pitch, out) => {
       const cy = Math.cos(yaw), sy = Math.sin(yaw)
@@ -133,7 +147,7 @@ export default function SphericalLattice({
       out[3] = sy*sx;   out[4] = cx;  out[5] = cy*sx
       out[6] = sy*cx;   out[7] = -sx; out[8] = cy*cx
     }
-    const invertRotation = (m, out) => { // для ортонормальной: transpose
+    const invertRotation = (m, out) => { // ортонормальная → transpose
       out[0]=m[0]; out[1]=m[3]; out[2]=m[6]
       out[3]=m[1]; out[4]=m[4]; out[5]=m[7]
       out[6]=m[2]; out[7]=m[5]; out[8]=m[8]
@@ -146,7 +160,7 @@ export default function SphericalLattice({
     const dot3 = (ax,ay,az,bx,by,bz) => ax*bx + ay*by + az*bz
     const invLen3 = (x,y,z) => 1.0 / Math.sqrt(x*x + y*y + z*z || 1)
 
-    // нормируем свет один раз
+    // нормируем свет
     {
       const invL = invLen3(lightDirCam[0], lightDirCam[1], lightDirCam[2])
       S.light[0] = lightDirCam[0]*invL
@@ -154,7 +168,7 @@ export default function SphericalLattice({
       S.light[2] = lightDirCam[2]*invL
     }
 
-    // offscreen-спрайт круга (быстрее, чем тысячи arc())
+    // offscreen-спрайт круга
     const makeSprite = () => {
       const dpr = S.dpr
       const r = Math.max(0.5, S.pointSize)
@@ -184,7 +198,7 @@ export default function SphericalLattice({
         ? mouseRadius
         : clamp(mouseRadiusRel, 0.05, 2.0) * S.R
       S.phiMax = clamp(S.mouseRadiusWorld / S.R, 0.01, Math.PI)
-      S.cosPhiMax = Math.cos(S.phiMax) // для быстрого сравнения без acos
+      S.cosPhiMax = Math.cos(S.phiMax)
     }
 
     const init = () => {
@@ -222,7 +236,7 @@ export default function SphericalLattice({
       S.ry = new Float32Array(S.count)
       S.rz = new Float32Array(S.count)
 
-      // раскладка по сфере (равномерная по широтам/долготам)
+      // раскладка по сфере
       let k = 0
       for (let r = 0; r < S.rows; r++) {
         const t = (r + 0.5) / S.rows
@@ -260,6 +274,12 @@ export default function SphericalLattice({
         }
       }
 
+      // стартовая диагональная скорость (если заданы initial*)
+      if (typeof initialYawVel === 'number')
+        S.yawVel = clamp(initialYawVel, -S.rotMaxSpeedY, S.rotMaxSpeedY)
+      if (typeof initialPitchVel === 'number')
+        S.pitchVel = clamp(initialPitchVel, -S.rotMaxSpeedX, S.rotMaxSpeedX)
+
       S.acc = 0
       S.last = performance.now()/1000
     }
@@ -288,28 +308,24 @@ export default function SphericalLattice({
 
     const render = () => {
       ctx.clearRect(0, 0, S.w, S.h)
-      const baseA = clamp(S.pointOpacity, 0, 1)
+      const baseA = Math.max(0, Math.min(1, S.pointOpacity))
       const r = S.pointSize
       const sprite = S.sprite
 
-      // базовый проход (глубина + ламберт + rim в альфу)
       for (let i = 0; i < S.count; i++) {
         const x = S.sx[i], y = S.sy[i]
         if (x < -10 || y < -10 || x > S.w + 10 || y > S.h + 10) continue
 
-        // глубина → front [0..1]
-        const front = clamp((S.rz[i] / S.R + 1) * 0.5, 0, 1)
+        const front = Math.max(0, Math.min(1, (S.rz[i] / S.R + 1) * 0.5))
         let alpha = baseA * (0.25 + S.depthBoost * front)
 
         if (S.lighting) {
           const nx = S.rx[i] / S.R, ny = S.ry[i] / S.R, nz = S.rz[i] / S.R
-          const nl = clamp(nx*S.light[0] + ny*S.light[1] + nz*S.light[2], 0, 1)
+          const nl = Math.max(0, Math.min(1, nx*S.light[0] + ny*S.light[1] + nz*S.light[2]))
           alpha *= (1 - S.lambertIntensity) + S.lambertIntensity * nl
-
-          // rim (edge highlight)
-          const nDotV = nz // камера ≈ (0,0,1)
+          const nDotV = nz
           const rim = Math.pow(1 - Math.max(0, nDotV), S.rimPower) * S.rimIntensity
-          alpha = clamp(alpha + rim * 0.2, 0, 1)
+          alpha = Math.max(0, Math.min(1, alpha + rim * 0.2))
         }
 
         if (alpha <= 0.001) continue
@@ -317,17 +333,15 @@ export default function SphericalLattice({
         ctx.drawImage(sprite, x - r, y - r, r*2, r*2)
       }
 
-      // спекуляр (аддитив)
       if (S.lighting && S.specularIntensity > 0.001) {
         ctx.globalCompositeOperation = 'lighter'
         for (let i = 0; i < S.count; i++) {
           const x = S.sx[i], y = S.sy[i]
           if (x < -10 || y < -10 || x > S.w + 10 || y > S.h + 10) continue
           const nx = S.rx[i] / S.R, ny = S.ry[i] / S.R, nz = S.rz[i] / S.R
-          // half-vector ≈ light + view(0,0,1)
           const hx = S.light[0], hy = S.light[1], hz = S.light[2] + 1
-          const invH = invLen3(hx, hy, hz)
-          const ndh = clamp((nx*hx + ny*hy + nz*hz) * invH, 0, 1)
+          const invH = Math.sqrt(hx*hx + hy*hy + hz*hz) || 1
+          const ndh = Math.max(0, Math.min(1, (nx*hx + ny*hy + nz*hz) / invH))
           const a = Math.pow(ndh, S.specularPower) * S.specularIntensity
           if (a < 0.02) continue
           ctx.globalAlpha = a
@@ -351,12 +365,10 @@ export default function SphericalLattice({
       const nbr = S.nbr, rest = S.rest
       const kSpring = S.stiffness, kAnchor = S.originStiffness
 
-      // данные для репульсии (подготовлены в tick)
+      // данные для репульсии
       const hasPick = S.hasHit && S.mouseRepelGain > 0
       const pnx = S.pickDirN[0], pny = S.pickDirN[1], pnz = S.pickDirN[2]
       const cosThr = S.cosPhiMax
-      // для линейной аппроксимации «t = 1 - ang/phiMax» через косинусы
-      // map cos ∈ [cosPhiMax..1] → t ∈ [0..1]:  t ≈ (cos - cosPhiMax) / (1 - cosPhiMax)
       const denom = (1 - cosThr) || 1
 
       for (let i = 0; i < S.count; i++) {
@@ -364,8 +376,7 @@ export default function SphericalLattice({
         const x = px[i], y = py[i], z = pz[i]
         const base = i*8
 
-        // пружины (Hooke)
-        // NB: всё в локальных переменных, минимум виртуальных вызовов
+        // пружины
         for (let d = 0; d < 8; d++) {
           const j = nbr[base+d]
           if (j < 0) continue
@@ -377,29 +388,24 @@ export default function SphericalLattice({
           fx += dx * f; fy += dy * f; fz += dz * f
         }
 
-        // якорь к исходной позиции
+        // якорь
         fx += kAnchor * (ox[i]-x)
         fy += kAnchor * (oy[i]-y)
         fz += kAnchor * (oz[i]-z)
 
-        // слабая репульсия по касательной (без acos)
+        // слабая репульсия по касательной
         if (hasPick) {
-          // нормаль в точке (единичный вектор)
           const invL = invLen3(x, y, z)
           const nx = x * invL, ny = y * invL, nz = z * invL
-
-          // cos(угла) между нормалью точки и направлением pick
-          const c = nx*pnx + ny*pny + nz*pnz // ∈ [-1..1]
+          const c = nx*pnx + ny*pny + nz*pnz
           if (c >= cosThr) {
-            // касательная компонента ОТ pick к точке
-            // v = (x - pick) - proj_n((x - pick))  ; но чтобы не трогать радиус, берём проекцию на касательную к нормали в точке
             let tx = x - S.pick[0], ty = y - S.pick[1], tz = z - S.pick[2]
             const proj = tx*nx + ty*ny + tz*nz
             tx -= nx*proj; ty -= ny*proj; tz -= nz*proj
             const invT = invLen3(tx,ty,tz)
             if (invT > 1e-6) {
-              const t = ((c - cosThr) / denom) // [0..1]
-              const str = (mouseFalloff <= 0) ? 1 : Math.pow(clamp(t,0,1), mouseFalloff)
+              const t = ((c - cosThr) / denom)
+              const str = (mouseFalloff <= 0) ? 1 : Math.pow(Math.max(0, Math.min(1, t)), mouseFalloff)
               const F = mouseForce * mouseRepelGain * str
               fx += tx * invT * F
               fy += ty * invT * F
@@ -408,7 +414,7 @@ export default function SphericalLattice({
           }
         }
 
-        // интегрирование + возврат на идеальную сферу
+        // интегрирование + возврат на сферу
         const nvx = (vx[i] + fx*dt) * dampF
         const nvy = (vy[i] + fy*dt) * dampF
         const nvz = (vz[i] + fz*dt) * dampF
@@ -425,7 +431,7 @@ export default function SphericalLattice({
     }
 
     // ===== главный цикл =====
-    let rafId = 0 // <-- объявляем ОДИН раз
+    let rafId = 0  // ОБЪЯВЛЕНО ОДИН РАЗ
 
     const tick = (tMs) => {
       const t = tMs/1000
@@ -434,33 +440,33 @@ export default function SphericalLattice({
       S.last = t
       S.acc += dt
 
-      // инерция вращения к целевым ω + трение
-      const ty = S.autoRotation ? S.rotationSpeed  : 0.0
-      const tx = S.autoRotation ? S.rotationSpeedX : 0.0
-      S.yawVel   += (ty - S.yawVel)   * S.rotSpring * dt
-      S.pitchVel += (tx - S.pitchVel) * S.rotSpring * dt
+      // инерция вращения:
+      // followTarget=true → тянем к rotationSpeed; иначе тянем к 0 (остановка).
+      const targetY = (S.autoRotation && S.followTarget) ? S.rotationSpeed  : 0.0
+      const targetX = (S.autoRotation && S.followTarget) ? S.rotationSpeedX : 0.0
+      S.yawVel   += (targetY - S.yawVel)   * S.rotSpring * dt
+      S.pitchVel += (targetX - S.pitchVel) * S.rotSpring * dt
+
+      // трение (эксп. затухание)
       const fr = Math.exp(-S.rotFriction * dt)
       S.yawVel   *= fr
       S.pitchVel *= fr
 
-      // hit-test (один раз в кадр) + подготовка pickDirN/cosPhi
+      // hit-test + pick
       S.hasHit = false
       if (S.pointerInside) {
-        // экран → луч в world
         const cx = S.w * 0.5, cy = S.h * 0.5
         const x = (S.mx - cx) / S.focalPx
         const y = -(S.my - cy) / S.focalPx
         const roW = [0,0,S.camDist]
-        const invL = invLen3(x, y, -1)
+        const invL = 1.0 / (Math.sqrt(x*x + y*y + 1) || 1)
         const rdW = [x*invL, y*invL, -1*invL]
 
-        // world → object
-        invertRotation(S.rotM, S.invRot) // rotM обновим чуть ниже; на первом кадре ок
+        invertRotation(S.rotM, S.invRot)
         const ro = [0,0,0], rd = [0,0,0]
         mulM3V3(S.invRot, roW[0], roW[1], roW[2], ro)
         mulM3V3(S.invRot, rdW[0], rdW[1], rdW[2], rd)
 
-        // пересечение луча со сферой (центр 0, радиус R): (-b - sqrt(b^2 - c))
         const b = dot3(ro[0],ro[1],ro[2], rd[0],rd[1],rd[2])
         const c = dot3(ro[0],ro[1],ro[2], ro[0],ro[1],ro[2]) - S.R2
         const D = b*b - c
@@ -479,15 +485,13 @@ export default function SphericalLattice({
         }
       }
 
-      // применяем «накопленные» импульсы вращения только если ЛКМ зажата и действительно попали в сферу
+      // импульсы от drag
       if (S.isPointerDown && S.hasHit) {
         S.yawVel   += S.dAccumX * S.rotDragGain
         S.pitchVel += -S.dAccumY * S.rotDragGain
-        // сброс накопленных дельт
         S.dAccumX = 0
         S.dAccumY = 0
       } else {
-        // если не вращаем — аккумулировать не нужно
         S.dAccumX = 0
         S.dAccumY = 0
       }
@@ -498,12 +502,12 @@ export default function SphericalLattice({
       if (S.pitchVel >  S.rotMaxSpeedX) S.pitchVel =  S.rotMaxSpeedX
       if (S.pitchVel < -S.rotMaxSpeedX) S.pitchVel = -S.rotMaxSpeedX
 
-      // обновляем углы и матрицы
+      // углы и матрицы
       S.yaw   += S.yawVel   * dt
       S.pitch += S.pitchVel * dt
       buildRotation(S.yaw, S.basePitch + S.pitch, S.rotM)
 
-      // фиксированная физика
+      // физика сетки
       let steps = 0
       while (S.acc >= fixedDt && steps < maxSub) {
         stepPhysics(fixedDt)
@@ -511,13 +515,13 @@ export default function SphericalLattice({
         steps++
       }
 
-      // проекция + рендер
+      // рендер
       projectAll(S.rotM)
       render()
       rafId = requestAnimationFrame(tick)
     }
 
-    // ===== события мыши/тач (лёгкие!) =====
+    // ===== события =====
     const onPointerMove = (e) => {
       const rect = wrap.getBoundingClientRect()
       const x = e.clientX, y = e.clientY
@@ -530,7 +534,6 @@ export default function SphericalLattice({
 
       if (S.isPointerDown) {
         const minDim = Math.max(1, Math.min(rect.width, rect.height))
-        // аккумулируем нормализованные dx/dy — применим в tick, если попали в сферу
         S.dAccumX += (nx - S.mx) / minDim
         S.dAccumY += (ny - S.my) / minDim
       }
@@ -556,7 +559,7 @@ export default function SphericalLattice({
 
     init()
     S.last = performance.now()/1000
-    rafId = requestAnimationFrame(tick)
+    rafId = requestAnimationFrame(tick) // ВАЖНО: без повторного "let"
 
     return () => {
       cancelAnimationFrame(rafId)
@@ -577,6 +580,7 @@ export default function SphericalLattice({
     lighting, depthBoost, lambertIntensity, specularPower, specularIntensity,
     rimIntensity, rimPower, lightDirCam,
     rotSpring, rotFriction, rotDragGain, rotMaxSpeedY, rotMaxSpeedX,
+    initialYawVel, initialPitchVel, pullToTarget,
   ])
 
   return (
@@ -587,8 +591,8 @@ export default function SphericalLattice({
         position: 'absolute',
         inset: 0,
         zIndex: 0,
-        pointerEvents: 'none', // холст не перехватывает клики; слушаем window
-        ...style,
+        pointerEvents: 'none',
+        ...(style || {}),
       }}
     >
       <canvas
