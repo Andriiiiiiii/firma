@@ -4,6 +4,20 @@ export default function About() {
   const sectionRef = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
   const [hovered, setHovered] = useState(null) // 'fund' | 'eng' | 'inn' | null
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Определяем мобильное устройство
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 1024 || 
+                    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      setIsMobile(mobile)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -15,6 +29,17 @@ export default function About() {
     if (sectionRef.current) observer.observe(sectionRef.current)
     return () => observer.disconnect()
   }, [])
+
+  // Обработчик для мобильных (клик) и десктопа (hover)
+  const handleInteraction = (type) => {
+    if (isMobile) {
+      // На мобильных: toggle при клике
+      setHovered(prev => prev === type ? null : type)
+    } else {
+      // На десктопе: показываем при hover
+      setHovered(type)
+    }
+  }
 
   return (
     <section
@@ -29,7 +54,7 @@ export default function About() {
         <h2 className="section-title fade-text fade-fast">Наша миссия</h2>
 
         <div className="about-content">
-          {/* ЛЕВО: быстрый показ + подмена на карточки при ховере пунктов */}
+          {/* ЛЕВО: быстрый показ + подмена на карточки при взаимодействии */}
           <div className="about-text fade-text fade-fast">
             <div className="about-swap">
               {/* Базовый текст */}
@@ -90,18 +115,35 @@ export default function About() {
             </div>
           </div>
 
-          {/* ПРАВО: появляется с задержкой; ховеры управляют левым контентом */}
-          <div className="stats fade-text fade-delayed"
-               onMouseLeave={() => setHovered(null)}>
-            <div className="stat-item" onMouseEnter={() => setHovered('fund')}>
+          {/* ПРАВО: появляется с задержкой; взаимодействие управляет левым контентом */}
+          <div 
+            className="stats fade-text fade-delayed"
+            onMouseLeave={() => !isMobile && setHovered(null)}
+          >
+            <div 
+              className="stat-item" 
+              onMouseEnter={() => !isMobile && handleInteraction('fund')}
+              onClick={() => isMobile && handleInteraction('fund')}
+              style={{ cursor: isMobile ? 'pointer' : 'default' }}
+            >
               <div className="stat-line"></div>
               <div className="stat-label">Фундаментальный подход</div>
             </div>
-            <div className="stat-item" onMouseEnter={() => setHovered('eng')}>
+            <div 
+              className="stat-item" 
+              onMouseEnter={() => !isMobile && handleInteraction('eng')}
+              onClick={() => isMobile && handleInteraction('eng')}
+              style={{ cursor: isMobile ? 'pointer' : 'default' }}
+            >
               <div className="stat-line"></div>
               <div className="stat-label">Инженерная точность</div>
             </div>
-            <div className="stat-item" onMouseEnter={() => setHovered('inn')}>
+            <div 
+              className="stat-item" 
+              onMouseEnter={() => !isMobile && handleInteraction('inn')}
+              onClick={() => isMobile && handleInteraction('inn')}
+              style={{ cursor: isMobile ? 'pointer' : 'default' }}
+            >
               <div className="stat-line"></div>
               <div className="stat-label">Инновационные решения</div>
             </div>

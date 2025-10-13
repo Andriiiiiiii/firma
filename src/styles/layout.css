@@ -6,7 +6,7 @@
   scroll-snap-align: start;
   scroll-snap-stop: normal;
   min-height: 100vh;
-  min-height: 100dvh; /* Dynamic viewport height для мобильных */
+  min-height: 100dvh;
   position: relative;
   display: flex;
   align-items: center;
@@ -34,6 +34,7 @@
 @media (min-width: 1024px) {
   .snap-section {
     padding: 5vh 0;
+    scroll-snap-align: start;
   }
   
   .container {
@@ -42,5 +43,31 @@
     height: 100%;
     max-height: 100vh;
     overflow: hidden;
+  }
+}
+
+/* Адаптация для маленьких высот экранов (ландшафт на мобильных) */
+@media (max-height: 600px) {
+  .snap-section {
+    min-height: auto;
+    padding: 2rem 0;
+  }
+}
+
+/* Поддержка dvh */
+@supports (height: 100dvh) {
+  .snap-section {
+    min-height: 100dvh;
+  }
+}
+
+/* Отключение snap на очень маленьких экранах для лучшей прокрутки */
+@media (max-width: 767px) {
+  html {
+    scroll-snap-type: none;
+  }
+  
+  .snap-section {
+    scroll-snap-align: none;
   }
 }

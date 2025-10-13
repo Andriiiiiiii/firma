@@ -10,6 +10,23 @@ export default function Contact() {
 
   const sectionRef = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
+  const [showAnimation, setShowAnimation] = useState(true)
+
+  useEffect(() => {
+    // Проверяем, не мобильное ли это устройство
+    const checkDevice = () => {
+      const isMobile = window.innerWidth < 1024 || 
+                      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      setShowAnimation(!isMobile)
+    }
+
+    checkDevice()
+    
+    const handleResize = () => checkDevice()
+    window.addEventListener('resize', handleResize)
+    
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const params =
     typeof window !== 'undefined'
@@ -46,7 +63,7 @@ export default function Contact() {
       className={`contact-section snap-section ${isVisible ? 'is-visible' : ''}`}
       style={{ position: 'relative', overflow: 'hidden', background: '#000' }}
     >
-      {isVisible && (
+      {isVisible && showAnimation && (
         <SphericalLattice
           pointsPerRow={25}
           pointsPerCol={70}

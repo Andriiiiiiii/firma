@@ -1,16 +1,39 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import CrystalLattice from './DotGrid.jsx'
 
 export default function Cover() {
+  const [showAnimation, setShowAnimation] = useState(true)
+
+  useEffect(() => {
+    // Проверяем, не мобильное ли это устройство
+    const checkDevice = () => {
+      const isMobile = window.innerWidth < 1024 || 
+                      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      setShowAnimation(!isMobile)
+    }
+
+    checkDevice()
+    
+    // Добавляем слушатель на изменение размера
+    const handleResize = () => checkDevice()
+    window.addEventListener('resize', handleResize)
+    
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   return (
     <section
       id="cover"
       className="cover snap-section"
     >
-      {/* Кристаллическая решётка на фоне */}
-      <div className="cover-background">
-        <CrystalLattice />
-      </div>
+      {/* Кристаллическая решётка на фоне - только для десктопа */}
+      {showAnimation ? (
+        <div className="cover-background">
+          <CrystalLattice />
+        </div>
+      ) : (
+        <div className="cover-background" style={{ background: '#000' }} />
+      )}
 
       {/* Логотип по центру */}
       <div className="cover-logo">

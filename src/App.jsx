@@ -12,6 +12,20 @@ import OverlayMenu from './components/OverlayMenu'
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Определяем мобильное устройство
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 1024 || 
+                    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      setIsMobile(mobile)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,7 +38,10 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Smooth snap только для десктопа
   useEffect(() => {
+    if (isMobile) return
+
     let scrollTimeout
 
     const handleSmoothSnap = () => {
@@ -50,7 +67,7 @@ export default function App() {
       window.removeEventListener('scroll', handleSmoothSnap)
       clearTimeout(scrollTimeout)
     }
-  }, [])
+  }, [isMobile])
 
   const scrollToSection = useCallback((sectionId) => {
     const section = document.getElementById(sectionId)
@@ -59,6 +76,19 @@ export default function App() {
       setMenuOpen(false)
     }
   }, [])
+
+  // Блокируем скролл когда меню открыто на мобильных
+  useEffect(() => {
+    if (menuOpen && isMobile) {
+      document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.width = '100%'
+    } else {
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
+    }
+  }, [menuOpen, isMobile])
 
   return (
     <>

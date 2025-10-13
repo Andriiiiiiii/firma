@@ -1,5 +1,6 @@
 /* ============================================
    ГЛОБАЛЬНЫЕ СТИЛИ И RESET
+   Mobile First подход
    ============================================ */
 
 * {
@@ -17,6 +18,8 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }
 
 body {
@@ -28,14 +31,24 @@ body {
   -webkit-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 #root {
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .main-container {
   position: relative;
+}
+
+/* Поддержка dvh для мобильных браузеров */
+@supports (height: 100dvh) {
+  html, body, #root {
+    min-height: 100dvh;
+  }
 }
 
 /* ============================================
@@ -74,6 +87,16 @@ body {
 
 /* Laptop */
 @media (min-width: 1024px) {
+  html {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+  
+  body {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
   .section-label {
     font-size: 0.8vw;
     letter-spacing: 0.05vw;
@@ -84,5 +107,31 @@ body {
     font-size: 3vw;
     margin-bottom: 3vh;
     letter-spacing: -0.05vw;
+  }
+}
+
+/* Улучшенная читаемость на мобильных */
+@media (max-width: 767px) {
+  body {
+    line-height: 1.65;
+  }
+  
+  p {
+    max-width: 65ch;
+  }
+}
+
+/* Оптимизация для маленьких экранов */
+@media (max-width: 374px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* Поддержка нотча/безопасной зоны */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
   }
 }

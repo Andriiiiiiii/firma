@@ -9,6 +9,13 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" 
     />
     
+    <!-- Предотвращение задержки клика на iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- Отключение автоматического определения номеров телефонов и адресов -->
+    <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
+    
     <!-- SEO и описание -->
     <meta name="description" content="firma' — веб-решения мирового класса. Ускоряем развитие бизнеса на годы вперёд." />
     <meta name="keywords" content="веб-разработка, дизайн, разработка сайтов, digital agency" />
@@ -21,16 +28,96 @@
     
     <!-- PWA и theme color -->
     <meta name="theme-color" content="#000000" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     
+    <!-- Preconnect для улучшения производительности -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    
     <title>firma' — Веб-решения мирового класса</title>
+    
+    <!-- Встроенный критический CSS для улучшения производительности на мобильных -->
+    <style>
+      /* Критический CSS для начальной загрузки */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-text-size-adjust: 100%;
+      }
+      
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background-color: #000;
+        color: #e8e6e1;
+        overflow-x: hidden;
+        -webkit-tap-highlight-color: transparent;
+      }
+      
+      #root {
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+      
+      /* Loader для улучшения UX */
+      .initial-loader {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #000;
+        z-index: 9999;
+        transition: opacity 0.3s ease;
+      }
+      
+      .initial-loader.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
   </head>
   <body>
+    <!-- Начальный loader -->
+    <div class="initial-loader" id="loader">
+      <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30" cy="30" r="28" stroke="#e8e6e1" stroke-width="2" opacity="0.2"/>
+        <path d="M30 2C14.536 2 2 14.536 2 30" stroke="#e8e6e1" stroke-width="2" stroke-linecap="round">
+          <animateTransform
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            from="0 30 30"
+            to="360 30 30"
+            dur="1s"
+            repeatCount="indefinite"/>
+        </path>
+      </svg>
+    </div>
+    
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Скрипт для скрытия loader после загрузки -->
+    <script>
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          const loader = document.getElementById('loader');
+          if (loader) {
+            loader.classList.add('hidden');
+            setTimeout(function() {
+              loader.remove();
+            }, 300);
+          }
+        }, 500);
+      });
+    </script>
   </body>
 </html>

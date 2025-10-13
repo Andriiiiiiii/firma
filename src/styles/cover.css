@@ -1,11 +1,12 @@
 /* ============================================
-   COVER SECTION
+   COVER SECTION (Mobile First)
    ============================================ */
 
 .cover {
   position: relative;
   height: 100vh;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,21 +28,68 @@
   place-items: center;
   z-index: 10;
   pointer-events: none;
+  padding: var(--container-padding);
 }
 
 .cover-logo svg {
-  width: 20vw;
+  width: 70vw;
+  max-width: 400px;
   height: auto;
   opacity: 0.95;
 }
 
 .cover-caption {
   position: absolute;
-  left: 5vw;
-  bottom: 5vh;
+  left: var(--container-padding);
+  bottom: 2rem;
   color: #c7c7c7;
-  font-size: 0.9vw;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
   opacity: 0.75;
   z-index: 10;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .cover-logo svg {
+    width: 50vw;
+    max-width: 500px;
+  }
+  
+  .cover-caption {
+    font-size: 0.85rem;
+    bottom: 3rem;
+  }
+}
+
+/* Laptop и выше */
+@media (min-width: 1024px) {
+  .cover-logo svg {
+    width: 20vw;
+    max-width: none;
+  }
+  
+  .cover-caption {
+    left: 5vw;
+    bottom: 5vh;
+    font-size: 0.9vw;
+  }
+}
+
+/* Поддержка dvh */
+@supports (height: 100dvh) {
+  .cover {
+    min-height: 100dvh;
+  }
+}
+
+/* Адаптация для маленьких высот */
+@media (max-height: 600px) {
+  .cover {
+    min-height: 100vh;
+  }
+  
+  .cover-caption {
+    bottom: 1.5rem;
+  }
 }
