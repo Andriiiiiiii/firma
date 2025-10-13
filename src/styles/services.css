@@ -5,9 +5,9 @@
 .services-section {
   border-top: 1px solid rgba(232, 230, 225, 0.1);
   background: 
-    radial-gradient(ellipse 80vw 55vh at 50% 25%, rgba(255, 255, 255, 0.08), transparent 60%),
-    radial-gradient(ellipse 60vw 45vh at 30% 70%, rgba(255, 255, 255, 0.04), transparent 65%),
-    radial-gradient(ellipse 50vw 35vh at 80% 50%, rgba(255, 255, 255, 0.03), transparent 70%),
+    radial-gradient(ellipse 80vw 55vh at 50% 25%, rgba(255, 255, 255, 0.15), transparent 60%),
+    radial-gradient(ellipse 60vw 45vh at 30% 70%, rgba(255, 255, 255, 0.10), transparent 65%),
+    radial-gradient(ellipse 50vw 35vh at 80% 50%, rgba(255, 255, 255, 0.08), transparent 70%),
     #000000 !important;
 }
 

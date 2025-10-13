@@ -29,11 +29,10 @@ export default function Services() {
       ref={sectionRef}
       id="services"
       className={`services-section snap-section ${isVisible ? 'is-visible' : ''}`}
-      style={{ position: 'relative', overflow: 'hidden', background: '#1a1a1a' }}
+      style={{ position: 'relative', overflow: 'hidden' }}
     >
-      {/* Контент без фоновой анимации */}
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="section-label fade-text">/ Наши услуги</div>
+        <div className="section-label fade-text">/ 03 / Наши услуги</div>
         <h2 className="section-title fade-text">Что мы делаем</h2>
 
         <div className="services-grid">

@@ -86,13 +86,15 @@
   opacity: 0.9;
 }
 
-/* Members List Column */
+/* Members List Column - фиксированная ширина */
 .team-members-list {
   display: flex;
   flex-direction: column;
   gap: 1.5vh;
   height: 100%;
   min-height: 0;
+  width: var(--team-list-width);
+  flex-shrink: 0;
 }
 
 .team-names {
@@ -169,14 +171,14 @@
   line-height: 1.2;
 }
 
-/* Experience Column */
+/* Experience Column - невидимая рамка */
 .team-experience {
   height: 100%;
   min-height: 0;
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 0;
   padding: 0;
   background: transparent;
@@ -186,14 +188,12 @@
   gap: 1.2vh;
   transition: opacity 0.25s ease,
               background 0.25s ease,
-              padding 0.25s ease,
-              border-color 0.25s ease;
+              padding 0.25s ease;
 }
 
 .team-layout.has-hover .team-experience {
   opacity: 1;
   pointer-events: auto;
-  border: 1px solid rgba(232, 230, 225, 0.15);
   padding: 2vh 2vw;
   background:
     radial-gradient(60% 80% at 30% 30%, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.00) 70%),

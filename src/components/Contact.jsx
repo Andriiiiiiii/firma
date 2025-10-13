@@ -11,13 +11,16 @@ export default function Contact() {
   const sectionRef = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
   const [showAnimation, setShowAnimation] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
+  const [scrollRotation, setScrollRotation] = useState({ yaw: 0, pitch: 0 })
 
   useEffect(() => {
     // Проверяем, не мобильное ли это устройство
     const checkDevice = () => {
-      const isMobile = window.innerWidth < 1024 || 
+      const mobile = window.innerWidth < 1024 || 
                       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-      setShowAnimation(!isMobile)
+      setIsMobile(mobile)
+      setShowAnimation(!mobile)
     }
 
     checkDevice()
@@ -28,12 +31,32 @@ export default function Contact() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  // Обработчик скролла для мобильных устройств
+  useEffect(() => {
+    if (!isMobile) return
+
+    let lastScrollY = window.scrollY
+
+    const handleScroll = () => {
+      const scrollSpeed = Math.abs(window.scrollY - lastScrollY)
+      lastScrollY = window.scrollY
+
+      setScrollRotation(prev => ({
+        yaw: prev.yaw + scrollSpeed * 0.05,
+        pitch: prev.pitch + scrollSpeed * 0.03
+      }))
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [isMobile])
+
   const params =
     typeof window !== 'undefined'
       ? new URLSearchParams(window.location.search)
       : new URLSearchParams('')
-  const SPIN_Y = Number(params.get('spin')) || 0.9
-  const SPIN_X = Number(params.get('spinX')) || 0.9
+  const SPIN_Y = Number(params.get('spin')) || (isMobile ? scrollRotation.yaw : 0.9)
+  const SPIN_X = Number(params.get('spinX')) || (isMobile ? scrollRotation.pitch : 0.9)
 
   useEffect(() => {
     const node = sectionRef.current
@@ -69,8 +92,8 @@ export default function Contact() {
           pointsPerCol={70}
           rotationSpeed={SPIN_Y}
           rotationSpeedX={SPIN_X}
-          initialYawVel={20}
-          initialPitchVel={20}
+          initialYawVel={isMobile ? scrollRotation.yaw : 20}
+          initialPitchVel={isMobile ? scrollRotation.pitch : 20}
           rotFriction={0.1}
           rotSpring={0.8}
           pullToTarget={false}
@@ -78,7 +101,7 @@ export default function Contact() {
       )}
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="section-label fade-text">/ Связаться с нами</div>
+        <div className="section-label fade-text">/ 06 / Связаться с нами</div>
         <h2 className="section-title fade-text">Начнём работу вместе</h2>
 
         <div className="contact-wrapper">

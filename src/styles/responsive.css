@@ -199,6 +199,7 @@
   .team-members-list {
     height: auto;
     max-height: 400px;
+    width: 100%;
   }
   
   .team-names {
@@ -288,17 +289,24 @@
   }
   
   .stats {
-    gap: 1.5rem;
+    gap: 1rem;
     padding-left: 0;
   }
   
   .stat-item {
     gap: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .stat-item:hover {
+    padding-left: 0;
   }
   
   .stat-line {
-    width: 3px;
-    min-height: 50px;
+    width: 100%;
+    height: 2px;
+    min-height: auto;
   }
   
   .stat-label {
@@ -313,11 +321,23 @@
   }
   
   .stats {
-    gap: 1.25rem;
+    gap: 0.75rem;
+  }
+  
+  .stat-item {
+    gap: 0.5rem;
   }
   
   .stat-label {
     font-size: 1rem;
+  }
+  
+  .about-card h4 {
+    font-size: 1.125rem;
+  }
+  
+  .about-card p {
+    font-size: 0.9rem;
   }
 }
 
@@ -518,7 +538,8 @@
   .menu-close,
   .menu-item a,
   .submit-button,
-  .team-member-item {
+  .team-member-item,
+  .stat-item {
     min-height: 44px;
     position: relative;
   }
@@ -535,6 +556,15 @@
   
   .stat-item:hover {
     padding-left: 0;
+  }
+  
+  .stat-item:hover .stat-line {
+    background: linear-gradient(
+      to bottom,
+      rgba(232, 230, 225, 0.7) 0%,
+      rgba(232, 230, 225, 0.4) 50%,
+      rgba(232, 230, 225, 0.7) 100%
+    );
   }
   
   .team-member-item:hover {
@@ -592,7 +622,11 @@
   }
   
   /* Упрощаем градиенты */
-  .about-gradient-overlay,
+  .about-gradient-overlay {
+    background: 
+      radial-gradient(ellipse 70vw 50vh at 50% 30%, rgba(255, 255, 255, 0.06), transparent 70%);
+  }
+  
   .services-section {
     background: #000 !important;
   }

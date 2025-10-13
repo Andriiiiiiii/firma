@@ -81,7 +81,7 @@ export default function Team() {
     >
       <div className="container team-container">
         <div className="team-header">
-          <div className="section-label fade-text">/ Команда</div>
+          <div className="section-label fade-text">/ 04 / Команда</div>
           <h2 className="section-title team-title fade-text">Наша команда</h2>
         </div>
 

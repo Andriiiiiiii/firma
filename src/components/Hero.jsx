@@ -10,12 +10,26 @@ export default function Hero() {
   const sectionRef = useRef(null)
   const wheelImgRef = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   const angleRef = useRef(0)
   const angVelRef = useRef(0)
   const spinRafRef = useRef(0)
   const lastTsRef = useRef(0)
   const inViewportRef = useRef(false)
+
+  // Определяем мобильное устройство
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 1024 || 
+                    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      setIsMobile(mobile)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const section = sectionRef.current
@@ -64,7 +78,7 @@ export default function Hero() {
     const clamp = (v, a, b) => Math.max(a, Math.min(b, v))
 
     const handleWheel = (e) => {
-      if (!inViewportRef.current) return
+      if (!inViewportRef.current || isMobile) return
       const deltaY = e.deltaY
       angVelRef.current = clamp(
         angVelRef.current + deltaY * SPIN_GAIN,
@@ -74,21 +88,41 @@ export default function Hero() {
       ensureSpin()
     }
 
-    window.addEventListener('wheel', handleWheel, { passive: true })
+    const handleScroll = () => {
+      if (!isMobile || !inViewportRef.current) return
+      const scrollSpeed = Math.abs(window.scrollY - (lastScrollY || 0))
+      lastScrollY = window.scrollY
+      
+      angVelRef.current = clamp(
+        angVelRef.current + scrollSpeed * 2,
+        -SPIN_MAX,
+        SPIN_MAX
+      )
+      ensureSpin()
+    }
+
+    let lastScrollY = window.scrollY
+
+    if (isMobile) {
+      window.addEventListener('scroll', handleScroll, { passive: true })
+    } else {
+      window.addEventListener('wheel', handleWheel, { passive: true })
+    }
 
     return () => {
       io.disconnect()
       window.removeEventListener('wheel', handleWheel)
+      window.removeEventListener('scroll', handleScroll)
       if (spinRafRef.current) cancelAnimationFrame(spinRafRef.current)
     }
-  }, [])
+  }, [isMobile])
 
   return (
     <section ref={sectionRef} id="intro" className="hero-section snap-section">
       <div className="container">
         <div className="hero-layout">
           <div className={`hero-content ${isVisible ? 'is-visible' : ''}`}>
-            <div className="section-label">/ Введение</div>
+            <div className="section-label">/ 02 / Введение</div>
             <h1 className="hero-title">
               <span className="title-line">Ускоряем развитие</span>
               <span className="title-line">бизнеса — на годы</span>
