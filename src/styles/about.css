@@ -1,0 +1,133 @@
+/* ============================================
+   ABOUT SECTION
+   ============================================ */
+
+.about-section {
+  border-top: 1px solid rgba(232, 230, 225, 0.1);
+  position: relative;
+}
+
+.about-section .container {
+  max-height: none;
+}
+
+.about-content-wrap {
+  position: relative;
+  z-index: 2;
+  padding-bottom: 6vh;
+}
+
+.about-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: 
+    radial-gradient(ellipse 65vw 45vh at 60% 30%, rgba(255, 255, 255, 0.05), transparent 65%),
+    radial-gradient(ellipse 50vw 35vh at 30% 60%, rgba(255, 255, 255, 0.03), transparent 70%);
+  pointer-events: none;
+}
+
+.about-content {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 5vw;
+  margin-top: 0;
+  align-items: start;
+}
+
+.about-text {
+  font-size: 1.2vw;
+  line-height: 1.7;
+  opacity: 0.85;
+}
+
+.about-swap {
+  position: relative;
+  min-height: 18vh;
+}
+
+.about-swap-inner {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(0.6vh);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.about-swap-inner.active {
+  opacity: 1;
+  transform: none;
+}
+
+.about-card {
+  border: 1px solid rgba(232, 230, 225, 0.15);
+  border-radius: 0;
+  padding: 2vh 2vw;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+}
+
+.about-card h4 {
+  font-weight: 300;
+  font-size: 1.3vw;
+  margin-bottom: 1.2vh;
+}
+
+.about-card p {
+  font-size: 1.05vw;
+  line-height: 1.55;
+  opacity: 0.9;
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5vh;
+  align-self: stretch;
+  padding-left: 0;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 2vw;
+  padding: 0;
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.stat-item:hover {
+  padding-left: 0.3vw;
+}
+
+.stat-line {
+  width: 0.2vw;
+  height: 100%;
+  min-height: 7vh;
+  background: linear-gradient(
+    to bottom,
+    rgba(232, 230, 225, 0.7) 0%,
+    rgba(232, 230, 225, 0.4) 50%,
+    rgba(232, 230, 225, 0.7) 100%
+  );
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover .stat-line {
+  background: linear-gradient(
+    to bottom,
+    rgba(232, 230, 225, 0.9) 0%,
+    rgba(232, 230, 225, 0.6) 50%,
+    rgba(232, 230, 225, 0.9) 100%
+  );
+}
+
+.stat-label {
+  font-size: 1.3vw;
+  font-weight: 300;
+  letter-spacing: 0.02vw;
+  opacity: 0.95;
+  line-height: 1.5;
+  flex: 1;
+}

@@ -1,0 +1,223 @@
+/* ============================================
+   TEAM SECTION
+   ============================================ */
+
+:root {
+  --team-list-width: 28vw;
+  --team-height: min(60vh, 70vh);
+}
+
+.team-section {
+  border-top: 1px solid rgba(232, 230, 225, 0.1);
+  background: #000;
+  color: #e8e6e1;
+}
+
+.team-container {
+  max-width: 90vw;
+  margin: 0 auto;
+  padding: 0 4vw;
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.team-header {
+  margin-bottom: 1.5vh;
+}
+
+.team-title {
+  margin-bottom: 2.5vh;
+}
+
+.team-layout {
+  display: grid;
+  grid-template-columns: 1fr 0fr var(--team-list-width);
+  gap: 4vw;
+  align-items: stretch;
+  height: var(--team-height);
+  transition: grid-template-columns 0.35s ease;
+}
+
+.team-layout.has-hover {
+  grid-template-columns: 0.5fr 0.5fr var(--team-list-width);
+}
+
+/* Photo Column */
+.team-photo-large {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #111;
+  border: 1px solid rgba(232, 230, 225, 0.15);
+  border-radius: 0;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.team-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.team-photo-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.8vh 2.5vw;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.team-count {
+  font-size: 1.1vw;
+  font-weight: 300;
+  letter-spacing: 0.05vw;
+  opacity: 0.9;
+}
+
+/* Members List Column */
+.team-members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vh;
+  height: 100%;
+  min-height: 0;
+}
+
+.team-names {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2vh;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.5vw;
+}
+
+.team-names::-webkit-scrollbar {
+  width: 0.25vw;
+}
+
+.team-names::-webkit-scrollbar-track {
+  background: rgba(232, 230, 225, 0.05);
+}
+
+.team-names::-webkit-scrollbar-thumb {
+  background: rgba(232, 230, 225, 0.2);
+}
+
+.team-names::-webkit-scrollbar-thumb:hover {
+  background: rgba(232, 230, 225, 0.3);
+}
+
+.team-member-item {
+  display: flex;
+  align-items: center;
+  gap: 1.5vw;
+  padding: 1.2vh 0;
+  border-bottom: 1px solid rgba(232, 230, 225, 0.08);
+  transition: all 0.3s ease;
+}
+
+.team-member-item:hover {
+  border-bottom-color: rgba(232, 230, 225, 0.2);
+  padding-left: 0.3vw;
+}
+
+.member-number {
+  font-size: 0.8vw;
+  opacity: 0.4;
+  font-weight: 300;
+  min-width: 1.5vw;
+  text-align: right;
+  align-self: flex-start;
+  margin-top: 0.2vh;
+}
+
+.member-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3vh;
+  flex: 1;
+}
+
+.member-name {
+  font-size: 1.1vw;
+  font-weight: 300;
+  letter-spacing: 0.02vw;
+  opacity: 0.92;
+  line-height: 1.3;
+}
+
+.member-role {
+  font-size: 0.85vw;
+  font-weight: 300;
+  letter-spacing: 0.01vw;
+  opacity: 0.5;
+  line-height: 1.2;
+}
+
+/* Experience Column */
+.team-experience {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1.2vh;
+  transition: opacity 0.25s ease,
+              background 0.25s ease,
+              padding 0.25s ease,
+              border-color 0.25s ease;
+}
+
+.team-layout.has-hover .team-experience {
+  opacity: 1;
+  pointer-events: auto;
+  border: 1px solid rgba(232, 230, 225, 0.15);
+  padding: 2vh 2vw;
+  background:
+    radial-gradient(60% 80% at 30% 30%, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.00) 70%),
+    radial-gradient(70% 90% at 80% 70%, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.00) 75%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+}
+
+.team-exp-title {
+  font-size: 1.3vw;
+  font-weight: 300;
+  letter-spacing: 0.02vw;
+  opacity: 0.95;
+}
+
+.team-exp-role {
+  font-size: 0.95vw;
+  opacity: 0.6;
+  margin-bottom: 1vh;
+}
+
+.team-exp-points {
+  font-size: 0.95vw;
+  line-height: 1.5;
+  opacity: 0.9;
+  display: grid;
+  gap: 0.8vh;
+}

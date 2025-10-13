@@ -1,15 +1,14 @@
 {
-  "name": "webflow-solutions-react",
+  "name": "firma-website",
   "version": "1.0.0",
   "private": true,
-  "description": "WebFlow Solutions — веб-решения мирового класса (React + Vite).",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --strictPort --port 4173"
+    "preview": "vite preview"
   },
   "dependencies": {
-    "gsap": "^3.12.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "three": "^0.180.0"

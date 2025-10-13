@@ -1,0 +1,58 @@
+/* ============================================
+   CSS VARIABLES & BREAKPOINTS
+   ============================================ */
+
+:root {
+  /* Брейкпоинты */
+  --breakpoint-mobile: 320px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-laptop: 1024px;
+  --breakpoint-desktop: 1440px;
+  
+  /* Цвета */
+  --color-bg: #000000;
+  --color-text: #e8e6e1;
+  --color-text-dim: rgba(232, 230, 225, 0.7);
+  --color-border: rgba(232, 230, 225, 0.1);
+  
+  /* Spacing (Mobile First) */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  --spacing-2xl: 4rem;
+  
+  /* Typography Mobile */
+  --font-size-xs: 0.75rem;      /* 12px */
+  --font-size-sm: 0.875rem;     /* 14px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-lg: 1.125rem;     /* 18px */
+  --font-size-xl: 1.25rem;      /* 20px */
+  --font-size-2xl: 1.5rem;      /* 24px */
+  --font-size-3xl: 2rem;        /* 32px */
+  --font-size-4xl: 2.5rem;      /* 40px */
+  --font-size-5xl: 3rem;        /* 48px */
+  
+  /* Container */
+  --container-padding: 1.5rem;
+  --container-max-width: 1440px;
+}
+
+/* Tablet и выше */
+@media (min-width: 768px) {
+  :root {
+    --spacing-xl: 4rem;
+    --spacing-2xl: 6rem;
+    --container-padding: 2.5rem;
+  }
+}
+
+/* Desktop и выше */
+@media (min-width: 1024px) {
+  :root {
+    --spacing-xl: 5rem;
+    --spacing-2xl: 8rem;
+    --container-padding: 4rem;
+  }
+}

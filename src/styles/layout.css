@@ -1,0 +1,46 @@
+/* ============================================
+   LAYOUT И КОНТЕЙНЕРЫ (Mobile First)
+   ============================================ */
+
+.snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height для мобильных */
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .snap-section {
+    padding: 3rem 0;
+  }
+}
+
+/* Laptop */
+@media (min-width: 1024px) {
+  .snap-section {
+    padding: 5vh 0;
+  }
+  
+  .container {
+    max-width: 90vw;
+    padding: 0 4vw;
+    height: 100%;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+}

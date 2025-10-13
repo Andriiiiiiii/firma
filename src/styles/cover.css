@@ -1,0 +1,47 @@
+/* ============================================
+   COVER SECTION
+   ============================================ */
+
+.cover {
+  position: relative;
+  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000;
+  padding: 0;
+}
+
+.cover-background {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.cover-logo {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.cover-logo svg {
+  width: 20vw;
+  height: auto;
+  opacity: 0.95;
+}
+
+.cover-caption {
+  position: absolute;
+  left: 5vw;
+  bottom: 5vh;
+  color: #c7c7c7;
+  font-size: 0.9vw;
+  letter-spacing: 0.06em;
+  opacity: 0.75;
+  z-index: 10;
+}

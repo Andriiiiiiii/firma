@@ -1,0 +1,46 @@
+/* ============================================
+   SERVICES SECTION
+   ============================================ */
+
+.services-section {
+  border-top: 1px solid rgba(232, 230, 225, 0.1);
+  background: 
+    radial-gradient(ellipse 80vw 55vh at 50% 25%, rgba(255, 255, 255, 0.08), transparent 60%),
+    radial-gradient(ellipse 60vw 45vh at 30% 70%, rgba(255, 255, 255, 0.04), transparent 65%),
+    radial-gradient(ellipse 50vw 35vh at 80% 50%, rgba(255, 255, 255, 0.03), transparent 70%),
+    #000000 !important;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2vh 1.5vw;
+  margin-top: 0;
+  max-height: 60vh;
+  overflow: hidden;
+}
+
+.service-card {
+  padding: 1.5vh 0;
+}
+
+.service-number {
+  font-size: 0.7vw;
+  opacity: 0.5;
+  margin-bottom: 0.8vh;
+  letter-spacing: 0.05vw;
+}
+
+.service-title {
+  font-size: 1.4vw;
+  font-weight: 300;
+  margin-bottom: 0.8vh;
+  letter-spacing: -0.03vw;
+  line-height: 1.2;
+}
+
+.service-description {
+  font-size: 0.9vw;
+  opacity: 0.7;
+  line-height: 1.4;
+}

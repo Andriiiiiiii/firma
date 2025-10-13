@@ -1,0 +1,348 @@
+/* ============================================
+   АДАПТИВНЫЕ СТИЛИ ДЛЯ ВСЕХ СЕКЦИЙ
+   ============================================ */
+
+/* ===== COVER SECTION ===== */
+@media (max-width: 1023px) {
+  .cover-logo svg {
+    width: 60vw;
+    max-width: 300px;
+  }
+  
+  .cover-caption {
+    left: var(--container-padding);
+    bottom: 2rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .cover-logo svg {
+    width: 70vw;
+  }
+}
+
+/* ===== HERO SECTION ===== */
+@media (max-width: 1023px) {
+  .hero-layout {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .hero-content {
+    max-width: 100%;
+    text-align: center;
+  }
+  
+  .hero-title {
+    font-size: var(--font-size-4xl);
+    margin-bottom: 1.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: var(--font-size-base);
+    max-width: 100%;
+  }
+  
+  .hero-wheel-wrapper {
+    width: 40vw;
+    height: 40vw;
+    max-width: 250px;
+    max-height: 250px;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .hero-wheel-wrapper {
+    width: 50vw;
+    height: 50vw;
+  }
+}
+
+/* ===== SERVICES SECTION ===== */
+@media (max-width: 1023px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 1.5rem;
+    max-height: none;
+  }
+  
+  .service-number {
+    font-size: var(--font-size-xs);
+  }
+  
+  .service-title {
+    font-size: var(--font-size-lg);
+  }
+  
+  .service-description {
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 767px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .service-card {
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+  }
+}
+
+/* ===== TEAM SECTION ===== */
+@media (max-width: 1023px) {
+  .team-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    height: auto;
+  }
+  
+  .team-layout.has-hover {
+    grid-template-columns: 1fr;
+  }
+  
+  .team-photo-large {
+    height: 40vh;
+    min-height: 300px;
+  }
+  
+  .team-count {
+    font-size: var(--font-size-base);
+  }
+  
+  .team-experience {
+    display: none; /* Скрываем на планшетах и мобильных */
+  }
+  
+  .team-members-list {
+    height: auto;
+    max-height: 50vh;
+  }
+  
+  .team-names {
+    gap: 1rem;
+  }
+  
+  .member-name {
+    font-size: var(--font-size-base);
+  }
+  
+  .member-role {
+    font-size: var(--font-size-sm);
+  }
+  
+  .member-number {
+    font-size: var(--font-size-sm);
+    min-width: 2rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .team-photo-large {
+    height: 35vh;
+    min-height: 250px;
+  }
+  
+  .team-members-list {
+    max-height: none;
+  }
+  
+  .member-info {
+    gap: 0.25rem;
+  }
+}
+
+/* ===== ABOUT SECTION ===== */
+@media (max-width: 1023px) {
+  .about-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .about-text {
+    font-size: var(--font-size-base);
+  }
+  
+  .about-card h4 {
+    font-size: var(--font-size-xl);
+  }
+  
+  .about-card p {
+    font-size: var(--font-size-base);
+  }
+  
+  .stats {
+    gap: 2rem;
+  }
+  
+  .stat-line {
+    width: 3px;
+    min-height: 50px;
+  }
+  
+  .stat-label {
+    font-size: var(--font-size-lg);
+  }
+}
+
+@media (max-width: 767px) {
+  .about-swap {
+    min-height: auto;
+  }
+  
+  .stats {
+    padding-left: 0;
+  }
+  
+  .stat-item {
+    gap: 1rem;
+  }
+}
+
+/* ===== CONTACT SECTION ===== */
+@media (max-width: 1023px) {
+  .contact-wrapper {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-height: none;
+  }
+  
+  .info-label {
+    font-size: var(--font-size-xs);
+  }
+  
+  .info-link,
+  .info-text {
+    font-size: var(--font-size-base);
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .form-input,
+  .form-textarea,
+  .form-label {
+    font-size: var(--font-size-base);
+  }
+  
+  .submit-button {
+    width: 100%;
+    padding: 1rem 2rem;
+    font-size: var(--font-size-base);
+    border-radius: 50px;
+  }
+}
+
+@media (max-width: 767px) {
+  .contact-info {
+    gap: 1.5rem;
+  }
+  
+  .form-textarea {
+    min-height: 120px;
+  }
+}
+
+/* ===== MENU ===== */
+@media (max-width: 1023px) {
+  .hamburger-menu {
+    width: 32px;
+    height: 20px;
+    right: var(--container-padding);
+    top: 1.5rem;
+  }
+  
+  .hamburger-line {
+    height: 2px;
+  }
+  
+  .hamburger-menu:hover .hamburger-line:nth-child(1),
+  .hamburger-menu:hover .hamburger-line:nth-child(3) {
+    transform: none; /* Отключаем анимацию на мобильных */
+  }
+  
+  .menu-logo {
+    font-size: var(--font-size-lg);
+  }
+  
+  .menu-close {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .close-line {
+    height: 2px;
+  }
+  
+  .menu-grid-two-rows {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 1.5rem;
+  }
+  
+  .menu-text {
+    font-size: var(--font-size-4xl);
+  }
+  
+  .menu-sup {
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 767px) {
+  .menu-text {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .menu-center {
+    padding: 4rem var(--container-padding);
+  }
+}
+
+/* ===== FOOTER ===== */
+@media (max-width: 1023px) {
+  .footer-text {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* ===== ANIMATIONS ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== TOUCH OPTIMIZATION ===== */
+@media (hover: none) and (pointer: coarse) {
+  /* Увеличиваем области нажатия на touch-устройствах */
+  .hamburger-menu,
+  .menu-close,
+  .menu-item a,
+  .submit-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Убираем hover-эффекты */
+  .hamburger-menu:hover .hamburger-line,
+  .menu-item a:hover,
+  .stat-item:hover {
+    transform: none;
+  }
+}

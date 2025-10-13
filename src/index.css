@@ -1,0 +1,23 @@
+/* ============================================
+   ГЛАВНЫЙ ФАЙЛ СТИЛЕЙ
+   Импортирует все модульные CSS файлы
+   ============================================ */
+
+/* Переменные и базовые стили */
+@import './styles/variables.css';
+@import './styles/base.css';
+@import './styles/layout.css';
+@import './styles/animations.css';
+
+/* Компоненты секций */
+@import './styles/cover.css';
+@import './styles/hero.css';
+@import './styles/menu.css';
+@import './styles/services.css';
+@import './styles/team.css';
+@import './styles/about.css';
+@import './styles/contact.css';
+@import './styles/footer.css';
+
+/* Адаптивные стили (должны быть последними) */
+@import './styles/responsive.css';
