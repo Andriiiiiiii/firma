@@ -87,6 +87,24 @@
   opacity: 0.9;
 }
 
+@media (max-width: 767px) {
+  .hero-section {
+    min-height: auto;
+    padding: clamp(3rem, 8vw, 4.5rem) 0;
+  }
+
+  .hero-layout {
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0;
+  }
+
+  .hero-wheel-wrapper {
+    margin-top: 1.5rem;
+    align-self: center;
+  }
+}
+
 /* Tablet */
 @media (min-width: 768px) {
   .hero-layout {
@@ -126,17 +144,24 @@
 
 /* Laptop и выше */
 @media (min-width: 1024px) {
+  .hero-section {
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 0;
+  }
+
   .hero-layout {
     flex-direction: row;
     justify-content: space-between;
-    gap: 5vw;
+    align-items: center;
+    gap: 8vw;
     padding: 0;
   }
   
   .hero-content {
-    max-width: 60vw;
+    max-width: 55vw;
     text-align: left;
-    transform: translateY(3vh);
+    transform: translateY(0);
   }
   
   .hero-content .section-label {
@@ -144,18 +169,20 @@
   }
   
   .hero-title {
-    font-size: 4.5vw;
+    font-size: 4.2vw;
     margin-bottom: 3vh;
   }
   
   .hero-subtitle {
-    font-size: 1.3vw;
-    max-width: 40vw;
+    font-size: 1.25vw;
+    max-width: 42vw;
   }
   
   .hero-wheel-wrapper {
-    width: 18vw;
-    height: 18vw;
+    width: 16vw;
+    height: 16vw;
+    position: relative;
+    top: -3vh;
   }
   
   .hero-wheel-img {

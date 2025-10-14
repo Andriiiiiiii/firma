@@ -11,9 +11,11 @@ export default function Contact() {
   const [submitStatus, setSubmitStatus] = useState(null)
 
   const sectionRef = useRef(null)
+  const hasBeenVisibleRef = useRef(false)
   const [isVisible, setIsVisible] = useState(false)
+  const [shouldRenderGlobe, setShouldRenderGlobe] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [scrollRotation, setScrollRotation] = useState({ yaw: 0, pitch: 0 })
+  // We no longer accumulate scroll-driven rotation. Globe will have a gentle constant spin.
 
   useEffect(() => {
     const checkDevice = () => {
@@ -30,44 +32,37 @@ export default function Contact() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  useEffect(() => {
-    if (!isMobile) return
-
-    let lastScrollY = window.scrollY
-
-    const handleScroll = () => {
-      const scrollSpeed = Math.abs(window.scrollY - lastScrollY)
-      lastScrollY = window.scrollY
-
-      setScrollRotation(prev => ({
-        yaw: prev.yaw + scrollSpeed * 0.05,
-        pitch: prev.pitch + scrollSpeed * 0.03
-      }))
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [isMobile])
+  // Scroll-driven globe interaction removed per latest requirement.
 
   const params =
     typeof window !== 'undefined'
       ? new URLSearchParams(window.location.search)
       : new URLSearchParams('')
-  const SPIN_Y = Number(params.get('spin')) || (isMobile ? scrollRotation.yaw : 0.9)
-  const SPIN_X = Number(params.get('spinX')) || (isMobile ? scrollRotation.pitch : 0.9)
+  // Gentle constant spin values (can be tuned via ?spin / ?spinX params) independent of scroll.
+  const SPIN_Y = Number(params.get('spin')) || 0.35
+  const SPIN_X = Number(params.get('spinX')) || 0.22
 
   useEffect(() => {
     const node = sectionRef.current
     if (!node) return
+    const appearThreshold = 0.45 // become active a bit before 0.5
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsVisible(entry.isIntersecting && entry.intersectionRatio >= 0.5)
+        const ratio = entry.intersectionRatio
+        const visible = ratio >= appearThreshold
+        setIsVisible(visible)
+
+        // Once visible, mount the globe and keep it mounted to prevent resets
+        if (visible && !hasBeenVisibleRef.current) {
+          hasBeenVisibleRef.current = true
+          setShouldRenderGlobe(true)
+        }
       },
-      { threshold: [0, 0.25, 0.5, 0.75, 1] }
+      { threshold: [0, 0.05, 0.1, 0.2, 0.3, 0.45, 0.6, 0.75, 1] }
     )
     observer.observe(node)
     return () => observer.disconnect()
-  }, [])
+  }, [isMobile])
 
   const handleChange = (e) =>
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -116,18 +111,24 @@ export default function Contact() {
       className={`contact-section snap-section ${isVisible ? 'is-visible' : ''}`}
       style={{ position: 'relative', overflow: 'hidden', background: '#000' }}
     >
-      {isVisible && (
-        <SphericalLattice
-          pointsPerRow={25}
-          pointsPerCol={70}
-          rotationSpeed={SPIN_Y}
-          rotationSpeedX={SPIN_X}
-          initialYawVel={isMobile ? scrollRotation.yaw : 20}
-          initialPitchVel={isMobile ? scrollRotation.pitch : 20}
-          rotFriction={0.1}
-          rotSpring={0.8}
-          pullToTarget={false}
-        />
+      {shouldRenderGlobe && (
+        <div style={{ 
+          opacity: isVisible ? 1 : 0, 
+          transition: 'opacity 0.3s ease',
+          pointerEvents: 'none'
+        }}>
+          <SphericalLattice
+            pointsPerRow={25}
+            pointsPerCol={70}
+            rotationSpeed={SPIN_Y}
+            rotationSpeedX={SPIN_X}
+            initialYawVel={2}
+            initialPitchVel={2}
+            rotFriction={0.35}
+            rotSpring={0.5}
+            pullToTarget={false}
+          />
+        </div>
       )}
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>

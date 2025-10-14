@@ -43,7 +43,7 @@
 
 @media (max-width: 767px) {
   .cover {
-    min-height: 100svh;
+    min-height: auto;
   }
   
   .cover-logo svg {
@@ -59,7 +59,7 @@
 /* ===== HERO SECTION ===== */
 @media (max-width: 1023px) {
   .hero-section {
-    min-height: 100svh;
+    min-height: auto;
   }
   
   .hero-layout {
@@ -115,7 +115,7 @@
 /* ===== SERVICES SECTION ===== */
 @media (max-width: 1023px) {
   .services-section {
-    min-height: 100svh;
+    min-height: auto;
   }
   
   .services-grid {
@@ -161,7 +161,7 @@
 /* ===== TEAM SECTION ===== */
 @media (max-width: 1023px) {
   .team-section {
-    min-height: 100svh;
+    min-height: auto;
   }
   
   .team-container {
@@ -251,7 +251,7 @@
 /* ===== ABOUT SECTION ===== */
 @media (max-width: 1023px) {
   .about-section {
-    min-height: 100svh;
+    min-height: auto;
   }
   
   .about-content-wrap {
@@ -274,6 +274,18 @@
   
   .about-swap {
     min-height: auto;
+  }
+
+  .about-swap-inner {
+    position: relative;
+    opacity: 1;
+    transform: none;
+    display: none;
+    transition: none;
+  }
+
+  .about-swap-inner.active {
+    display: block;
   }
   
   .about-card {
@@ -348,7 +360,7 @@
 /* ===== CONTACT SECTION ===== */
 @media (max-width: 1023px) {
   .contact-section {
-    min-height: 100svh;
+    min-height: auto;
   }
   
   .contact-wrapper {

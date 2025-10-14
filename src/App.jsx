@@ -48,19 +48,50 @@ export default function App() {
   useEffect(() => {
     if (isMobile) return
     let scrollTimeout
+    // Track last position/time to compute simple velocity
+    let lastY = window.scrollY
+    let lastT = performance.now()
+
+    const getSectionsCount = () => document.querySelectorAll('.snap-section').length || 1
+
     const handleSmoothSnap = () => {
+      const now = performance.now()
+      const y = window.scrollY
+      const dy = y - lastY
+      const dt = Math.max(1, now - lastT)
+      const velocity = dy / dt // px per ms
+      lastY = y
+      lastT = now
+
       clearTimeout(scrollTimeout)
+      // Wait a short moment after user stops scrolling to snap
       scrollTimeout = setTimeout(() => {
         const scrollY = window.scrollY
-        const windowHeight = window.innerHeight
-        const currentIndex = Math.round(scrollY / windowHeight)
-        const targetScroll = currentIndex * windowHeight
-        const distanceFromTarget = Math.abs(scrollY - targetScroll)
-        if (distanceFromTarget > 10 && distanceFromTarget < windowHeight * 0.4) {
+        const windowHeight = window.innerHeight || 1
+        const indexF = scrollY / windowHeight
+
+        // Decide target index: default nearest, but respect strong fling (velocity)
+        let targetIndex = Math.round(indexF)
+
+        // If user performed a quick scroll (fling), move to next/prev section in direction
+        // velocity threshold tuned empirically (0.5 px/ms => ~500 px in 1s)
+        if (Math.abs(velocity) > 0.5) {
+          if (velocity > 0) targetIndex = Math.ceil(indexF + 0.05)
+          else targetIndex = Math.floor(indexF - 0.05)
+        }
+
+        const sectionsCount = getSectionsCount()
+        targetIndex = Math.max(0, Math.min(sectionsCount - 1, targetIndex))
+
+        const targetScroll = targetIndex * windowHeight
+
+        // Only trigger smooth scroll if we're reasonably far from target
+        if (Math.abs(scrollY - targetScroll) > 8) {
           window.scrollTo({ top: targetScroll, behavior: 'smooth' })
         }
-      }, 150)
+      }, 120)
     }
+
     window.addEventListener('scroll', handleSmoothSnap, { passive: true })
     return () => {
       window.removeEventListener('scroll', handleSmoothSnap)

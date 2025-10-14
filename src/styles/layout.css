@@ -69,5 +69,15 @@
   
   .snap-section {
     scroll-snap-align: none;
+    min-height: auto;
+    padding: clamp(3rem, 9vw, 4.5rem) 0;
+    display: block;
+    align-items: flex-start;
+  }
+
+  .container {
+    display: block;
+    padding: 0 clamp(1.25rem, 5vw, 1.75rem);
+    max-width: min(100%, var(--container-max-width));
   }
 }

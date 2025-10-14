@@ -24,11 +24,13 @@
 .cover-logo {
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
   z-index: 10;
   pointer-events: none;
   padding: var(--container-padding);
+  padding-bottom: 33.33vh;
 }
 
 .cover-logo svg {
@@ -64,6 +66,12 @@
 
 /* Laptop и выше */
 @media (min-width: 1024px) {
+  .cover-logo {
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 15vh;
+  }
+  
   .cover-logo svg {
     width: 20vw;
     max-width: none;

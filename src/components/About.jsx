@@ -51,8 +51,6 @@ export default function About() {
       className={`about-section snap-section ${isVisible ? 'is-visible' : ''}`}
       onClick={handleBackgroundClick}
     >
-      <div className="about-gradient-overlay"></div>
-
       <div className="container about-content-wrap">
         <div className="section-label fade-text fade-fast">/ 05 / О компании</div>
         <h2 className="section-title fade-text fade-fast">Наша миссия</h2>
