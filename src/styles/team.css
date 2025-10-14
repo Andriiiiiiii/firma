@@ -40,7 +40,7 @@
   gap: 4vw;
   align-items: stretch;
   height: var(--team-height);
-  transition: grid-template-columns 0.35s ease;
+  transition: grid-template-columns 0.2s ease;
 }
 
 .team-layout.has-hover {
@@ -178,7 +178,7 @@
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
-  border: 1px solid transparent;
+  border: none;
   border-radius: 0;
   padding: 0;
   background: transparent;
@@ -187,7 +187,6 @@
   justify-content: flex-start;
   gap: 1.2vh;
   transition: opacity 0.25s ease,
-              background 0.25s ease,
               padding 0.25s ease;
 }
 
@@ -195,10 +194,7 @@
   opacity: 1;
   pointer-events: auto;
   padding: 2vh 2vw;
-  background:
-    radial-gradient(60% 80% at 30% 30%, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.00) 70%),
-    radial-gradient(70% 90% at 80% 70%, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.00) 75%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  background: transparent;
 }
 
 .team-exp-title {

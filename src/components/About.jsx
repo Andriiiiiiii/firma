@@ -3,10 +3,9 @@ import React, { useEffect, useRef, useState } from 'react'
 export default function About() {
   const sectionRef = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
-  const [hovered, setHovered] = useState(null) // 'fund' | 'eng' | 'inn' | null
+  const [hovered, setHovered] = useState(null)
   const [isMobile, setIsMobile] = useState(false)
 
-  // Определяем мобильное устройство
   useEffect(() => {
     const checkMobile = () => {
       const mobile = window.innerWidth < 1024 || 
@@ -30,14 +29,18 @@ export default function About() {
     return () => observer.disconnect()
   }, [])
 
-  // Обработчик для мобильных (клик) и десктопа (hover)
   const handleInteraction = (type) => {
     if (isMobile) {
-      // На мобильных: toggle при клике
       setHovered(prev => prev === type ? null : type)
     } else {
-      // На десктопе: показываем при hover
       setHovered(type)
+    }
+  }
+
+  // Закрытие на клик по фону (только мобильные)
+  const handleBackgroundClick = (e) => {
+    if (isMobile && e.target === e.currentTarget) {
+      setHovered(null)
     }
   }
 
@@ -46,6 +49,7 @@ export default function About() {
       ref={sectionRef}
       id="about"
       className={`about-section snap-section ${isVisible ? 'is-visible' : ''}`}
+      onClick={handleBackgroundClick}
     >
       <div className="about-gradient-overlay"></div>
 
@@ -54,10 +58,8 @@ export default function About() {
         <h2 className="section-title fade-text fade-fast">Наша миссия</h2>
 
         <div className="about-content">
-          {/* ЛЕВО: быстрый показ + подмена на карточки при взаимодействии */}
           <div className="about-text fade-text fade-fast">
             <div className="about-swap">
-              {/* Базовый текст */}
               <div className={`about-swap-inner ${hovered === null ? 'active' : ''}`}>
                 <p>
                   Мы создаём цифровые решения, которые помогают бизнесу расти и
@@ -73,7 +75,6 @@ export default function About() {
                 </p>
               </div>
 
-              {/* Фундаментальный подход */}
               <div className={`about-swap-inner ${hovered === 'fund' ? 'active' : ''}`}>
                 <div className="about-card">
                   <h4>Фундаментальный подход</h4>
@@ -86,7 +87,6 @@ export default function About() {
                 </div>
               </div>
 
-              {/* Инженерная точность */}
               <div className={`about-swap-inner ${hovered === 'eng' ? 'active' : ''}`}>
                 <div className="about-card">
                   <h4>Инженерная точность</h4>
@@ -99,7 +99,6 @@ export default function About() {
                 </div>
               </div>
 
-              {/* Инновационные решения */}
               <div className={`about-swap-inner ${hovered === 'inn' ? 'active' : ''}`}>
                 <div className="about-card">
                   <h4>Инновационные решения</h4>
@@ -115,7 +114,6 @@ export default function About() {
             </div>
           </div>
 
-          {/* ПРАВО: появляется с задержкой; взаимодействие управляет левым контентом */}
           <div 
             className="stats fade-text fade-delayed"
             onMouseLeave={() => !isMobile && setHovered(null)}

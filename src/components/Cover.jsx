@@ -1,24 +1,28 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import CrystalLattice from './DotGrid.jsx'
 
 export default function Cover() {
-  const [showAnimation, setShowAnimation] = useState(true)
+  const [isVisible, setIsVisible] = useState(false)
+  const sectionRef = useRef(null)
 
   useEffect(() => {
-    const checkDevice = () => {
-      const isMobile = window.innerWidth < 1024 || 
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-      setShowAnimation(!isMobile)
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting)
+      },
+      { threshold: 0.1 }
+    )
+    
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
     }
-    checkDevice()
-    const handleResize = () => checkDevice()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    
+    return () => observer.disconnect()
   }, [])
 
   return (
-    <section id="cover" className="cover snap-section">
-      {showAnimation ? (
+    <section ref={sectionRef} id="cover" className="cover snap-section">
+      {isVisible ? (
         <div className="cover-background">
           <CrystalLattice />
         </div>

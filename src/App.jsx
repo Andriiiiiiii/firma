@@ -15,7 +15,6 @@ export default function App() {
   const [showMenu, setShowMenu] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
-  // Определяем мобильное устройство
   useEffect(() => {
     const checkMobile = () => {
       const mobile =
@@ -24,6 +23,10 @@ export default function App() {
           navigator.userAgent
         )
       setIsMobile(mobile)
+      // На мобильных показываем меню всегда
+      if (mobile) {
+        setShowMenu(true)
+      }
     }
     checkMobile()
     window.addEventListener('resize', checkMobile)

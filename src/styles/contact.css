@@ -161,3 +161,28 @@
   transform: translateY(-0.3vh);
   box-shadow: 0 0.8vh 1.5vw rgba(255, 255, 255, 0.1);
 }
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submit-message {
+  margin-bottom: 1.5vh;
+  padding: 1vh 1.5vw;
+  border-radius: 0.5vh;
+  font-size: 0.9vw;
+  text-align: center;
+}
+
+.submit-message.success {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.submit-message.error {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}

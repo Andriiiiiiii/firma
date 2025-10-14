@@ -4,23 +4,22 @@ import SphericalLattice from './SphericalLattice.jsx'
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
+    contact: '',
     message: '',
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState(null)
 
   const sectionRef = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
-  const [showAnimation, setShowAnimation] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
   const [scrollRotation, setScrollRotation] = useState({ yaw: 0, pitch: 0 })
 
   useEffect(() => {
-    // Проверяем, не мобильное ли это устройство
     const checkDevice = () => {
       const mobile = window.innerWidth < 1024 || 
                       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
       setIsMobile(mobile)
-      setShowAnimation(!mobile)
     }
 
     checkDevice()
@@ -31,7 +30,6 @@ export default function Contact() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // Обработчик скролла для мобильных устройств
   useEffect(() => {
     if (!isMobile) return
 
@@ -74,9 +72,41 @@ export default function Contact() {
   const handleChange = (e) =>
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    alert('Спасибо! Это демо-форма, сообщение не отправляется на сервер.')
+    setIsSubmitting(true)
+    setSubmitStatus(null)
+
+    try {
+      // Отправка в Telegram Bot
+      const botToken = '7977655823:AAE3OKlJbK4sOpxfhqJBBLQpPYf_-MjVMYY'
+      const chatId = '893081997'
+      const message = `🔔 Новая заявка с сайта:\n\n👤 Имя: ${formData.name}\n📧 Контакт: ${formData.contact}\n💬 Сообщение: ${formData.message}`
+
+      const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message,
+          parse_mode: 'HTML'
+        })
+      })
+
+      if (response.ok) {
+        setSubmitStatus('success')
+        setFormData({ name: '', contact: '', message: '' })
+      } else {
+        setSubmitStatus('error')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -86,7 +116,7 @@ export default function Contact() {
       className={`contact-section snap-section ${isVisible ? 'is-visible' : ''}`}
       style={{ position: 'relative', overflow: 'hidden', background: '#000' }}
     >
-      {isVisible && showAnimation && (
+      {isVisible && (
         <SphericalLattice
           pointsPerRow={25}
           pointsPerCol={70}
@@ -135,21 +165,23 @@ export default function Contact() {
                   value={formData.name}
                   onChange={handleChange}
                   required
+                  disabled={isSubmitting}
                 />
                 <label className="form-label">Ваше имя</label>
               </div>
 
               <div className="form-group">
                 <input
-                  type="email"
-                  name="email"
+                  type="text"
+                  name="contact"
                   className="form-input"
                   placeholder=" "
-                  value={formData.email}
+                  value={formData.contact}
                   onChange={handleChange}
                   required
+                  disabled={isSubmitting}
                 />
-                <label className="form-label">Email</label>
+                <label className="form-label">Email/Telegram</label>
               </div>
 
               <div className="form-group form-group-full">
@@ -161,13 +193,21 @@ export default function Contact() {
                   value={formData.message}
                   onChange={handleChange}
                   required
+                  disabled={isSubmitting}
                 />
                 <label className="form-label">Расскажите о вашем проекте</label>
               </div>
             </div>
 
-            <button type="submit" className="submit-button">
-              <span>Отправить</span>
+            {submitStatus === 'success' && (
+              <p className="submit-message success">Спасибо! Ваше сообщение отправлено.</p>
+            )}
+            {submitStatus === 'error' && (
+              <p className="submit-message error">Ошибка отправки. Попробуйте позже.</p>
+            )}
+
+            <button type="submit" className="submit-button" disabled={isSubmitting}>
+              <span>{isSubmitting ? 'Отправка...' : 'Отправить'}</span>
             </button>
           </form>
         </div>
