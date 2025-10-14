@@ -21,3 +21,44 @@
 
 /* Адаптивные стили (должны быть последними) */
 @import './styles/responsive.css';
+/* ===== ЛОГОТИП: первый слайд ===== */
+.cover {
+  position: relative; /* чтобы абсолютное центрирование работало внутри секции */
+}
+
+.cover-logo {
+  position: absolute;
+  inset: 0;                 /* растягиваем контейнер по всей секции */
+  display: grid;
+  place-items: center;      /* строгий центр по X/Y */
+  z-index: 3;               /* поверх анимации фона */
+  pointer-events: none;     /* логотип не мешает скроллу/кликам */
+}
+
+.cover-logo-img {
+  display: block;
+  width: 220px;   /* ———— чёткий размер на телефонах */
+  height: auto;
+  user-select: none;
+}
+
+/* Планка на планшетах */
+@media (min-width: 640px) {
+  .cover-logo-img { width: 300px; }  /* ———— чёткий размер на планшетах */
+}
+
+/* Планка на десктопе */
+@media (min-width: 1024px) {
+  .cover-logo-img { width: 580px; }  /* ———— чёткий размер на десктопе */
+}
+
+/* ===== ЛОГОТИП: в меню ===== */
+.menu-logo-img {
+  display: block;
+  height: 28px;  /* чёткая высота в меню */
+  width: auto;
+}
+
+@media (min-width: 1024px) {
+  .menu-logo-img { height: 100px; } /* крупнее на десктопе */
+}

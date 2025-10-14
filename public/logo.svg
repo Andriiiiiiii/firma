@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1800" height="900" viewBox="0 0 1800 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="фирма́ wordmark (transparent background)">
+  <defs>
+    <style><![CDATA[
+      .mark {
+        font-family: 'Playfair Display', 'Oranienbaum', 'Prata', 'Times New Roman', serif;
+        font-weight: 300;
+        font-size: 320px;
+        fill: #FFFFFF;
+        letter-spacing: 0.06em;
+        text-rendering: geometricPrecision;
+        -webkit-font-smoothing: antialiased;
+        font-feature-settings: "kern" 1, "liga" 1;
+      }
+    ]]></style>
+  </defs>
+  <text class="mark" x="50%" y="60%" dominant-baseline="middle" text-anchor="middle">фирма́</text>
+</svg>
