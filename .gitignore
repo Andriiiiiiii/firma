@@ -11,6 +11,9 @@ dist-ssr
 .env.*
 !.env.example
 
+# Virtual environment
+.venv/
+
 # Logs
 *.log
 npm-debug.log*
