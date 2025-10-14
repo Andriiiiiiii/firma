@@ -1,23 +1,26 @@
+// OverlayMenu.jsx
 import React, { useEffect } from 'react'
 
 export default function OverlayMenu({ open, onClose, onNav }) {
   useEffect(() => {
     if (!open) return
-    const handleKeyDown = (e) => { if (e.key === 'Escape') onClose() }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    const onKey = (e) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
   }, [open, onClose])
 
   const menuItems = [
-    { id: 'cover', label: 'Главная', number: '01' },
-    { id: 'intro', label: 'Введение', number: '02' },
-    { id: 'services', label: 'Услуги', number: '03' },
-    { id: 'team', label: 'Команда', number: '04' },
-    { id: 'about', label: 'О нас', number: '05' },
-    { id: 'contact', label: 'Контакты', number: '06' }
+    { id: 'cover',    label: 'Главная',   number: '01' },
+    { id: 'intro',    label: 'Введение',  number: '02' },
+    { id: 'services', label: 'Услуги',    number: '03' },
+    { id: 'team',     label: 'Команда',   number: '04' },
+    { id: 'about',    label: 'О нас',     number: '05' },
+    { id: 'contact',  label: 'Контакты',  number: '06' },
   ]
 
-  const handleItemClick = (id) => { onNav(id) }
+  const handleItemClick = (id) => {
+    onNav?.(id)
+  }
 
   return (
     <div className={`menu-overlay ${open ? 'open' : ''}`} aria-hidden={!open}>
@@ -25,15 +28,6 @@ export default function OverlayMenu({ open, onClose, onNav }) {
         <div className="menu-logo">
           <img src="/logo.svg" alt="firma' logo" className="menu-logo-img" />
         </div>
-        <button
-          aria-label="Закрыть меню"
-          className="menu-close"
-          onClick={onClose}
-          type="button"
-        >
-          <span className="close-line"></span>
-          <span className="close-line"></span>
-        </button>
       </div>
 
       <div className="menu-center">

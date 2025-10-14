@@ -1,3 +1,4 @@
+// App.jsx
 import { useEffect, useState, useCallback } from 'react'
 import Cover from './components/Cover'
 import Hero from './components/Hero'
@@ -17,23 +18,25 @@ export default function App() {
   // Определяем мобильное устройство
   useEffect(() => {
     const checkMobile = () => {
-      const mobile = window.innerWidth < 1024 || 
-                    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      const mobile =
+        window.innerWidth < 1024 ||
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        )
       setIsMobile(mobile)
     }
-
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+  // Показываем кнопку после половины экрана скролла
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY
       const threshold = window.innerHeight * 0.5
       setShowMenu(scrollY > threshold)
     }
-
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -41,9 +44,7 @@ export default function App() {
   // Smooth snap только для десктопа
   useEffect(() => {
     if (isMobile) return
-
     let scrollTimeout
-
     const handleSmoothSnap = () => {
       clearTimeout(scrollTimeout)
       scrollTimeout = setTimeout(() => {
@@ -52,16 +53,11 @@ export default function App() {
         const currentIndex = Math.round(scrollY / windowHeight)
         const targetScroll = currentIndex * windowHeight
         const distanceFromTarget = Math.abs(scrollY - targetScroll)
-
         if (distanceFromTarget > 10 && distanceFromTarget < windowHeight * 0.4) {
-          window.scrollTo({
-            top: targetScroll,
-            behavior: 'smooth'
-          })
+          window.scrollTo({ top: targetScroll, behavior: 'smooth' })
         }
       }, 150)
     }
-
     window.addEventListener('scroll', handleSmoothSnap, { passive: true })
     return () => {
       window.removeEventListener('scroll', handleSmoothSnap)
@@ -92,15 +88,17 @@ export default function App() {
 
   return (
     <>
-      <MenuButton 
-        visible={showMenu && !menuOpen} 
-        onClick={() => setMenuOpen(true)} 
+      {/* ВАЖНО: visible = showMenu || menuOpen => не прячем кнопку, когда меню открыто */}
+      <MenuButton
+        open={menuOpen}
+        visible={showMenu || menuOpen}
+        onClick={() => setMenuOpen((o) => !o)}
       />
 
-      <OverlayMenu 
-        open={menuOpen} 
-        onClose={() => setMenuOpen(false)} 
-        onNav={scrollToSection} 
+      <OverlayMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onNav={scrollToSection}
       />
 
       <div className="main-container">

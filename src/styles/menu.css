@@ -1,54 +1,82 @@
 /* ============================================
-   MENU (Mobile First)
+   MENU (Unified Button + Overlay)
    ============================================ */
 
-/* Hamburger Button */
-.hamburger-menu {
+/* Позиция/размер кнопки меню */
+:root {
+  --menu-top: 2rem;
+  --menu-right: var(--container-padding, 5vw);
+  --menu-size: 48px;
+  --menu-line-h: 2px;
+}
+
+/* ЕДИНАЯ кнопка меню: одно и то же место для открытия/закрытия */
+.menu-trigger {
   position: fixed;
-  top: 1.5rem;
-  right: var(--container-padding);
-  z-index: 1000;
-  width: 28px;
-  height: 18px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  opacity: 0;
-  transform: translateY(-10px);
-  pointer-events: none;
-  transition: opacity 0.6s cubic-bezier(0.645, 0.045, 0.355, 1.0),
-              transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1.0);
-  /* Увеличенная область нажатия для мобильных */
-  min-width: 44px;
-  min-height: 44px;
+  top: var(--menu-top);
+  right: var(--menu-right);
+  width: var(--menu-size);
+  height: var(--menu-size);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 2001; /* выше слоя меню-оверлея */
+  -webkit-tap-highlight-color: transparent;
 }
 
-.hamburger-menu.visible {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
+/* Полоски кнопки */
+.menu-trigger .line {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  height: var(--menu-line-h);
+  background: #e8e6e1;
+  border-radius: 1px;
+  transition:
+    transform .25s ease,
+    top .25s ease,
+    opacity .2s ease,
+    background .25s ease;
 }
 
-.hamburger-line {
-  width: 100%;
-  max-width: 28px;
-  height: 2px;
-  background-color: #e8e6e1;
-  transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1.0);
+/* Три полоски по умолчанию */
+.menu-trigger .line-top { top: 14px; }
+.menu-trigger .line-mid { top: 22px; }
+.menu-trigger .line-bot { top: 30px; }
+
+/* Ховер (меню закрыто): превращаемся в одну полоску */
+.menu-trigger:hover:not(.open) .line-top,
+.menu-trigger:hover:not(.open) .line-bot {
+  top: 22px;
+  opacity: 0;
 }
 
-/* Overlay Menu */
+/* Открытое состояние: крест */
+.menu-trigger.open .line-mid {
+  opacity: 0;
+}
+.menu-trigger.open .line-top {
+  top: 22px;
+  transform: rotate(45deg);
+}
+.menu-trigger.open .line-bot {
+  top: 22px;
+  transform: rotate(-45deg);
+}
+
+/* ============================================
+   Overlay Menu
+   ============================================ */
+
 .menu-overlay {
   position: fixed;
   inset: 0;
   z-index: 2000;
-  background: 
+  background:
     radial-gradient(ellipse 70vw 50vh at 30% 20%, rgba(50, 50, 50, 0.6), transparent 65%),
     radial-gradient(ellipse 55vw 40vh at 70% 60%, rgba(40, 40, 40, 0.5), transparent 70%),
     radial-gradient(ellipse 45vw 30vh at 50% 80%, rgba(30, 30, 30, 0.4), transparent 75%),
@@ -57,8 +85,9 @@
   opacity: 0;
   pointer-events: none;
   transform: scale(1.02);
-  transition: opacity 0.6s cubic-bezier(0.645, 0.045, 0.355, 1.0),
-              transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1.0);
+  transition:
+    opacity 0.6s cubic-bezier(0.645, 0.045, 0.355, 1.0),
+    transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1.0);
 }
 
 .menu-overlay.open {
@@ -82,43 +111,7 @@
   opacity: 0.9;
 }
 
-.menu-close {
-  width: 32px;
-  height: 32px;
-  min-width: 44px;
-  min-height: 44px;
-  position: relative;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  z-index: 2001;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.close-line {
-  position: absolute;
-  width: 100%;
-  max-width: 32px;
-  height: 2px;
-  background: #e8e6e1;
-  transition: background 0.3s ease;
-}
-
-.menu-close:hover .close-line {
-  background: #ffffff;
-}
-
-.close-line:first-child {
-  transform: rotate(45deg);
-}
-
-.close-line:last-child {
-  transform: rotate(-45deg);
-}
-
+/* Центр/контент */
 .menu-center {
   position: absolute;
   inset: 0;
@@ -171,9 +164,7 @@
   align-items: center;
 }
 
-.menu-item a:hover {
-  opacity: 1;
-}
+.menu-item a:hover { opacity: 1; }
 
 .menu-text {
   font-weight: 200;
@@ -184,9 +175,7 @@
   line-height: 1.1;
 }
 
-.menu-item a:hover .menu-text {
-  opacity: 1;
-}
+.menu-item a:hover .menu-text { opacity: 1; }
 
 .menu-sup {
   font-size: 0.875rem;
@@ -197,117 +186,69 @@
   margin-top: 0.25rem;
 }
 
-/* Tablet */
+/* ============================================
+   Responsive
+   ============================================ */
+
 @media (min-width: 768px) {
-  .hamburger-menu {
-    width: 32px;
-    height: 20px;
-    top: 2rem;
-  }
-  
-  .hamburger-line {
-    max-width: 32px;
-  }
-  
-  .menu-logo {
-    font-size: 1.25rem;
-  }
-  
-  .menu-center {
-    padding: 5rem var(--container-padding) 3rem;
-  }
-  
-  .menu-text {
-    font-size: 2.5rem;
-  }
-  
-  .menu-sup {
-    font-size: 1rem;
-  }
+  .menu-top { padding: 2rem var(--container-padding); }
+
+  .menu-logo { font-size: 1.25rem; }
+
+  .menu-center { padding: 5rem var(--container-padding) 3rem; }
+
+  .menu-text { font-size: 2.5rem; }
+
+  .menu-sup { font-size: 1rem; }
 }
 
-/* Laptop и выше */
 @media (min-width: 1024px) {
-  .hamburger-menu {
+  /* кнопка чуть более «fluid» на десктопе */
+  .menu-trigger {
     width: 2.5vw;
-    height: 1.5vh;
+    height: 2.5vw;
     top: 2.5vh;
     right: 5vw;
-    min-width: auto;
-    min-height: auto;
   }
-  
-  .hamburger-line {
+  .menu-trigger .line {
+    left: 0.5vw;
+    right: 0.5vw;
     height: 0.15vh;
-    max-width: none;
   }
-  
-  .hamburger-menu:hover .hamburger-line:nth-child(1) {
-    transform: translateY(0.7vh);
-  }
-  
-  .hamburger-menu:hover .hamburger-line:nth-child(3) {
-    transform: translateY(-0.7vh);
-  }
-  
+  .menu-trigger .line-top { top: 0.9vw; }
+  .menu-trigger .line-mid { top: 1.25vw; }
+  .menu-trigger .line-bot { top: 1.6vw; }
+
   .menu-overlay {
-    background: 
-      radial-gradient(ellipse 70vw 50vh at 30% 20%, rgba(50, 50, 50, 0.6), transparent 65%),
-      radial-gradient(ellipse 55vw 40vh at 70% 60%, rgba(40, 40, 40, 0.5), transparent 70%),
-      radial-gradient(ellipse 45vw 30vh at 50% 80%, rgba(30, 30, 30, 0.4), transparent 75%),
-      #000;
     backdrop-filter: blur(0.6vw);
   }
-  
-  .menu-top {
-    padding: 2.5vh 5vw;
-  }
-  
+
+  .menu-top { padding: 2.5vh 5vw; }
+
   .menu-logo {
     font-size: 1.3vw;
     letter-spacing: 0.05vw;
   }
-  
-  .menu-close {
-    width: 2vw;
-    height: 2vw;
-    min-width: auto;
-    min-height: auto;
-  }
-  
-  .close-line {
-    height: 0.15vh;
-    max-width: none;
-  }
-  
+
   .menu-center {
     align-items: center;
     padding: 7vh 5vw;
   }
-  
-  .menu-content {
-    max-width: 90vw;
-  }
-  
+
+  .menu-content { max-width: 90vw; }
+
   .menu-grid-two-rows {
     grid-template-columns: repeat(3, auto);
     grid-template-rows: repeat(2, auto);
     gap: 2vh 3vw;
   }
-  
-  .menu-item {
-    min-height: auto;
-  }
-  
+
   .menu-item a {
     gap: 0.8vw;
-    min-height: auto;
   }
-  
-  .menu-text {
-    font-size: 5vw;
-  }
-  
+
+  .menu-text { font-size: 5vw; }
+
   .menu-sup {
     font-size: 1.2vw;
     letter-spacing: 0.03vw;
@@ -317,19 +258,15 @@
 
 /* Очень маленькие экраны */
 @media (max-width: 374px) {
-  .menu-text {
-    font-size: 1.75rem;
-  }
-  
-  .menu-center {
-    padding: 3rem var(--container-padding) 2rem;
-  }
+  .menu-text { font-size: 1.75rem; }
+  .menu-center { padding: 3rem var(--container-padding) 2rem; }
 }
 
-/* Touch устройства */
+/* Touch-устройства: отключаем hover-анимацию для «одной полоски» */
 @media (hover: none) and (pointer: coarse) {
-  .hamburger-menu:hover .hamburger-line:nth-child(1),
-  .hamburger-menu:hover .hamburger-line:nth-child(3) {
-    transform: none;
+  .menu-trigger:hover:not(.open) .line-top,
+  .menu-trigger:hover:not(.open) .line-bot {
+    top: initial;
+    opacity: 1;
   }
 }
