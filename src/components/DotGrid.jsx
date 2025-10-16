@@ -4,10 +4,10 @@ import { getDeviceType, getQualitySettings, isMobile } from "../utils/deviceUtil
 export default function CrystalLattice(props) {
   const {
     baseSpacing = 20,
-    stiffness = 100,
-    originStiffness = 10,
-    damping = 0.4,
-    mouseForce = 3000,
+    stiffness = 80,
+    originStiffness = 8,
+    damping = 0.6,
+    mouseForce = 1500,
     mouseRadius = 400,
     mouseFalloff = 3,
     sideVignetteStrength = 1,
@@ -17,33 +17,41 @@ export default function CrystalLattice(props) {
 
   const canvasRef = useRef(null)
   const wrapRef = useRef(null)
+  
+  const isMobileDevice = isMobile()
 
   useEffect(() => {
     const canvas = canvasRef.current
     const wrap = wrapRef.current
     if (!canvas || !wrap) return
 
-    // Определяем тип устройства и настройки производительности
     const deviceType = getDeviceType()
     const qualitySettings = getQualitySettings()
     const isMobileDevice = isMobile()
     
-    // Адаптивные настройки плотности сетки
     const getGridDensity = () => {
+      const { width, height } = wrap.getBoundingClientRect()
+      const ar = height / Math.max(1, width)
+
+      const decide = (baseCols) => {
+        let rows = Math.ceil(ar * (baseCols - 1)) + 1
+        rows = Math.max(rows, Math.min(18, baseCols))
+        return { cols: baseCols, rows }
+      }
+
       switch (deviceType) {
         case 'mobile':
-          return { cols: 40, rows: 25 }
+          return decide(width < 360 ? 18 : width < 420 ? 22 : 26)
         case 'tablet':
-          return { cols: 60, rows: 35 }
+          return decide(42)
         default:
-          return { cols: 80, rows: 45 }
+          return decide(80)
       }
     }
     
     const { cols: fixedCols, rows: fixedRows } = getGridDensity()
     
-    // Отключаем интерактивность на слабых устройствах
-    const enableInteractivity = qualitySettings.enableAnimations
+    const enableInteractivity = true
 
     const ctx = canvas.getContext("2d", { alpha: true })
 
@@ -57,11 +65,12 @@ export default function CrystalLattice(props) {
       vx: null, vy: null,
       ox: null, oy: null,
       nbr: null, rest: null,
-      mx: -1e6, my: -1e6, mActive: false && enableInteractivity,
+      mx: -1e6, my: -1e6, mActive: enableInteractivity,
       acc: 0, last: 0,
       dotR: 0,
       vignetteCanvas: null,
       dotSprite: null, dotSpriteSize: 0,
+      waveTriggered: false,
     }
 
     const neighborOffsets = new Int8Array([
@@ -72,6 +81,7 @@ export default function CrystalLattice(props) {
     const mR2 = mR * mR
     const mRInv = mR > 0 ? 1 / mR : 0
 
+    // Расширяем затемнение по краям (было 280/240, делаем шире)
     const buildVignette = () => {
       const vw = S.w, vh = S.h
       if (vw <= 0 || vh <= 0) return
@@ -82,8 +92,9 @@ export default function CrystalLattice(props) {
       const vCtx = vCan.getContext("2d")
       vCtx.clearRect(0, 0, vw, vh)
 
-      const bandX = Math.min(280, Math.max(120, vw * 0.18))
-      const bandY = Math.min(240, Math.max(100, vh * 0.22))
+      // Увеличиваем ширину затемнения
+      const bandX = Math.min(450, Math.max(200, vw * 0.28))
+      const bandY = Math.min(400, Math.max(160, vh * 0.32))
       const a = Math.max(0, Math.min(1, sideVignetteStrength))
 
       let g = vCtx.createLinearGradient(0, 0, bandX, 0)
@@ -149,8 +160,13 @@ export default function CrystalLattice(props) {
       canvas.style.height = `${S.h}px`
       ctx.scale(S.dpr, S.dpr)
 
-      S.spacing = S.w / (S.cols - 1)
-      S.dotR = S.spacing * 0.075
+      S.spacingX = S.cols > 1 ? S.w / (S.cols - 1) : S.w
+      S.spacingY = S.rows > 1 ? S.h / (S.rows - 1) : S.h
+      S.spacing = Math.min(S.spacingX, S.spacingY)
+      
+      // Фиксированный размер точек (не зависит от масштаба браузера)
+      const dotSizeFactor = isMobileDevice ? 0.11 : 0.07
+      S.dotR = S.spacing * dotSizeFactor
 
       S.count = S.cols * S.rows
 
@@ -165,9 +181,9 @@ export default function CrystalLattice(props) {
 
       let k = 0
       for (let r = 0; r < S.rows; r++) {
-        const y = r * S.spacing
+        const y = r * S.spacingY
         for (let c = 0; c < S.cols; c++, k++) {
-          const x = c * S.spacing
+          const x = c * S.spacingX
           S.px[k] = S.ox[k] = x
           S.py[k] = S.oy[k] = y
         }
@@ -199,6 +215,39 @@ export default function CrystalLattice(props) {
 
       S.acc = 0
       S.last = performance.now() / 1000
+      S.waveTriggered = false
+    }
+
+    // Добавляем волну при открытии
+    const triggerInitialWave = () => {
+      if (S.waveTriggered) return
+      S.waveTriggered = true
+      
+      // Случайная точка и направление
+      const cx = Math.random() * S.w
+      const cy = Math.random() * S.h
+      const angle = Math.random() * Math.PI * 2
+      const waveForce = 8000
+      
+      const px = S.px, py = S.py, vx = S.vx, vy = S.vy
+      const cnt = S.count
+      const maxDist = Math.max(S.w, S.h)
+      
+      for (let i = 0; i < cnt; i++) {
+        const dx = px[i] - cx
+        const dy = py[i] - cy
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        if (dist < 1) continue
+        
+        const t = Math.max(0, 1 - dist / maxDist)
+        const str = t * t * waveForce
+        
+        const dirX = Math.cos(angle)
+        const dirY = Math.sin(angle)
+        
+        vx[i] += dirX * str / dist
+        vy[i] += dirY * str / dist
+      }
     }
 
     const fixedDt = 1 / 60
@@ -220,11 +269,12 @@ export default function CrystalLattice(props) {
       let minC = 0, maxC = -1, minR = 0, maxR = -1
       const mActive = S.mActive && enableInteractivity
       if (mActive) {
-        const rad = mR + S.spacing
-        minC = Math.max(0, Math.floor((S.mx - rad) / S.spacing))
-        maxC = Math.min(cols - 1, Math.floor((S.mx + rad) / S.spacing))
-        minR = Math.max(0, Math.floor((S.my - rad) / S.spacing))
-        maxR = Math.min(rows - 1, Math.floor((S.my + rad) / S.spacing))
+        const avg = S.spacing
+        const rad = mR + avg
+        minC = Math.max(0, Math.floor((S.mx - rad) / S.spacingX))
+        maxC = Math.min(cols - 1, Math.floor((S.mx + rad) / S.spacingX))
+        minR = Math.max(0, Math.floor((S.my - rad) / S.spacingY))
+        maxR = Math.min(rows - 1, Math.floor((S.my + rad) / S.spacingY))
       }
 
       let i = 0
@@ -311,6 +361,11 @@ export default function CrystalLattice(props) {
       S.last = t
       S.acc += dt
 
+      // Запускаем волну при первом кадре
+      if (!S.waveTriggered) {
+        setTimeout(() => triggerInitialWave(), 100)
+      }
+
       let steps = 0
       while (S.acc >= fixedDt && steps < maxSub) {
         update(fixedDt)
@@ -381,8 +436,9 @@ export default function CrystalLattice(props) {
           display: "block",
           width: "100%",
           height: "100%",
-          cursor: "crosshair",
-          touchAction: "none",
+          cursor: "default",
+          touchAction: "pan-y",
+          pointerEvents: "auto",
         }}
       />
     </div>

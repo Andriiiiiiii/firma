@@ -1,4 +1,3 @@
-// App.jsx
 import { useEffect, useState, useCallback } from 'react'
 import Cover from './components/Cover'
 import Hero from './components/Hero'
@@ -6,7 +5,6 @@ import Services from './components/Services'
 import Team from './components/Team'
 import About from './components/About'
 import Contact from './components/Contact'
-import Footer from './components/Footer'
 import MenuButton from './components/MenuButton'
 import OverlayMenu from './components/OverlayMenu'
 
@@ -23,7 +21,6 @@ export default function App() {
           navigator.userAgent
         )
       setIsMobile(mobile)
-      // На мобильных показываем меню всегда
       if (mobile) {
         setShowMenu(true)
       }
@@ -33,7 +30,6 @@ export default function App() {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  // Показываем кнопку после половины экрана скролла
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY
@@ -44,30 +40,6 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Smooth snap только для десктопа
-  useEffect(() => {
-    if (isMobile) return
-    let scrollTimeout
-    const handleSmoothSnap = () => {
-      clearTimeout(scrollTimeout)
-      scrollTimeout = setTimeout(() => {
-        const scrollY = window.scrollY
-        const windowHeight = window.innerHeight
-        const currentIndex = Math.round(scrollY / windowHeight)
-        const targetScroll = currentIndex * windowHeight
-        const distanceFromTarget = Math.abs(scrollY - targetScroll)
-        if (distanceFromTarget > 10 && distanceFromTarget < windowHeight * 0.4) {
-          window.scrollTo({ top: targetScroll, behavior: 'smooth' })
-        }
-      }, 150)
-    }
-    window.addEventListener('scroll', handleSmoothSnap, { passive: true })
-    return () => {
-      window.removeEventListener('scroll', handleSmoothSnap)
-      clearTimeout(scrollTimeout)
-    }
-  }, [isMobile])
-
   const scrollToSection = useCallback((sectionId) => {
     const section = document.getElementById(sectionId)
     if (section) {
@@ -76,7 +48,6 @@ export default function App() {
     }
   }, [])
 
-  // Блокируем скролл когда меню открыто на мобильных
   useEffect(() => {
     if (menuOpen && isMobile) {
       document.body.style.overflow = 'hidden'
@@ -91,7 +62,6 @@ export default function App() {
 
   return (
     <>
-      {/* ВАЖНО: visible = showMenu || menuOpen => не прячем кнопку, когда меню открыто */}
       <MenuButton
         open={menuOpen}
         visible={showMenu || menuOpen}
@@ -111,7 +81,6 @@ export default function App() {
         <Team />
         <About />
         <Contact />
-        <Footer />
       </div>
     </>
   )

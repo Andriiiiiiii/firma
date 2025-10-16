@@ -4,6 +4,8 @@ export default function Team() {
   const sectionRef = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
   const [hoveredIndex, setHoveredIndex] = useState(null)
+  const [lockedIndex, setLockedIndex] = useState(null)
+  const [cursorY, setCursorY] = useState(0)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -67,11 +69,40 @@ export default function Team() {
       ]},
   ]
 
-  const hasHover = hoveredIndex !== null
+  const activeIndex = lockedIndex !== null ? lockedIndex : hoveredIndex
+  const hasHover = activeIndex !== null
   const hovered = useMemo(
-    () => (hasHover ? teamMembers[hoveredIndex] : null),
-    [hasHover, hoveredIndex, teamMembers]
+    () => (hasHover ? teamMembers[activeIndex] : null),
+    [hasHover, activeIndex, teamMembers]
   )
+
+  const handleMouseMove = (e, index) => {
+    if (lockedIndex === null) {
+      setHoveredIndex(index)
+      const rect = e.currentTarget.getBoundingClientRect()
+      setCursorY(e.clientY - rect.top)
+    }
+  }
+
+  const handleMouseLeave = () => {
+    if (lockedIndex === null) {
+      setHoveredIndex(null)
+    }
+  }
+
+  const handleClick = (index) => {
+    if (lockedIndex === index) {
+      setLockedIndex(null)
+    } else {
+      setLockedIndex(index)
+      setHoveredIndex(index)
+    }
+  }
+
+  const handleTitleClick = () => {
+    setLockedIndex(null)
+    setHoveredIndex(null)
+  }
 
   return (
     <section
@@ -82,26 +113,50 @@ export default function Team() {
       <div className="container team-container">
         <div className="team-header">
           <div className="section-label fade-text">/ 04 / Команда</div>
-          <h2 className="section-title team-title fade-text">Наша команда</h2>
+          <h2 
+            className="section-title team-title fade-text" 
+            onClick={handleTitleClick}
+            style={{ cursor: lockedIndex !== null ? 'pointer' : 'default' }}
+          >
+            Наша команда
+          </h2>
         </div>
 
         <div className={`team-layout ${hasHover ? 'has-hover' : ''}`}>
-          {/* ЛЕВАЯ КОЛОНКА — фото команды/участника */}
-          <div className="team-photo-large fade-text">
+          <div 
+            className="team-photo-large fade-text"
+            style={{
+              transform: hasHover ? `translateX(0) scale(1)` : 'translateX(0) scale(1)',
+              opacity: 1,
+              transformOrigin: 'right center',
+              transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease'
+            }}
+          >
             <img
               src={hasHover ? `/${hovered.photo}` : '/team.webp'}
               alt={hasHover ? hovered.name : "Команда firma'"}
               className="team-photo-img"
               draggable="false"
+              style={{
+                transform: hasHover ? 'scale(1)' : 'scale(1)',
+                opacity: 1,
+                transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease',
+              }}
+              key={hasHover ? hovered.photo : 'team'}
             />
             {!hasHover && (
-              <div className="team-photo-overlay">
+              <div 
+                className="team-photo-overlay"
+                style={{
+                  opacity: 1,
+                  transition: 'opacity 0.3s ease'
+                }}
+              >
                 <span className="team-count">{teamMembers.length} человек</span>
               </div>
             )}
           </div>
 
-          {/* ЦЕНТРАЛЬНАЯ КОЛОНКА — опыт (невидима до ховера, с градиентом) */}
           <div className="team-experience fade-text" aria-hidden={!hasHover}>
             {hasHover && (
               <>
@@ -114,17 +169,19 @@ export default function Team() {
             )}
           </div>
 
-          {/* ПРАВАЯ КОЛОНКА — список: фиксированная ширина/высота, внутренний скролл */}
           <div
             className="team-members-list fade-text"
-            onMouseLeave={() => setHoveredIndex(null)}
+            onMouseLeave={handleMouseLeave}
           >
             <ul className="team-names">
               {teamMembers.map((member, i) => (
                 <li
                   key={i}
-                  className="team-member-item"
-                  onMouseEnter={() => setHoveredIndex(i)}
+                  className={`team-member-item ${lockedIndex === i ? 'locked' : ''}`}
+                  onMouseEnter={(e) => handleMouseMove(e, i)}
+                  onMouseMove={(e) => handleMouseMove(e, i)}
+                  onClick={() => handleClick(i)}
+                  style={{ cursor: 'pointer' }}
                 >
                   <span className="member-number">{String(i + 1).padStart(2, '0')}</span>
                   <div className="member-info">

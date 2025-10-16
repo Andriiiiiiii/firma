@@ -4,6 +4,17 @@
 
 .contact-section {
   border-top: 1px solid rgba(232, 230, 225, 0.1);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  padding-bottom: 3vh;
 }
 
 .contact-wrapper {
@@ -11,8 +22,9 @@
   grid-template-columns: 1fr 1.5fr;
   gap: 4vw;
   margin-top: 0;
-  max-height: 70vh;
+  max-height: 60vh;
   overflow: hidden;
+  flex: 1;
 }
 
 .contact-info {
@@ -185,4 +197,18 @@
   color: #f87171;
   background: rgba(248, 113, 113, 0.1);
   border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+/* Footer внутри Contact */
+.contact-footer {
+  margin-top: auto;
+  padding-top: 4vh;
+  text-align: center;
+  border-top: 1px solid rgba(232, 230, 225, 0.1);
+}
+
+.contact-footer-text {
+  opacity: 0.5;
+  font-size: 0.8vw;
+  font-weight: 300;
 }

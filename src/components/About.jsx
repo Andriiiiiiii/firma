@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 export default function About() {
   const sectionRef = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
-  const [hovered, setHovered] = useState(null)
+  const [selectedType, setSelectedType] = useState(null)
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -31,16 +31,19 @@ export default function About() {
 
   const handleInteraction = (type) => {
     if (isMobile) {
-      setHovered(prev => prev === type ? null : type)
+      setSelectedType(prev => prev === type ? null : type)
     } else {
-      setHovered(type)
+      setSelectedType(type)
     }
   }
 
-  // Закрытие на клик по фону (только мобильные)
+  const handleTitleClick = () => {
+    setSelectedType(null)
+  }
+
   const handleBackgroundClick = (e) => {
     if (isMobile && e.target === e.currentTarget) {
-      setHovered(null)
+      setSelectedType(null)
     }
   }
 
@@ -51,16 +54,20 @@ export default function About() {
       className={`about-section snap-section ${isVisible ? 'is-visible' : ''}`}
       onClick={handleBackgroundClick}
     >
-      <div className="about-gradient-overlay"></div>
-
       <div className="container about-content-wrap">
         <div className="section-label fade-text fade-fast">/ 05 / О компании</div>
-        <h2 className="section-title fade-text fade-fast">Наша миссия</h2>
+        <h2 
+          className="section-title fade-text fade-fast"
+          onClick={handleTitleClick}
+          style={{ cursor: selectedType ? 'pointer' : 'default' }}
+        >
+          Наша миссия
+        </h2>
 
         <div className="about-content">
           <div className="about-text fade-text fade-fast">
             <div className="about-swap">
-              <div className={`about-swap-inner ${hovered === null ? 'active' : ''}`}>
+              <div className={`about-swap-inner ${selectedType === null ? 'active' : ''}`}>
                 <p>
                   Мы создаём цифровые решения, которые помогают бизнесу расти и
                   развиваться в современном мире. Наша команда состоит из опытных
@@ -75,7 +82,7 @@ export default function About() {
                 </p>
               </div>
 
-              <div className={`about-swap-inner ${hovered === 'fund' ? 'active' : ''}`}>
+              <div className={`about-swap-inner ${selectedType === 'fund' ? 'active' : ''}`}>
                 <div className="about-card">
                   <h4>Фундаментальный подход</h4>
                   <p>
@@ -87,7 +94,7 @@ export default function About() {
                 </div>
               </div>
 
-              <div className={`about-swap-inner ${hovered === 'eng' ? 'active' : ''}`}>
+              <div className={`about-swap-inner ${selectedType === 'eng' ? 'active' : ''}`}>
                 <div className="about-card">
                   <h4>Инженерная точность</h4>
                   <p>
@@ -99,7 +106,7 @@ export default function About() {
                 </div>
               </div>
 
-              <div className={`about-swap-inner ${hovered === 'inn' ? 'active' : ''}`}>
+              <div className={`about-swap-inner ${selectedType === 'inn' ? 'active' : ''}`}>
                 <div className="about-card">
                   <h4>Инновационные решения</h4>
                   <p>
@@ -116,31 +123,31 @@ export default function About() {
 
           <div 
             className="stats fade-text fade-delayed"
-            onMouseLeave={() => !isMobile && setHovered(null)}
+            onMouseLeave={() => !isMobile && setSelectedType(null)}
           >
             <div 
-              className="stat-item" 
+              className={`stat-item ${selectedType === 'fund' ? 'active' : ''}`}
               onMouseEnter={() => !isMobile && handleInteraction('fund')}
-              onClick={() => isMobile && handleInteraction('fund')}
-              style={{ cursor: isMobile ? 'pointer' : 'default' }}
+              onClick={() => handleInteraction('fund')}
+              style={{ cursor: 'pointer' }}
             >
               <div className="stat-line"></div>
               <div className="stat-label">Фундаментальный подход</div>
             </div>
             <div 
-              className="stat-item" 
+              className={`stat-item ${selectedType === 'eng' ? 'active' : ''}`}
               onMouseEnter={() => !isMobile && handleInteraction('eng')}
-              onClick={() => isMobile && handleInteraction('eng')}
-              style={{ cursor: isMobile ? 'pointer' : 'default' }}
+              onClick={() => handleInteraction('eng')}
+              style={{ cursor: 'pointer' }}
             >
               <div className="stat-line"></div>
               <div className="stat-label">Инженерная точность</div>
             </div>
             <div 
-              className="stat-item" 
+              className={`stat-item ${selectedType === 'inn' ? 'active' : ''}`}
               onMouseEnter={() => !isMobile && handleInteraction('inn')}
-              onClick={() => isMobile && handleInteraction('inn')}
-              style={{ cursor: isMobile ? 'pointer' : 'default' }}
+              onClick={() => handleInteraction('inn')}
+              style={{ cursor: 'pointer' }}
             >
               <div className="stat-line"></div>
               <div className="stat-label">Инновационные решения</div>

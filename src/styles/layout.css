@@ -3,8 +3,6 @@
    ============================================ */
 
 .snap-section {
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
   min-height: 100vh;
   min-height: 100dvh;
   position: relative;
@@ -34,7 +32,6 @@
 @media (min-width: 1024px) {
   .snap-section {
     padding: 5vh 0;
-    scroll-snap-align: start;
   }
   
   .container {
@@ -63,11 +60,16 @@
 
 /* Отключение snap на очень маленьких экранах для лучшей прокрутки */
 @media (max-width: 767px) {
-  html {
-    scroll-snap-type: none;
-  }
-  
   .snap-section {
-    scroll-snap-align: none;
+    min-height: auto;
+    padding: clamp(3rem, 9vw, 4.5rem) 0;
+    display: block;
+    align-items: flex-start;
+  }
+
+  .container {
+    display: block;
+    padding: 0 clamp(1.25rem, 5vw, 1.75rem);
+    max-width: min(100%, var(--container-max-width));
   }
 }

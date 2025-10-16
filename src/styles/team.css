@@ -40,14 +40,14 @@
   gap: 4vw;
   align-items: stretch;
   height: var(--team-height);
-  transition: grid-template-columns 0.2s ease;
+  transition: grid-template-columns 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .team-layout.has-hover {
   grid-template-columns: 0.5fr 0.5fr var(--team-list-width);
 }
 
-/* Photo Column */
+/* Photo Column - появление справа налево */
 .team-photo-large {
   position: relative;
   width: 100%;
@@ -57,6 +57,7 @@
   border-radius: 0;
   overflow: hidden;
   min-height: 0;
+  transform-origin: right center;
 }
 
 .team-photo-img {
@@ -65,6 +66,7 @@
   object-fit: cover;
   object-position: center;
   display: block;
+  transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .team-photo-overlay {
@@ -77,6 +79,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  transition: opacity 0.3s ease;
 }
 
 .team-count {
@@ -130,12 +133,19 @@
   gap: 1.5vw;
   padding: 1.2vh 0;
   border-bottom: 1px solid rgba(232, 230, 225, 0.08);
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
 }
 
-.team-member-item:hover {
-  border-bottom-color: rgba(232, 230, 225, 0.2);
-  padding-left: 0.3vw;
+.team-member-item:hover,
+.team-member-item.locked {
+  border-bottom-color: rgba(232, 230, 225, 0.3);
+  padding-left: 0.6vw;
+  transform: translateX(0.3vw);
+}
+
+.team-member-item.locked {
+  background: rgba(232, 230, 225, 0.05);
 }
 
 .member-number {
@@ -146,6 +156,12 @@
   text-align: right;
   align-self: flex-start;
   margin-top: 0.2vh;
+  transition: opacity 0.3s ease;
+}
+
+.team-member-item:hover .member-number,
+.team-member-item.locked .member-number {
+  opacity: 0.7;
 }
 
 .member-info {
@@ -161,6 +177,12 @@
   letter-spacing: 0.02vw;
   opacity: 0.92;
   line-height: 1.3;
+  transition: opacity 0.3s ease;
+}
+
+.team-member-item:hover .member-name,
+.team-member-item.locked .member-name {
+  opacity: 1;
 }
 
 .member-role {
@@ -169,9 +191,15 @@
   letter-spacing: 0.01vw;
   opacity: 0.5;
   line-height: 1.2;
+  transition: opacity 0.3s ease;
 }
 
-/* Experience Column - невидимая рамка */
+.team-member-item:hover .member-role,
+.team-member-item.locked .member-role {
+  opacity: 0.7;
+}
+
+/* Experience Column - плавное появление */
 .team-experience {
   height: 100%;
   min-height: 0;
@@ -186,8 +214,9 @@
   flex-direction: column;
   justify-content: flex-start;
   gap: 1.2vh;
-  transition: opacity 0.25s ease,
-              padding 0.25s ease;
+  transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+              padding 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: translateX(2vw);
 }
 
 .team-layout.has-hover .team-experience {
@@ -195,6 +224,7 @@
   pointer-events: auto;
   padding: 2vh 2vw;
   background: transparent;
+  transform: translateX(0);
 }
 
 .team-exp-title {
@@ -202,12 +232,14 @@
   font-weight: 300;
   letter-spacing: 0.02vw;
   opacity: 0.95;
+  animation: slideInFromRight 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .team-exp-role {
   font-size: 0.95vw;
   opacity: 0.6;
   margin-bottom: 1vh;
+  animation: slideInFromRight 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s backwards;
 }
 
 .team-exp-points {
@@ -216,4 +248,23 @@
   opacity: 0.9;
   display: grid;
   gap: 0.8vh;
+}
+
+.team-exp-points > div {
+  animation: slideInFromRight 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) calc(0.2s + var(--i, 0) * 0.1s) backwards;
+}
+
+.team-exp-points > div:nth-child(1) { --i: 0; }
+.team-exp-points > div:nth-child(2) { --i: 1; }
+.team-exp-points > div:nth-child(3) { --i: 2; }
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(2vw);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
