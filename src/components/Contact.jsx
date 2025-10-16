@@ -207,9 +207,10 @@ export default function Contact() {
           </form>
         </div>
 
-        <footer className="contact-footer">
+        {/* Footer в правом нижнем углу */}
+        <div className="contact-footer-corner">
           <p className="contact-footer-text">© 2025 фирма́. Все права защищены.</p>
-        </footer>
+        </div>
       </div>
     </section>
   )

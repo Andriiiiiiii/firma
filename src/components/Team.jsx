@@ -25,6 +25,12 @@ export default function Team() {
         'Микросервисы с CQRS/ES, GraphQL Federation',
         'Оптимизация LCP до < 2.0s, cold-start контейнеров'
       ]},
+    { name: 'Терентьев Андрей', role: 'Tech Lead', photo: 'terentev.jpg',
+      exp: [
+        '8+ лет: архитектура распределённых систем',
+        'Kubernetes, Kafka, event-driven architecture',
+        'Code review, tech interviews, team mentoring'
+      ]},
     { name: 'Блохин Олег', role: 'ML Engineer', photo: 'blokhin.jpg',
       exp: [
         'CV/NLP модели: PyTorch → ONNX/TensorRT',
@@ -126,10 +132,8 @@ export default function Team() {
           <div 
             className="team-photo-large fade-text"
             style={{
-              transform: hasHover ? `translateX(0) scale(1)` : 'translateX(0) scale(1)',
               opacity: 1,
-              transformOrigin: 'right center',
-              transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease'
+              transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
             <img
@@ -138,9 +142,8 @@ export default function Team() {
               className="team-photo-img"
               draggable="false"
               style={{
-                transform: hasHover ? 'scale(1)' : 'scale(1)',
                 opacity: 1,
-                transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease',
+                transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
               }}
               key={hasHover ? hovered.photo : 'team'}
             />
@@ -149,7 +152,7 @@ export default function Team() {
                 className="team-photo-overlay"
                 style={{
                   opacity: 1,
-                  transition: 'opacity 0.3s ease'
+                  transition: 'opacity 0.5s ease'
                 }}
               >
                 <span className="team-count">{teamMembers.length} человек</span>

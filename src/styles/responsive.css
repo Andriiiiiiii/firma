@@ -428,9 +428,14 @@
     margin-bottom: 1rem;
   }
 
-  .contact-footer {
-    padding-top: 2rem;
+  .contact-footer-corner {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    text-align: center;
     margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(232, 230, 225, 0.1);
   }
 
   .contact-footer-text {

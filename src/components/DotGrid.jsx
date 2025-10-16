@@ -1,75 +1,62 @@
 import { useEffect, useRef } from "react"
-import { getDeviceType, getQualitySettings, isMobile } from "../utils/deviceUtils"
 
 export default function CrystalLattice(props) {
   const {
-    baseSpacing = 20,
-    stiffness = 80,
-    originStiffness = 8,
-    damping = 0.6,
-    mouseForce = 1500,
-    mouseRadius = 400,
-    mouseFalloff = 3,
-    sideVignetteStrength = 1,
     className,
     style,
   } = props
 
+  // БАЗОВАЯ ЕДИНИЦА: расстояние между точками = 2% от ширины экрана
+  const SPACING_RATIO = 0.015 // 2% от ширины экрана
+  
+  // ВСЕ ПАРАМЕТРЫ В ОТНОСИТЕЛЬНЫХ ЕДИНИЦАХ (кратные spacing)
+  const DOT_SIZE_RATIO = 0.05 // размер точки = 4.5% от spacing
+  const DOT_OPACITY = 0.5 // прозрачность (константа)
+  const MOUSE_RADIUS_RATIO = 20 // радиус взаимодействия = 15 × spacing
+  const MOUSE_FORCE_RATIO = 100 // сила взаимодействия = 87.5 × spacing
+  const MOUSE_FALLOFF = 2 // степень затухания (константа)
+  const VIGNETTE_WIDTH_X_RATIO = 8.75 // ширина затемнения X = 8.75 × spacing
+  const VIGNETTE_WIDTH_Y_RATIO = 7.5 // ширина затемнения Y = 7.5 × spacing
+  const WAVE_FORCE_RATIO = 400 // сила волны при открытии = 300 × spacing
+  
+  // Физические параметры (константы)
+  const STIFFNESS = 90
+  const ORIGIN_STIFFNESS = 8
+  const DAMPING = 0.6
+
   const canvasRef = useRef(null)
   const wrapRef = useRef(null)
-  
-  const isMobileDevice = isMobile()
 
   useEffect(() => {
     const canvas = canvasRef.current
     const wrap = wrapRef.current
     if (!canvas || !wrap) return
 
-    const deviceType = getDeviceType()
-    const qualitySettings = getQualitySettings()
-    const isMobileDevice = isMobile()
-    
-    const getGridDensity = () => {
-      const { width, height } = wrap.getBoundingClientRect()
-      const ar = height / Math.max(1, width)
-
-      const decide = (baseCols) => {
-        let rows = Math.ceil(ar * (baseCols - 1)) + 1
-        rows = Math.max(rows, Math.min(18, baseCols))
-        return { cols: baseCols, rows }
-      }
-
-      switch (deviceType) {
-        case 'mobile':
-          return decide(width < 360 ? 18 : width < 420 ? 22 : 26)
-        case 'tablet':
-          return decide(42)
-        default:
-          return decide(80)
-      }
-    }
-    
-    const { cols: fixedCols, rows: fixedRows } = getGridDensity()
-    
-    const enableInteractivity = true
-
     const ctx = canvas.getContext("2d", { alpha: true })
 
     const S = {
-      w: 0, h: 0, dpr: qualitySettings.dpr,
-      cols: fixedCols,
-      rows: fixedRows,
+      w: 0, 
+      h: 0, 
+      dpr: Math.min(window.devicePixelRatio || 1, 2),
+      cols: 0,
+      rows: 0,
       count: 0,
-      spacing: baseSpacing,
+      spacing: 0, // будет вычислено на основе ширины экрана
+      dotSize: 0,
+      mouseRadius: 0,
+      mouseForce: 0,
+      waveForce: 0,
+      vignetteX: 0,
+      vignetteY: 0,
       px: null, py: null,
       vx: null, vy: null,
       ox: null, oy: null,
       nbr: null, rest: null,
-      mx: -1e6, my: -1e6, mActive: enableInteractivity,
+      mx: -1e6, my: -1e6, mActive: true,
       acc: 0, last: 0,
-      dotR: 0,
       vignetteCanvas: null,
-      dotSprite: null, dotSpriteSize: 0,
+      dotSprite: null, 
+      dotSpriteSize: 0,
       waveTriggered: false,
     }
 
@@ -77,11 +64,7 @@ export default function CrystalLattice(props) {
       -1, 0, 1, 0, 0, -1, 0, 1, -1, -1, 1, -1, -1, 1, 1, 1
     ])
 
-    const mR = mouseRadius
-    const mR2 = mR * mR
-    const mRInv = mR > 0 ? 1 / mR : 0
-
-    // Расширяем затемнение по краям (было 280/240, делаем шире)
+    // Построение виньетки с относительными размерами
     const buildVignette = () => {
       const vw = S.w, vh = S.h
       if (vw <= 0 || vh <= 0) return
@@ -92,10 +75,9 @@ export default function CrystalLattice(props) {
       const vCtx = vCan.getContext("2d")
       vCtx.clearRect(0, 0, vw, vh)
 
-      // Увеличиваем ширину затемнения
-      const bandX = Math.min(450, Math.max(200, vw * 0.28))
-      const bandY = Math.min(400, Math.max(160, vh * 0.32))
-      const a = Math.max(0, Math.min(1, sideVignetteStrength))
+      const bandX = S.vignetteX
+      const bandY = S.vignetteY
+      const a = 1.0
 
       let g = vCtx.createLinearGradient(0, 0, bandX, 0)
       g.addColorStop(0, `rgba(0,0,0,${a})`)
@@ -132,8 +114,9 @@ export default function CrystalLattice(props) {
       S.vignetteCanvas = vCan
     }
 
+    // Построение спрайта точки с относительным размером
     const buildDotSprite = () => {
-      const r = S.dotR
+      const r = S.dotSize
       const size = Math.max(1, (r * 2 + 2) | 0)
       const dCan = document.createElement("canvas")
       dCan.width = size
@@ -142,7 +125,7 @@ export default function CrystalLattice(props) {
       dCtx.clearRect(0, 0, size, size)
       dCtx.beginPath()
       dCtx.arc(size * 0.5, size * 0.5, r, 0, Math.PI * 2)
-      dCtx.fillStyle = "rgba(255,255,255,0.5)"
+      dCtx.fillStyle = `rgba(255,255,255,${DOT_OPACITY})`
       dCtx.fill()
       S.dotSprite = dCan
       S.dotSpriteSize = size
@@ -153,6 +136,15 @@ export default function CrystalLattice(props) {
       S.w = Math.max(1, width | 0)
       S.h = Math.max(1, height | 0)
 
+      // ВЫЧИСЛЯЕМ ВСЕ ПАРАМЕТРЫ НА ОСНОВЕ ШИРИНЫ ЭКРАНА (2%)
+      S.spacing = S.w * SPACING_RATIO
+      S.dotSize = S.spacing * DOT_SIZE_RATIO
+      S.mouseRadius = S.spacing * MOUSE_RADIUS_RATIO
+      S.mouseForce = S.spacing * MOUSE_FORCE_RATIO
+      S.waveForce = S.spacing * WAVE_FORCE_RATIO
+      S.vignetteX = S.spacing * VIGNETTE_WIDTH_X_RATIO
+      S.vignetteY = S.spacing * VIGNETTE_WIDTH_Y_RATIO
+
       ctx.setTransform(1, 0, 0, 1, 0, 0)
       canvas.width = Math.max(1, (S.w * S.dpr) | 0)
       canvas.height = Math.max(1, (S.h * S.dpr) | 0)
@@ -160,14 +152,9 @@ export default function CrystalLattice(props) {
       canvas.style.height = `${S.h}px`
       ctx.scale(S.dpr, S.dpr)
 
-      S.spacingX = S.cols > 1 ? S.w / (S.cols - 1) : S.w
-      S.spacingY = S.rows > 1 ? S.h / (S.rows - 1) : S.h
-      S.spacing = Math.min(S.spacingX, S.spacingY)
-      
-      // Фиксированный размер точек (не зависит от масштаба браузера)
-      const dotSizeFactor = isMobileDevice ? 0.11 : 0.07
-      S.dotR = S.spacing * dotSizeFactor
-
+      // Количество точек на основе spacing
+      S.cols = Math.max(2, Math.ceil(S.w / S.spacing) + 1)
+      S.rows = Math.max(2, Math.ceil(S.h / S.spacing) + 1)
       S.count = S.cols * S.rows
 
       S.px = new Float32Array(S.count)
@@ -179,16 +166,18 @@ export default function CrystalLattice(props) {
       S.nbr = new Int32Array(S.count * 8)
       S.rest = new Float32Array(S.count * 8)
 
+      // Расстановка точек с относительным интервалом
       let k = 0
       for (let r = 0; r < S.rows; r++) {
-        const y = r * S.spacingY
+        const y = r * S.spacing
         for (let c = 0; c < S.cols; c++, k++) {
-          const x = c * S.spacingX
+          const x = c * S.spacing
           S.px[k] = S.ox[k] = x
           S.py[k] = S.oy[k] = y
         }
       }
 
+      // Построение соседей
       const cols = S.cols, rows = S.rows
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
@@ -218,20 +207,18 @@ export default function CrystalLattice(props) {
       S.waveTriggered = false
     }
 
-    // Добавляем волну при открытии
+    // Волна от центра при открытии (с относительной силой)
     const triggerInitialWave = () => {
       if (S.waveTriggered) return
       S.waveTriggered = true
       
-      // Случайная точка и направление
-      const cx = Math.random() * S.w
-      const cy = Math.random() * S.h
-      const angle = Math.random() * Math.PI * 2
-      const waveForce = 8000
+      const cx = S.w * 0.5
+      const cy = S.h * 0.5
+      const waveForce = S.waveForce
       
       const px = S.px, py = S.py, vx = S.vx, vy = S.vy
       const cnt = S.count
-      const maxDist = Math.max(S.w, S.h)
+      const maxDist = Math.max(S.w, S.h) * 0.8
       
       for (let i = 0; i < cnt; i++) {
         const dx = px[i] - cx
@@ -240,19 +227,17 @@ export default function CrystalLattice(props) {
         if (dist < 1) continue
         
         const t = Math.max(0, 1 - dist / maxDist)
-        const str = t * t * waveForce
+        const str = t * t * t * waveForce
         
-        const dirX = Math.cos(angle)
-        const dirY = Math.sin(angle)
-        
-        vx[i] += dirX * str / dist
-        vy[i] += dirY * str / dist
+        const invDist = 1 / dist
+        vx[i] += dx * invDist * str
+        vy[i] += dy * invDist * str
       }
     }
 
     const fixedDt = 1 / 60
-    const maxSub = isMobileDevice ? 2 : 3
-    const dampDecayFactor = damping * 10
+    const maxSub = 3
+    const dampDecayFactor = DAMPING * 10
 
     const update = (dt) => {
       const px = S.px, py = S.py
@@ -262,19 +247,22 @@ export default function CrystalLattice(props) {
       const cols = S.cols, rows = S.rows
 
       const dampF = Math.exp(-dampDecayFactor * dt)
-      const kS = stiffness
-      const kO = originStiffness
-      const kM = mouseForce
+      const kS = STIFFNESS
+      const kO = ORIGIN_STIFFNESS
+      const kM = S.mouseForce // ОТНОСИТЕЛЬНАЯ СИЛА
+
+      const mR = S.mouseRadius // ОТНОСИТЕЛЬНЫЙ РАДИУС
+      const mR2 = mR * mR
+      const mRInv = mR > 0 ? 1 / mR : 0
 
       let minC = 0, maxC = -1, minR = 0, maxR = -1
-      const mActive = S.mActive && enableInteractivity
+      const mActive = S.mActive
       if (mActive) {
-        const avg = S.spacing
-        const rad = mR + avg
-        minC = Math.max(0, Math.floor((S.mx - rad) / S.spacingX))
-        maxC = Math.min(cols - 1, Math.floor((S.mx + rad) / S.spacingX))
-        minR = Math.max(0, Math.floor((S.my - rad) / S.spacingY))
-        maxR = Math.min(rows - 1, Math.floor((S.my + rad) / S.spacingY))
+        const rad = mR + S.spacing
+        minC = Math.max(0, Math.floor((S.mx - rad) / S.spacing))
+        maxC = Math.min(cols - 1, Math.floor((S.mx + rad) / S.spacing))
+        minR = Math.max(0, Math.floor((S.my - rad) / S.spacing))
+        maxR = Math.min(rows - 1, Math.floor((S.my + rad) / S.spacing))
       }
 
       let i = 0
@@ -311,7 +299,7 @@ export default function CrystalLattice(props) {
               if (d2 < mR2 && d2 > 0.01) {
                 const dist = Math.sqrt(d2)
                 const t = 1 - dist * mRInv
-                const str = t * t * t
+                const str = Math.pow(t, MOUSE_FALLOFF)
                 const invDist = 1 / dist
                 const f = kM * str
                 fx += dx * invDist * f
@@ -361,7 +349,6 @@ export default function CrystalLattice(props) {
       S.last = t
       S.acc += dt
 
-      // Запускаем волну при первом кадре
       if (!S.waveTriggered) {
         setTimeout(() => triggerInitialWave(), 100)
       }
@@ -378,20 +365,17 @@ export default function CrystalLattice(props) {
     }
 
     const onPointerMove = (e) => {
-      if (!enableInteractivity) return
       const rect = canvas.getBoundingClientRect()
       S.mx = e.clientX - rect.left
       S.my = e.clientY - rect.top
       S.mActive = true
     }
-    const onPointerEnter = () => { if (enableInteractivity) S.mActive = true }
+    const onPointerEnter = () => { S.mActive = true }
     const onPointerLeave = () => { S.mActive = false }
 
-    if (enableInteractivity) {
-      canvas.addEventListener("pointermove", onPointerMove, { passive: true })
-      canvas.addEventListener("pointerenter", onPointerEnter)
-      canvas.addEventListener("pointerleave", onPointerLeave)
-    }
+    canvas.addEventListener("pointermove", onPointerMove, { passive: true })
+    canvas.addEventListener("pointerenter", onPointerEnter)
+    canvas.addEventListener("pointerleave", onPointerLeave)
 
     const ro = new ResizeObserver(() => init())
     ro.observe(wrap)
@@ -403,17 +387,11 @@ export default function CrystalLattice(props) {
     return () => {
       cancelAnimationFrame(rafId)
       ro.disconnect()
-      if (enableInteractivity) {
-        canvas.removeEventListener("pointermove", onPointerMove)
-        canvas.removeEventListener("pointerenter", onPointerEnter)
-        canvas.removeEventListener("pointerleave", onPointerLeave)
-      }
+      canvas.removeEventListener("pointermove", onPointerMove)
+      canvas.removeEventListener("pointerenter", onPointerEnter)
+      canvas.removeEventListener("pointerleave", onPointerLeave)
     }
-  }, [
-    baseSpacing, damping, mouseFalloff,
-    mouseForce, mouseRadius, originStiffness,
-    sideVignetteStrength, stiffness,
-  ])
+  }, [])
 
   return (
     <div

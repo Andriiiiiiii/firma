@@ -36,18 +36,20 @@
 
 .team-layout {
   display: grid;
+  /* ФИКСИРОВАННАЯ ширина - список всегда одного размера */
   grid-template-columns: 1fr 0fr var(--team-list-width);
   gap: 4vw;
   align-items: stretch;
   height: var(--team-height);
-  transition: grid-template-columns 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: grid-template-columns 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .team-layout.has-hover {
+  /* При наведении - список НЕ меняет ширину */
   grid-template-columns: 0.5fr 0.5fr var(--team-list-width);
 }
 
-/* Photo Column - появление справа налево */
+/* Photo Column */
 .team-photo-large {
   position: relative;
   width: 100%;
@@ -66,7 +68,7 @@
   object-fit: cover;
   object-position: center;
   display: block;
-  transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .team-photo-overlay {
@@ -79,7 +81,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease;
 }
 
 .team-count {
@@ -133,7 +135,7 @@
   gap: 1.5vw;
   padding: 1.2vh 0;
   border-bottom: 1px solid rgba(232, 230, 225, 0.08);
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 
@@ -199,7 +201,7 @@
   opacity: 0.7;
 }
 
-/* Experience Column - плавное появление */
+/* Experience Column - более плавное появление */
 .team-experience {
   height: 100%;
   min-height: 0;
@@ -214,8 +216,9 @@
   flex-direction: column;
   justify-content: flex-start;
   gap: 1.2vh;
-  transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-              padding 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateX(2vw);
 }
 
@@ -232,14 +235,14 @@
   font-weight: 300;
   letter-spacing: 0.02vw;
   opacity: 0.95;
-  animation: slideInFromRight 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: slideInFromRight 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .team-exp-role {
   font-size: 0.95vw;
   opacity: 0.6;
   margin-bottom: 1vh;
-  animation: slideInFromRight 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s backwards;
+  animation: slideInFromRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s backwards;
 }
 
 .team-exp-points {
@@ -251,7 +254,7 @@
 }
 
 .team-exp-points > div {
-  animation: slideInFromRight 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) calc(0.2s + var(--i, 0) * 0.1s) backwards;
+  animation: slideInFromRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) calc(0.2s + var(--i, 0) * 0.1s) backwards;
 }
 
 .team-exp-points > div:nth-child(1) { --i: 0; }

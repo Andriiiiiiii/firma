@@ -15,6 +15,7 @@
   justify-content: space-between;
   min-height: 100vh;
   padding-bottom: 3vh;
+  position: relative;
 }
 
 .contact-wrapper {
@@ -199,12 +200,12 @@
   border: 1px solid rgba(248, 113, 113, 0.3);
 }
 
-/* Footer внутри Contact */
-.contact-footer {
-  margin-top: auto;
-  padding-top: 4vh;
-  text-align: center;
-  border-top: 1px solid rgba(232, 230, 225, 0.1);
+/* Footer в правом нижнем углу - БЕЗ линии сверху */
+.contact-footer-corner {
+  position: absolute;
+  bottom: 3vh;
+  right: 4vw;
+  text-align: right;
 }
 
 .contact-footer-text {

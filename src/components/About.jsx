@@ -4,6 +4,7 @@ export default function About() {
   const sectionRef = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
   const [selectedType, setSelectedType] = useState(null)
+  const [lockedType, setLockedType] = useState(null)
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -29,23 +30,42 @@ export default function About() {
     return () => observer.disconnect()
   }, [])
 
-  const handleInteraction = (type) => {
-    if (isMobile) {
-      setSelectedType(prev => prev === type ? null : type)
+  const handleMouseEnter = (type) => {
+    if (!isMobile && lockedType === null) {
+      setSelectedType(type)
+    }
+  }
+
+  const handleMouseLeave = () => {
+    if (!isMobile && lockedType === null) {
+      setSelectedType(null)
+    }
+  }
+
+  const handleStatClick = (type, e) => {
+    e.stopPropagation()
+    if (lockedType === type) {
+      setLockedType(null)
+      setSelectedType(null)
     } else {
+      setLockedType(type)
       setSelectedType(type)
     }
   }
 
   const handleTitleClick = () => {
+    setLockedType(null)
     setSelectedType(null)
   }
 
   const handleBackgroundClick = (e) => {
-    if (isMobile && e.target === e.currentTarget) {
+    if (e.target === e.currentTarget || e.target.classList.contains('about-text')) {
+      setLockedType(null)
       setSelectedType(null)
     }
   }
+
+  const activeType = lockedType !== null ? lockedType : selectedType
 
   return (
     <section
@@ -59,15 +79,18 @@ export default function About() {
         <h2 
           className="section-title fade-text fade-fast"
           onClick={handleTitleClick}
-          style={{ cursor: selectedType ? 'pointer' : 'default' }}
+          style={{ cursor: lockedType !== null ? 'pointer' : 'default' }}
         >
           Наша миссия
         </h2>
 
         <div className="about-content">
-          <div className="about-text fade-text fade-fast">
+          <div 
+            className="about-text fade-text fade-fast"
+            onClick={handleBackgroundClick}
+          >
             <div className="about-swap">
-              <div className={`about-swap-inner ${selectedType === null ? 'active' : ''}`}>
+              <div className={`about-swap-inner ${activeType === null ? 'active' : ''}`}>
                 <p>
                   Мы создаём цифровые решения, которые помогают бизнесу расти и
                   развиваться в современном мире. Наша команда состоит из опытных
@@ -82,7 +105,7 @@ export default function About() {
                 </p>
               </div>
 
-              <div className={`about-swap-inner ${selectedType === 'fund' ? 'active' : ''}`}>
+              <div className={`about-swap-inner ${activeType === 'fund' ? 'active' : ''}`}>
                 <div className="about-card">
                   <h4>Фундаментальный подход</h4>
                   <p>
@@ -94,7 +117,7 @@ export default function About() {
                 </div>
               </div>
 
-              <div className={`about-swap-inner ${selectedType === 'eng' ? 'active' : ''}`}>
+              <div className={`about-swap-inner ${activeType === 'eng' ? 'active' : ''}`}>
                 <div className="about-card">
                   <h4>Инженерная точность</h4>
                   <p>
@@ -106,7 +129,7 @@ export default function About() {
                 </div>
               </div>
 
-              <div className={`about-swap-inner ${selectedType === 'inn' ? 'active' : ''}`}>
+              <div className={`about-swap-inner ${activeType === 'inn' ? 'active' : ''}`}>
                 <div className="about-card">
                   <h4>Инновационные решения</h4>
                   <p>
@@ -123,30 +146,30 @@ export default function About() {
 
           <div 
             className="stats fade-text fade-delayed"
-            onMouseLeave={() => !isMobile && setSelectedType(null)}
+            onMouseLeave={handleMouseLeave}
           >
             <div 
-              className={`stat-item ${selectedType === 'fund' ? 'active' : ''}`}
-              onMouseEnter={() => !isMobile && handleInteraction('fund')}
-              onClick={() => handleInteraction('fund')}
+              className={`stat-item ${activeType === 'fund' ? 'active' : ''}`}
+              onMouseEnter={() => handleMouseEnter('fund')}
+              onClick={(e) => handleStatClick('fund', e)}
               style={{ cursor: 'pointer' }}
             >
               <div className="stat-line"></div>
               <div className="stat-label">Фундаментальный подход</div>
             </div>
             <div 
-              className={`stat-item ${selectedType === 'eng' ? 'active' : ''}`}
-              onMouseEnter={() => !isMobile && handleInteraction('eng')}
-              onClick={() => handleInteraction('eng')}
+              className={`stat-item ${activeType === 'eng' ? 'active' : ''}`}
+              onMouseEnter={() => handleMouseEnter('eng')}
+              onClick={(e) => handleStatClick('eng', e)}
               style={{ cursor: 'pointer' }}
             >
               <div className="stat-line"></div>
               <div className="stat-label">Инженерная точность</div>
             </div>
             <div 
-              className={`stat-item ${selectedType === 'inn' ? 'active' : ''}`}
-              onMouseEnter={() => !isMobile && handleInteraction('inn')}
-              onClick={() => handleInteraction('inn')}
+              className={`stat-item ${activeType === 'inn' ? 'active' : ''}`}
+              onMouseEnter={() => handleMouseEnter('inn')}
+              onClick={(e) => handleStatClick('inn', e)}
               style={{ cursor: 'pointer' }}
             >
               <div className="stat-line"></div>
