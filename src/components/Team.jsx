@@ -5,8 +5,12 @@ export default function Team() {
   const [isVisible, setIsVisible] = useState(false)
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [lockedIndex, setLockedIndex] = useState(null)
-  const [cursorY, setCursorY] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
+
+  // для мягкого кросс-фейда
+  const prevIndexRef = useRef(null)
+  const [imgFading, setImgFading] = useState(false)
+  const [expFading, setExpFading] = useState(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -80,28 +84,51 @@ export default function Team() {
   const hasHover = activeIndex !== null
   const hovered = useMemo(
     () => (hasHover ? teamMembers[activeIndex] : null),
-    [hasHover, activeIndex, teamMembers]
+    [hasHover, activeIndex]
   )
+
+  // плавный кросс-фейд при смене активного участника
+  useEffect(() => {
+    if (prevIndexRef.current !== activeIndex) {
+      setImgFading(true)
+      setExpFading(true)
+      const t1 = setTimeout(() => setImgFading(false), 380)  // картинка
+      const t2 = setTimeout(() => setExpFading(false), 460)  // текст
+      prevIndexRef.current = activeIndex
+      return () => { clearTimeout(t1); clearTimeout(t2) }
+    }
+  }, [activeIndex])
+
+  const handleMouseLeave = () => {
+    if (lockedIndex === null && !isTransitioning) {
+      // скрываем плавно
+      setImgFading(true)
+      setExpFading(true)
+      const t = setTimeout(() => {
+        setImgFading(false)
+        setExpFading(false)
+      }, 360)
+      // затем реально снимаем ховер
+      setTimeout(() => {
+        if (lockedIndex === null) {
+          // если не залочено, убираем подсветку
+          prevIndexRef.current = null
+          setHoveredIndex(null)
+        }
+      }, 180)
+      return () => clearTimeout(t)
+    }
+  }
 
   const handleMouseMove = (e, index) => {
     if (lockedIndex === null && !isTransitioning) {
       setHoveredIndex(index)
-      const rect = e.currentTarget.getBoundingClientRect()
-      setCursorY(e.clientY - rect.top)
-    }
-  }
-
-  const handleMouseLeave = () => {
-    if (lockedIndex === null && !isTransitioning) {
-      setHoveredIndex(null)
     }
   }
 
   const handleClick = (index) => {
     if (isTransitioning) return
-    
     setIsTransitioning(true)
-    
     if (lockedIndex === index) {
       setLockedIndex(null)
       setHoveredIndex(null)
@@ -109,22 +136,15 @@ export default function Team() {
       setLockedIndex(index)
       setHoveredIndex(index)
     }
-    
-    setTimeout(() => {
-      setIsTransitioning(false)
-    }, 800)
+    setTimeout(() => setIsTransitioning(false), 700)
   }
 
   const handleTitleClick = () => {
     if (isTransitioning) return
-    
     setIsTransitioning(true)
     setLockedIndex(null)
     setHoveredIndex(null)
-    
-    setTimeout(() => {
-      setIsTransitioning(false)
-    }, 800)
+    setTimeout(() => setIsTransitioning(false), 700)
   }
 
   return (
@@ -136,8 +156,8 @@ export default function Team() {
       <div className="container team-container">
         <div className="team-header">
           <div className="section-label fade-text">/ 04 / Команда</div>
-          <h2 
-            className="section-title team-title fade-text" 
+          <h2
+            className="section-title team-title fade-text"
             onClick={handleTitleClick}
             style={{ cursor: lockedIndex !== null ? 'pointer' : 'default' }}
           >
@@ -146,38 +166,24 @@ export default function Team() {
         </div>
 
         <div className={`team-layout ${hasHover ? 'has-hover' : ''}`}>
-          <div 
-            className="team-photo-large fade-text"
-            style={{
-              opacity: 1,
-              transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
+          <div
+            className={`team-photo-large fade-text ${imgFading ? 'is-fading' : ''}`}
+            style={{ opacity: 1 }}
           >
             <img
               src={hasHover ? `/${hovered.photo}` : '/team.webp'}
               alt={hasHover ? hovered.name : "Команда firma'"}
               className="team-photo-img"
               draggable="false"
-              style={{
-                opacity: 1,
-                transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-              }}
-              key={hasHover ? hovered.photo : 'team'}
             />
             {!hasHover && (
-              <div 
-                className="team-photo-overlay"
-                style={{
-                  opacity: 1,
-                  transition: 'opacity 0.5s ease'
-                }}
-              >
+              <div className="team-photo-overlay">
                 <span className="team-count">{teamMembers.length} человек</span>
               </div>
             )}
           </div>
 
-          <div className="team-experience fade-text" aria-hidden={!hasHover}>
+          <div className={`team-experience fade-text ${expFading ? 'is-fading' : ''}`} aria-hidden={!hasHover}>
             {hasHover && (
               <>
                 <div className="team-exp-title">{hovered.name}</div>

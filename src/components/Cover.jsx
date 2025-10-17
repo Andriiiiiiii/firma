@@ -12,11 +12,7 @@ export default function Cover() {
       },
       { threshold: 0.1 }
     )
-    
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-    
+    if (sectionRef.current) observer.observe(sectionRef.current)
     return () => observer.disconnect()
   }, [])
 
@@ -30,10 +26,10 @@ export default function Cover() {
         <div className="cover-background" style={{ background: '#000' }} />
       )}
 
-      {/* Лого из public/logo.svg */}
+      {/* Лого из public/logo.png */}
       <div className="cover-logo">
         <img
-          src="/logo.svg"
+          src="/logo.png"
           alt="firma' logo"
           className="cover-logo-img"
           draggable="false"
