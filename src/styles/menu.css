@@ -1,22 +1,15 @@
 /* ============================================
    MENU (Unified Button + Overlay)
+   Только vw/vh единицы
    ============================================ */
 
-/* Позиция/размер кнопки меню */
-:root {
-  --menu-top: 2rem;
-  --menu-right: var(--container-padding, 5vw);
-  --menu-size: 48px;
-  --menu-line-h: 2px;
-}
-
-/* ЕДИНАЯ кнопка меню: одно и то же место для открытия/закрытия */
+/* ЕДИНАЯ кнопка меню */
 .menu-trigger {
   position: fixed;
-  top: var(--menu-top);
-  right: var(--menu-right);
-  width: var(--menu-size);
-  height: var(--menu-size);
+  top: 2.5vh;
+  right: 5vw;
+  width: 2.5vw;
+  height: 2.5vw;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -24,18 +17,28 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  z-index: 2001; /* выше слоя меню-оверлея */
+  z-index: 2001;
   -webkit-tap-highlight-color: transparent;
+  opacity: 0;
+  transform: translateY(-1vh);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.menu-trigger.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 /* Полоски кнопки */
 .menu-trigger .line {
   position: absolute;
-  left: 10px;
-  right: 10px;
-  height: var(--menu-line-h);
+  left: 0.5vw;
+  right: 0.5vw;
+  height: 0.15vh;
   background: #e8e6e1;
-  border-radius: 1px;
+  border-radius: 0.05vw;
   transition:
     transform .25s ease,
     top .25s ease,
@@ -44,14 +47,14 @@
 }
 
 /* Три полоски по умолчанию */
-.menu-trigger .line-top { top: 14px; }
-.menu-trigger .line-mid { top: 22px; }
-.menu-trigger .line-bot { top: 30px; }
+.menu-trigger .line-top { top: 0.9vw; }
+.menu-trigger .line-mid { top: 1.25vw; }
+.menu-trigger .line-bot { top: 1.6vw; }
 
-/* Ховер (меню закрыто): превращаемся в одну полоску */
+/* Ховер (меню закрыто) */
 .menu-trigger:hover:not(.open) .line-top,
 .menu-trigger:hover:not(.open) .line-bot {
-  top: 22px;
+  top: 1.25vw;
   opacity: 0;
 }
 
@@ -60,11 +63,11 @@
   opacity: 0;
 }
 .menu-trigger.open .line-top {
-  top: 22px;
+  top: 1.25vw;
   transform: rotate(45deg);
 }
 .menu-trigger.open .line-bot {
-  top: 22px;
+  top: 1.25vw;
   transform: rotate(-45deg);
 }
 
@@ -81,7 +84,7 @@
     radial-gradient(ellipse 55vw 40vh at 70% 60%, rgba(40, 40, 40, 0.5), transparent 70%),
     radial-gradient(ellipse 45vw 30vh at 50% 80%, rgba(30, 30, 30, 0.4), transparent 75%),
     #000;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(0.6vw);
   opacity: 0;
   pointer-events: none;
   transform: scale(1.02);
@@ -100,15 +103,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem var(--container-padding);
+  padding: 2.5vh 5vw;
 }
 
 .menu-logo {
-  font-size: 1.125rem;
+  font-size: 1.3vw;
   font-weight: 300;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.05vw;
   color: #e8e6e1;
   opacity: 0.9;
+  display: flex;
+  align-items: center;
 }
 
 /* Центр/контент */
@@ -116,32 +121,32 @@
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 4rem var(--container-padding) 2rem;
+  align-items: center;
+  justify-content: center;
+  padding: 7vh 5vw;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
 .menu-content {
   width: 100%;
-  max-width: 100%;
+  max-width: 90vw;
 }
 
 .menu-grid-two-rows {
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto;
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: repeat(2, auto);
+  gap: 2vh 3vw;
   justify-content: start;
   align-items: start;
 }
 
 .menu-item {
   opacity: 0;
-  transform: translateY(15px);
+  transform: translateY(1.5vh);
   transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1.0);
-  min-height: 44px;
+  min-height: 5vh;
   display: flex;
   align-items: center;
 }
@@ -156,11 +161,11 @@
   color: #e8e6e1;
   display: inline-flex;
   align-items: baseline;
-  gap: 0.75rem;
+  gap: 0.8vw;
   line-height: 1;
   transition: opacity 0.3s ease;
   white-space: nowrap;
-  min-height: 44px;
+  min-height: 5vh;
   align-items: center;
 }
 
@@ -169,7 +174,7 @@
 .menu-text {
   font-weight: 200;
   letter-spacing: -0.01em;
-  font-size: 2rem;
+  font-size: 5vw;
   opacity: 0.92;
   transition: opacity 0.3s ease;
   line-height: 1.1;
@@ -178,95 +183,98 @@
 .menu-item a:hover .menu-text { opacity: 1; }
 
 .menu-sup {
-  font-size: 0.875rem;
+  font-size: 1.2vw;
   opacity: 0.5;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.03vw;
   font-weight: 300;
   align-self: flex-start;
-  margin-top: 0.25rem;
+  margin-top: 0.5vh;
 }
 
 /* ============================================
-   Responsive
+   Mobile/Tablet
    ============================================ */
 
-@media (min-width: 768px) {
-  .menu-top { padding: 2rem var(--container-padding); }
-
-  .menu-logo { font-size: 1.25rem; }
-
-  .menu-center { padding: 5rem var(--container-padding) 3rem; }
-
-  .menu-text { font-size: 2.5rem; }
-
-  .menu-sup { font-size: 1rem; }
-}
-
-@media (min-width: 1024px) {
-  /* кнопка чуть более «fluid» на десктопе */
+@media (max-width: 1023px) {
   .menu-trigger {
-    width: 2.5vw;
-    height: 2.5vw;
-    top: 2.5vh;
+    width: 12vw;
+    height: 12vw;
+    max-width: 12vw;
+    max-height: 12vw;
+    top: 2vh;
     right: 5vw;
   }
+  
   .menu-trigger .line {
-    left: 0.5vw;
-    right: 0.5vw;
-    height: 0.15vh;
+    left: 2vw;
+    right: 2vw;
+    height: 0.5vw;
   }
-  .menu-trigger .line-top { top: 0.9vw; }
-  .menu-trigger .line-mid { top: 1.25vw; }
-  .menu-trigger .line-bot { top: 1.6vw; }
-
-  .menu-overlay {
-    backdrop-filter: blur(0.6vw);
+  
+  .menu-trigger .line-top { top: 3.5vw; }
+  .menu-trigger .line-mid { top: 5.5vw; }
+  .menu-trigger .line-bot { top: 7.5vw; }
+  
+  .menu-trigger.open .line-top,
+  .menu-trigger.open .line-bot { top: 5.5vw; }
+  
+  .menu-top {
+    padding: 3vh 5vw;
   }
-
-  .menu-top { padding: 2.5vh 5vw; }
-
-  .menu-logo {
-    font-size: 1.3vw;
-    letter-spacing: 0.05vw;
+  
+  .menu-logo { 
+    font-size: 4vw;
   }
-
+  
   .menu-center {
+    padding: 12vh 5vw 8vh;
     align-items: center;
-    padding: 7vh 5vw;
+    justify-content: center;
   }
-
-  .menu-content { max-width: 90vw; }
-
+  
   .menu-grid-two-rows {
-    grid-template-columns: repeat(3, auto);
-    grid-template-rows: repeat(2, auto);
-    gap: 2vh 3vw;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 3vh 5vw;
+    max-width: none;
   }
-
-  .menu-item a {
-    gap: 0.8vw;
+  
+  .menu-text {
+    font-size: 6vw;
   }
-
-  .menu-text { font-size: 5vw; }
-
+  
   .menu-sup {
-    font-size: 1.2vw;
-    letter-spacing: 0.03vw;
-    margin-top: 0.5vh;
+    font-size: 3.5vw;
+  }
+  
+  .menu-item a {
+    gap: 2vw;
   }
 }
 
-/* Очень маленькие экраны */
-@media (max-width: 374px) {
-  .menu-text { font-size: 1.75rem; }
-  .menu-center { padding: 3rem var(--container-padding) 2rem; }
+@media (max-width: 767px) {
+  .menu-text { 
+    font-size: 7vw; 
+  }
+  
+  .menu-sup { 
+    font-size: 3.8vw; 
+  }
+  
+  .menu-center { 
+    padding: 10vh 5vw 6vh; 
+  }
+  
+  .menu-grid-two-rows {
+    gap: 2.5vh 4vw;
+  }
 }
 
-/* Touch-устройства: отключаем hover-анимацию для «одной полоски» */
+/* Touch-устройства */
 @media (hover: none) and (pointer: coarse) {
   .menu-trigger:hover:not(.open) .line-top,
   .menu-trigger:hover:not(.open) .line-bot {
-    top: initial;
+    top: 3.5vw;
     opacity: 1;
   }
 }

@@ -1,5 +1,6 @@
 /* ============================================
    CONTACT SECTION
+   Только vw/vh единицы
    ============================================ */
 
 .contact-section {
@@ -200,7 +201,6 @@
   border: 1px solid rgba(248, 113, 113, 0.3);
 }
 
-/* Footer в правом нижнем углу - БЕЗ линии сверху */
 .contact-footer-corner {
   position: absolute;
   bottom: 3vh;
@@ -212,4 +212,106 @@
   opacity: 0.5;
   font-size: 0.8vw;
   font-weight: 300;
+}
+
+/* Tablet */
+@media (max-width: 1023px) {
+  .contact-container {
+    min-height: 100vh;
+    min-height: 100dvh;
+    justify-content: flex-start;
+    padding-top: 8vh;
+    padding-bottom: 5vh;
+  }
+  
+  .contact-wrapper {
+    grid-template-columns: 1fr;
+    gap: 4vh;
+    max-height: none;
+    margin-top: 3vh;
+  }
+  
+  .contact-info {
+    gap: 2.5vh;
+  }
+  
+  .info-label {
+    font-size: 3vw;
+  }
+  
+  .info-link {
+    font-size: 4.5vw;
+  }
+  
+  .info-text {
+    font-size: 4vw;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5vh;
+    margin-bottom: 3vh;
+  }
+  
+  .form-input,
+  .form-textarea {
+    font-size: 4vw;
+    padding: 2vh 0 1.5vh 0;
+  }
+  
+  .form-label {
+    top: 2vh;
+    font-size: 4vw;
+  }
+  
+  .form-input:focus ~ .form-label,
+  .form-input:not(:placeholder-shown) ~ .form-label,
+  .form-textarea:focus ~ .form-label,
+  .form-textarea:not(:placeholder-shown) ~ .form-label {
+    top: 0;
+    font-size: 3vw;
+  }
+  
+  .form-textarea {
+    min-height: 15vh;
+    max-height: 20vh;
+  }
+  
+  .submit-button {
+    width: 100%;
+    padding: 2.5vh 5vw;
+    font-size: 4vw;
+    border-radius: 10vw;
+  }
+  
+  .submit-message {
+    font-size: 3.5vw;
+    padding: 1.5vh 3vw;
+    margin-bottom: 2vh;
+  }
+
+  .contact-footer-corner {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    text-align: center;
+    margin-top: 3vh;
+    padding-top: 3vh;
+    border-top: 1px solid rgba(232, 230, 225, 0.1);
+  }
+
+  .contact-footer-text {
+    font-size: 3vw;
+  }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .contact-info {
+    gap: 2vh;
+  }
+  
+  .contact-footer-text {
+    font-size: 3.2vw;
+  }
 }

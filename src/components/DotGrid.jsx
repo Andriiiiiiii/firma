@@ -6,18 +6,18 @@ export default function CrystalLattice(props) {
     style,
   } = props
 
-  // БАЗОВАЯ ЕДИНИЦА: расстояние между точками = 2% от ширины экрана
-  const SPACING_RATIO = 0.015 // 2% от ширины экрана
+  // БАЗОВАЯ ЕДИНИЦА: расстояние между точками = 5% от ширины экрана (ФИКСИРОВАНО)
+  const SPACING_RATIO = 0.02 // 5% от ширины экрана
   
   // ВСЕ ПАРАМЕТРЫ В ОТНОСИТЕЛЬНЫХ ЕДИНИЦАХ (кратные spacing)
-  const DOT_SIZE_RATIO = 0.05 // размер точки = 4.5% от spacing
+  const DOT_SIZE_RATIO = 0.05 // размер точки = 5% от spacing
   const DOT_OPACITY = 0.5 // прозрачность (константа)
-  const MOUSE_RADIUS_RATIO = 20 // радиус взаимодействия = 15 × spacing
-  const MOUSE_FORCE_RATIO = 100 // сила взаимодействия = 87.5 × spacing
+  const MOUSE_RADIUS_RATIO = 20 // радиус взаимодействия = 20 × spacing
+  const MOUSE_FORCE_RATIO = 100 // сила взаимодействия = 100 × spacing
   const MOUSE_FALLOFF = 2 // степень затухания (константа)
   const VIGNETTE_WIDTH_X_RATIO = 8.75 // ширина затемнения X = 8.75 × spacing
   const VIGNETTE_WIDTH_Y_RATIO = 7.5 // ширина затемнения Y = 7.5 × spacing
-  const WAVE_FORCE_RATIO = 400 // сила волны при открытии = 300 × spacing
+  const WAVE_FORCE_RATIO = 400 // сила волны при открытии = 400 × spacing
   
   // Физические параметры (константы)
   const STIFFNESS = 90
@@ -136,7 +136,7 @@ export default function CrystalLattice(props) {
       S.w = Math.max(1, width | 0)
       S.h = Math.max(1, height | 0)
 
-      // ВЫЧИСЛЯЕМ ВСЕ ПАРАМЕТРЫ НА ОСНОВЕ ШИРИНЫ ЭКРАНА (2%)
+      // ВЫЧИСЛЯЕМ ВСЕ ПАРАМЕТРЫ НА ОСНОВЕ ШИРИНЫ ЭКРАНА (5% - ФИКСИРОВАНО)
       S.spacing = S.w * SPACING_RATIO
       S.dotSize = S.spacing * DOT_SIZE_RATIO
       S.mouseRadius = S.spacing * MOUSE_RADIUS_RATIO
@@ -249,9 +249,9 @@ export default function CrystalLattice(props) {
       const dampF = Math.exp(-dampDecayFactor * dt)
       const kS = STIFFNESS
       const kO = ORIGIN_STIFFNESS
-      const kM = S.mouseForce // ОТНОСИТЕЛЬНАЯ СИЛА
+      const kM = S.mouseForce
 
-      const mR = S.mouseRadius // ОТНОСИТЕЛЬНЫЙ РАДИУС
+      const mR = S.mouseRadius
       const mR2 = mR * mR
       const mRInv = mR > 0 ? 1 / mR : 0
 

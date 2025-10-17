@@ -6,6 +6,7 @@ export default function Team() {
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [lockedIndex, setLockedIndex] = useState(null)
   const [cursorY, setCursorY] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -83,7 +84,7 @@ export default function Team() {
   )
 
   const handleMouseMove = (e, index) => {
-    if (lockedIndex === null) {
+    if (lockedIndex === null && !isTransitioning) {
       setHoveredIndex(index)
       const rect = e.currentTarget.getBoundingClientRect()
       setCursorY(e.clientY - rect.top)
@@ -91,23 +92,39 @@ export default function Team() {
   }
 
   const handleMouseLeave = () => {
-    if (lockedIndex === null) {
+    if (lockedIndex === null && !isTransitioning) {
       setHoveredIndex(null)
     }
   }
 
   const handleClick = (index) => {
+    if (isTransitioning) return
+    
+    setIsTransitioning(true)
+    
     if (lockedIndex === index) {
       setLockedIndex(null)
+      setHoveredIndex(null)
     } else {
       setLockedIndex(index)
       setHoveredIndex(index)
     }
+    
+    setTimeout(() => {
+      setIsTransitioning(false)
+    }, 800)
   }
 
   const handleTitleClick = () => {
+    if (isTransitioning) return
+    
+    setIsTransitioning(true)
     setLockedIndex(null)
     setHoveredIndex(null)
+    
+    setTimeout(() => {
+      setIsTransitioning(false)
+    }, 800)
   }
 
   return (

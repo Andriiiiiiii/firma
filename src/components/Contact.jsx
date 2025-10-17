@@ -68,28 +68,17 @@ export default function Contact() {
     setSubmitStatus(null)
 
     try {
-      const botToken = '7977655823:AAE3OKlJbK4sOpxfhqJBBLQpPYf_-MjVMYY'
-      const chatId = '893081997'
-      const message = `🔔 Новая заявка с сайта:\n\n👤 Имя: ${formData.name}\n📧 Контакт: ${formData.contact}\n💬 Сообщение: ${formData.message}`
-
-      const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: message,
-          parse_mode: 'HTML'
-        })
-      })
-
-      if (response.ok) {
-        setSubmitStatus('success')
-        setFormData({ name: '', contact: '', message: '' })
-      } else {
-        setSubmitStatus('error')
-      }
+      // Формируем mailto ссылку
+      const subject = encodeURIComponent('Новая заявка с сайта firma\'')
+      const body = encodeURIComponent(
+        `Имя: ${formData.name}\n\nКонтакт: ${formData.contact}\n\nСообщение:\n${formData.message}`
+      )
+      
+      // Открываем почтовый клиент
+      window.location.href = `mailto:zakaz@ne-firma.ru?subject=${subject}&body=${body}`
+      
+      setSubmitStatus('success')
+      setFormData({ name: '', contact: '', message: '' })
     } catch (error) {
       console.error('Error:', error)
       setSubmitStatus('error')
@@ -133,8 +122,8 @@ export default function Contact() {
           <div className="contact-info fade-text">
             <div className="info-item">
               <h3 className="info-label">Email</h3>
-              <a href="mailto:hello@webflow.solutions" className="info-link">
-                hello@webflow.solutions
+              <a href="mailto:zakaz@ne-firma.ru" className="info-link">
+                zakaz@ne-firma.ru
               </a>
             </div>
             <div className="info-item">
@@ -144,8 +133,8 @@ export default function Contact() {
               </a>
             </div>
             <div className="info-item">
-              <h3 className="info-label">Адрес</h3>
-              <p className="info-text">Москва, Тверская улица, 1</p>
+              <h3 className="info-label">Реквизиты</h3>
+              <p className="info-text">ИП Карпенко Богдан Максимович</p>
             </div>
           </div>
 
@@ -195,14 +184,14 @@ export default function Contact() {
             </div>
 
             {submitStatus === 'success' && (
-              <p className="submit-message success">Спасибо! Ваше сообщение отправлено.</p>
+              <p className="submit-message success">Открываем почтовый клиент для отправки...</p>
             )}
             {submitStatus === 'error' && (
-              <p className="submit-message error">Ошибка отправки. Попробуйте позже.</p>
+              <p className="submit-message error">Ошибка. Попробуйте позже.</p>
             )}
 
             <button type="submit" className="submit-button" disabled={isSubmitting}>
-              <span>{isSubmitting ? 'Отправка...' : 'Отправить'}</span>
+              <span>{isSubmitting ? 'Открываем почту...' : 'Отправить'}</span>
             </button>
           </form>
         </div>

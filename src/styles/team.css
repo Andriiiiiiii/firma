@@ -1,5 +1,6 @@
 /* ============================================
    TEAM SECTION
+   Только vw/vh единицы
    ============================================ */
 
 :root {
@@ -32,11 +33,11 @@
 
 .team-title {
   margin-bottom: 2.5vh;
+  transition: opacity 0.3s ease;
 }
 
 .team-layout {
   display: grid;
-  /* ФИКСИРОВАННАЯ ширина - список всегда одного размера */
   grid-template-columns: 1fr 0fr var(--team-list-width);
   gap: 4vw;
   align-items: stretch;
@@ -45,7 +46,6 @@
 }
 
 .team-layout.has-hover {
-  /* При наведении - список НЕ меняет ширину */
   grid-template-columns: 0.5fr 0.5fr var(--team-list-width);
 }
 
@@ -81,7 +81,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .team-count {
@@ -91,7 +91,7 @@
   opacity: 0.9;
 }
 
-/* Members List Column - фиксированная ширина */
+/* Members List Column */
 .team-members-list {
   display: flex;
   flex-direction: column;
@@ -201,7 +201,7 @@
   opacity: 0.7;
 }
 
-/* Experience Column - более плавное появление */
+/* Experience Column */
 .team-experience {
   height: 100%;
   min-height: 0;
@@ -269,5 +269,93 @@
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+/* Tablet */
+@media (max-width: 1023px) {
+  .team-container {
+    max-width: 100%;
+    padding: 0 5vw;
+    justify-content: flex-start;
+    padding-top: 8vh;
+  }
+  
+  .team-header {
+    margin-bottom: 3vh;
+  }
+  
+  .team-layout {
+    grid-template-columns: 1fr;
+    gap: 3vh;
+    height: auto;
+  }
+  
+  .team-layout.has-hover {
+    grid-template-columns: 1fr;
+  }
+  
+  .team-photo-large {
+    height: 40vh;
+  }
+  
+  .team-count {
+    font-size: 4vw;
+  }
+  
+  .team-experience {
+    display: none !important;
+  }
+  
+  .team-members-list {
+    height: auto;
+    max-height: 35vh;
+    width: 100%;
+  }
+  
+  .team-names {
+    gap: 1.5vh;
+    padding-right: 2vw;
+  }
+  
+  .team-member-item {
+    padding: 1.5vh 0;
+    gap: 3vw;
+  }
+  
+  .team-member-item:hover {
+    padding-left: 2vw;
+  }
+  
+  .member-number {
+    font-size: 3vw;
+    min-width: 5vw;
+  }
+  
+  .member-name {
+    font-size: 4vw;
+  }
+  
+  .member-role {
+    font-size: 3.2vw;
+  }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .team-photo-large {
+    height: 35vh;
+  }
+  
+  .team-members-list {
+    max-height: 40vh;
+  }
+  
+  .member-name {
+    font-size: 4.5vw;
+  }
+  
+  .member-role {
+    font-size: 3.5vw;
   }
 }

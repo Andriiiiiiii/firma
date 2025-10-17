@@ -1,8 +1,8 @@
-// MenuButton.jsx
 import React from 'react'
 
 export default function MenuButton({
   open = false,
+  visible = false,
   onClick,
   className = '',
   ariaLabel = 'Меню',
@@ -12,7 +12,7 @@ export default function MenuButton({
       type="button"
       aria-label={ariaLabel}
       aria-expanded={open}
-      className={`menu-trigger ${open ? 'open' : ''} ${className}`}
+      className={`menu-trigger ${open ? 'open' : ''} ${visible ? 'visible' : ''} ${className}`}
       onClick={onClick}
     >
       <span className="line line-top" />

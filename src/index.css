@@ -21,44 +21,51 @@
 
 /* Адаптивные стили (должны быть последними) */
 @import './styles/responsive.css';
+
 /* ===== ЛОГОТИП: первый слайд ===== */
 .cover {
-  position: relative; /* чтобы абсолютное центрирование работало внутри секции */
+  position: relative;
 }
 
 .cover-logo {
   position: absolute;
-  inset: 0;                 /* растягиваем контейнер по всей секции */
+  inset: 0;
   display: grid;
-  place-items: center;      /* строгий центр по X/Y */
-  z-index: 3;               /* поверх анимации фона */
-  pointer-events: none;     /* логотип не мешает скроллу/кликам */
+  place-items: center;
+  z-index: 3;
+  pointer-events: none;
 }
 
 .cover-logo-img {
   display: block;
-  width: 220px;   /* ———— чёткий размер на телефонах */
+  width: 120px;
   height: auto;
   user-select: none;
 }
 
 /* Планка на планшетах */
 @media (min-width: 640px) {
-  .cover-logo-img { width: 300px; }  /* ———— чёткий размер на планшетах */
+  .cover-logo-img { width: 140px; }
 }
 
-/* Планка на десктопе */
+/* Планка на десктопе - ФИКСИРОВАННЫЙ РАЗМЕР 20% */
 @media (min-width: 1024px) {
-  .cover-logo-img { width: 580px; }  /* ———— чёткий размер на десктопе */
+  .cover-logo-img { 
+    width: 20vw;
+  }
 }
 
 /* ===== ЛОГОТИП: в меню ===== */
 .menu-logo-img {
   display: block;
-  height: 28px;  /* чёткая высота в меню */
+  height: 32px;
   width: auto;
 }
 
+@media (min-width: 640px) {
+  .menu-logo-img { height: 40px; }
+}
+
 @media (min-width: 1024px) {
-  .menu-logo-img { height: 100px; } /* крупнее на десктопе */
+  .menu-logo-img { height: 100px; }
 }

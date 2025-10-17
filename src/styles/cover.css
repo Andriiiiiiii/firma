@@ -62,7 +62,7 @@
   }
 }
 
-/* Laptop и выше */
+/* Laptop и выше - ФИКСИРОВАННЫЙ РАЗМЕР 20% */
 @media (min-width: 1024px) {
   .cover-logo svg {
     width: 20vw;
