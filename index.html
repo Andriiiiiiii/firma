@@ -36,6 +36,29 @@
     <!-- Preconnect для улучшения производительности -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     
+    <!-- ============================================
+         КРИТИЧНО: ПРЕДЗАГРУЗКА ФОТОГРАФИЙ
+         Загружаются браузером параллельно при открытии сайта
+         ============================================ -->
+    
+    <!-- Главное фото команды -->
+    <link rel="preload" as="image" href="/team.webp" type="image/webp" />
+    
+    <!-- Фото членов команды -->
+    <link rel="preload" as="image" href="/karpenko.webp" type="image/webp" />
+    <link rel="preload" as="image" href="/terentev.webp" type="image/webp" />
+    <link rel="preload" as="image" href="/blokhin.webp" type="image/webp" />
+    <link rel="preload" as="image" href="/shcherbakov.webp" type="image/webp" />
+    <link rel="preload" as="image" href="/voronov.webp" type="image/webp" />
+    <link rel="preload" as="image" href="/nemirovskiy.webp" type="image/webp" />
+    <link rel="preload" as="image" href="/panov.webp" type="image/webp" />
+    <link rel="preload" as="image" href="/kozlov.webp" type="image/webp" />
+    <link rel="preload" as="image" href="/zhivetev.webp" type="image/webp" />
+    
+    <!-- Логотип и колесо -->
+    <link rel="preload" as="image" href="/logo.png" type="image/png" />
+    <link rel="preload" as="image" href="/wheel.png" type="image/png" />
+    
     <title>Фирма́ — Веб-решения мирового класса</title>
     
     <!-- Встроенный критический CSS для улучшения производительности на мобильных -->

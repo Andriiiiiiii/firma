@@ -137,7 +137,7 @@ export default function Hero() {
           <div className="hero-wheel-wrapper">
             <img
               ref={wheelImgRef}
-              src="/wheel.png"
+              src="/wheel.webp"
               alt="Wheel"
               className={`hero-wheel-img ${isVisible ? 'visible' : ''}`}
               draggable="false"

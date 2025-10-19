@@ -26,10 +26,10 @@ export default function Cover() {
         <div className="cover-background" style={{ background: '#000' }} />
       )}
 
-      {/* Лого из public/logo.png */}
+      {/* Лого из public/logo.webp */}
       <div className="cover-logo">
         <img
-          src="/logo.png"
+          src="/logo.webp"
           alt="firma' logo"
           className="cover-logo-img"
           draggable="false"

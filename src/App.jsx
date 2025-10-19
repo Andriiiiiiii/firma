@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
+import { preloadAllImages } from './utils/imageLoader'
 import Cover from './components/Cover'
 import Hero from './components/Hero'
 import Services from './components/Services'
@@ -12,6 +13,21 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [imagesLoaded, setImagesLoaded] = useState(false)
+
+  // ✨ КРИТИЧНО: Загружаем ВСЕ фото при монтировании App
+  useEffect(() => {
+    preloadAllImages()
+      .then(() => {
+        setImagesLoaded(true)
+        console.log('🎉 Приложение готово к работе')
+      })
+      .catch((err) => {
+        console.error('Ошибка загрузки фото:', err)
+        // Всё равно продолжаем работу, фото загружатся при необходимости
+        setImagesLoaded(true)
+      })
+  }, [])
 
   useEffect(() => {
     const checkMobile = () => {

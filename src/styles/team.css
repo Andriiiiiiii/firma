@@ -69,12 +69,14 @@
 }
 
 .team-photo-img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
   display: block;
   will-change: opacity;
+  pointer-events: none;
+  /* object-fit и object-position задаются inline для каждого изображения */
   /* transition задается inline в компоненте */
 }
 
@@ -87,6 +89,7 @@
   justify-content: flex-start;
   align-items: center;
   transition: opacity var(--team-transition-medium) var(--team-easing);
+  z-index: 10;
 }
 
 .team-count {
@@ -261,4 +264,3 @@
   .member-name { font-size: 4.5vw; }
   .member-role { font-size: 3.5vw; }
 }
-

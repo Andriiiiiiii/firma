@@ -17,23 +17,7 @@ export default function Team() {
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [lockedIndex, setLockedIndex] = useState(null)
   const [isTransitioning, setIsTransitioning] = useState(false)
-
-  // Текущая отображаемая фотография - всегда начинаем с фото команды
-  const [currentPhoto, setCurrentPhoto] = useState('/team.webp')
-  const [photoOpacity, setPhotoOpacity] = useState(1)
-  
-  // Ref для отслеживания желаемой фотографии (source of truth)
-  const desiredPhotoRef = useRef('/team.webp')
-  
-  // Таймеры
-  const transitionTimerRef = useRef(null)
-  const fadeOutTimerRef = useRef(null)
-  
-  // Кэш для предзагруженных изображений
-  const imageCache = useRef(new Map())
-  
-  // Флаг процесса смены фото
-  const isChangingPhotoRef = useRef(false)
+  const [imagesLoaded, setImagesLoaded] = useState(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -47,93 +31,129 @@ export default function Team() {
   }, [])
 
   const teamMembers = [
-    { name: 'Карпенко Богдан', role: 'Fullstack разработчик', photo: 'karpenko.jpg',
+    { 
+      name: 'Карпенко Богдан', 
+      role: 'Product / UX-UI Designer', 
+      photo: 'karpenko.webp',
+      cropPosition: 0.35,
       exp: [
-        '5+ лет: Node.js, React, PostgreSQL, Redis, WebSocket',
-        'Микросервисы с CQRS/ES, GraphQL Federation',
-        'Оптимизация LCP до < 2.0s, cold-start контейнеров'
-      ]},
-    { name: 'Терентьев Андрей', role: 'Tech Lead', photo: 'terentev.jpg',
+        '4+ года в продуктовом дизайне и UX-исследованиях',
+        'Customer Journey Map, прототипирование в Figma',
+        'Дизайн-системы, UI-киты, токены и компоненты',
+        'Проводит JTBD-интервью, юзабилити-тесты, A/B'
+      ]
+    },
+    { 
+      name: 'Терентьев Андрей', 
+      role: 'Tech Lead / Architect', 
+      photo: 'terentev.webp',
+      cropPosition: 0.5,
       exp: [
-        '8+ лет: архитектура распределённых систем',
-        'Kubernetes, Kafka, event-driven architecture',
-        'Code review, tech interviews, team mentoring'
-      ]},
-    { name: 'Блохин Олег', role: 'ML Engineer', photo: 'blokhin.jpg',
+        '6+ лет: проектирование высоконагруженных систем',
+        'Микросервисы, event-driven, CQRS/ES паттерны',
+        'Code review, технические собеседования',
+        'Безопасность: OAuth2/OIDC, шифрование, аудит'
+      ]
+    },
+    { 
+      name: 'Блохин Олег', 
+      role: 'Platform Engineer (DevOps/SRE)', 
+      photo: 'blokhin.webp',
+      cropPosition: 0.55,
       exp: [
-        'CV/NLP модели: PyTorch → ONNX/TensorRT',
-        'MLOps: DVC, Kubeflow, мониторинг метрик',
-        'Онлайн-инференс < 40ms на GPU/CPU'
-      ]},
-    { name: 'Щербаков Андрей', role: 'UI/UX дизайнер', photo: 'shcherbakov.jpg',
+        '5+ лет опыта в DevOps и Site Reliability Engineering',
+        'Kubernetes, Helm, GitOps (ArgoCD, Flux)',
+        'CI/CD: GitHub Actions, GitLab, Jenkins',
+        'Мониторинг: Prometheus, Grafana, Loki, Tempo'
+      ]
+    },
+    { 
+      name: 'Щербаков Андрей', 
+      role: 'Frontend Engineer', 
+      photo: 'shcherbakov.webp',
+      cropPosition: 0.33,
       exp: [
-        'Design System: токены, Figma Variables',
-        'Исследования: JTBD, глубинные интервью, A/B',
-        'Анимации, микровзаимодействия, доступность'
-      ]},
-    { name: 'Воронов Егор', role: 'Frontend разработчик', photo: 'voronov.jpg',
+        '4+ года во frontend-разработке',
+        'React 18, TypeScript, Vite/Webpack',
+        'Адаптивная верстка, pixel-perfect реализация',
+        'Unit/Integration тесты: Vitest, Testing Library'
+      ]
+    },
+    { 
+      name: 'Воронов Егор', 
+      role: 'Frontend Engineer (Senior)', 
+      photo: 'voronov.webp',
+      cropPosition: 0.65,
       exp: [
-        'React/Vite, SSR/SSG, Zustand/RTK',
-        'Оптимизация WebGL/Canvas, OffscreenCanvas, Workers',
-        'Метрики: TBT, INP, CLS; профилирование Performance'
-      ]},
-    { name: 'Немировский Георгий', role: 'Backend разработчик', photo: 'nemirovskiy.jpg',
+        '5+ лет: TypeScript, React, Next.js, SSR/SSG',
+        'Core Web Vitals: LCP < 2.5s, CLS < 0.1, FID < 100ms',
+        'WebGL/Canvas, Three.js, оптимизация рендера',
+        'State management: Zustand, Redux Toolkit, Jotai'
+      ]
+    },
+    { 
+      name: 'Немировский Георгий', 
+      role: 'Backend Engineer', 
+      photo: 'nemirovskiy.webp',
+      cropPosition: 0.5,
       exp: [
-        'Golang/Java, gRPC, Kafka, ClickHouse',
-        'p99 < 100ms, горизонтальное масштабирование',
-        'OAuth2/OIDC, политики секретов/ротации'
-      ]},
-    { name: 'Панов Дмитрий', role: 'DevOps инженер', photo: 'panov.jpg',
+        '4+ года в backend-разработке',
+        'Node.js/NestJS, TypeScript, микросервисы',
+        'PostgreSQL, Redis, RabbitMQ, Kafka',
+        'REST API, GraphQL, tRPC, интеграции с API'
+      ]
+    },
+    { 
+      name: 'Панов Дмитрий', 
+      role: 'Account / Project Manager', 
+      photo: 'panov.webp',
+      cropPosition: 0.57,
       exp: [
-        'K8s/Helm, GitOps (ArgoCD), IaC (Terraform)',
-        'Observability: Prometheus, Loki, Tempo, SLO/SLI',
-        'Zero-downtime релизы: canary/blue-green'
-      ]},
-    { name: 'Козлов Даниил', role: 'Product Manager', photo: 'kozlov.jpg',
+        '5+ лет в управлении проектами',
+        'Agile/Scrum, Kanban, планирование спринтов',
+        'Коммуникация с клиентами, сбор требований',
+        'Risk management, отчетность, post-mortem'
+      ]
+    },
+    { 
+      name: 'Живетьев Кирилл', 
+      role: 'QA Engineer', 
+      photo: 'zhivetev.webp',
+      cropPosition: 0.4,
       exp: [
-        'Roadmap/Backlog, North Star/Activation/Retention',
-        'Юнит-экономика, ценностные гипотезы, price-tests',
-        'GTM запуск, когортный анализ, growth-циклы'
-      ]},
-    { name: 'Живетьев Кирилл', role: 'Data Scientist', photo: 'zhivetev.jpg',
-      exp: [
-        'Фичеинжиниринг, причинные модели, uplift-анализ',
-        'Временные ряды: Prophet, SARIMAX, MLForecast',
-        'Эксперименты: CUPED, sequential testing'
-      ]},
+        '3+ года в тестировании и обеспечении качества',
+        'E2E-тестирование: Playwright, Cypress',
+        'API-тесты, нагрузочное тестирование (K6)',
+        'Test plans, bug tracking, метрики качества'
+      ]
+    },
   ]
 
-  // Предзагрузка всех изображений при монтировании компонента
+  // Предзагрузка всех изображений при монтировании
   useEffect(() => {
-    const preloadImages = () => {
-      // Предзагружаем групповое фото (приоритет!)
-      const teamImg = new Image()
-      teamImg.onload = () => {
-        imageCache.current.set('/team.webp', true)
-      }
-      teamImg.src = '/team.webp'
-      
-      // Предзагружаем фото всех членов команды
-      teamMembers.forEach(member => {
-        const img = new Image()
-        img.onload = () => {
-          imageCache.current.set(`/${member.photo}`, true)
-        }
-        img.src = `/${member.photo}`
-      })
-    }
+    let loadedCount = 0
+    const totalImages = teamMembers.length + 1 // +1 для team.webp
     
-    preloadImages()
-    
-    return () => {
-      // Очищаем все таймеры при размонтировании
-      if (transitionTimerRef.current) {
-        clearTimeout(transitionTimerRef.current)
-      }
-      if (fadeOutTimerRef.current) {
-        clearTimeout(fadeOutTimerRef.current)
+    const checkAllLoaded = () => {
+      loadedCount++
+      if (loadedCount === totalImages) {
+        setImagesLoaded(true)
       }
     }
+
+    // Загружаем групповое фото
+    const teamImg = new Image()
+    teamImg.onload = checkAllLoaded
+    teamImg.onerror = checkAllLoaded
+    teamImg.src = '/team.webp'
+
+    // Загружаем все фото членов команды
+    teamMembers.forEach(member => {
+      const img = new Image()
+      img.onload = checkAllLoaded
+      img.onerror = checkAllLoaded
+      img.src = `/${member.photo}`
+    })
   }, [])
 
   // Определяем активного пользователя
@@ -144,148 +164,9 @@ export default function Team() {
     [hasHover, activeIndex]
   )
 
-  // Универсальная функция безопасной отмены перехода (восстанавливает видимость)
-  const cancelTransitionSafely = () => {
-    if (transitionTimerRef.current) {
-      clearTimeout(transitionTimerRef.current)
-      transitionTimerRef.current = null
-    }
-    if (fadeOutTimerRef.current) {
-      clearTimeout(fadeOutTimerRef.current)
-      fadeOutTimerRef.current = null
-    }
-    isChangingPhotoRef.current = false
-    // КРИТИЧЕСКО: если отменили — возвращаем непрозрачность,
-    // чтобы не было «серого прямоугольника»
-    setPhotoOpacity(1)
-  }
-
-  // Функция для смены фотографии с проверкой актуальности
-  const changePhotoSafely = (targetPhotoSrc) => {
-    // Если уже меняем фото или это та же фотография, выходим
-    if (isChangingPhotoRef.current || currentPhoto === targetPhotoSrc) {
-      return
-    }
-
-    // Отменяем все предыдущие операции
-    cancelTransitionSafely()
-
-    isChangingPhotoRef.current = true
-
-    // Проверяем, загружено ли изображение
-    const isImageCached = imageCache.current.has(targetPhotoSrc)
-    
-    if (isImageCached) {
-      // Изображение загружено - делаем плавный переход
-      setPhotoOpacity(0)
-      
-      fadeOutTimerRef.current = setTimeout(() => {
-        // Финальная проверка перед сменой фото
-        if (desiredPhotoRef.current === targetPhotoSrc) {
-          setCurrentPhoto(targetPhotoSrc)
-          
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              // Еще одна проверка перед fade-in
-              if (desiredPhotoRef.current === targetPhotoSrc) {
-                setPhotoOpacity(1)
-              } else {
-                // Отменили по дороге — вернуть видимость текущего фото
-                setPhotoOpacity(1)
-              }
-              isChangingPhotoRef.current = false
-            })
-          })
-        } else {
-          // Цель изменилась — отменяем и возвращаем видимость
-          isChangingPhotoRef.current = false
-          setPhotoOpacity(1)
-        }
-      }, ANIMATION_CONFIG.PHOTO_TRANSITION_DURATION)
-    } else {
-      // Изображение не в кэше - загружаем его
-      const img = new Image()
-      
-      img.onload = () => {
-        imageCache.current.set(targetPhotoSrc, true)
-        
-        // Проверяем актуальность после загрузки
-        if (desiredPhotoRef.current === targetPhotoSrc) {
-          // Плавно поменяем
-          setPhotoOpacity(0)
-          
-          fadeOutTimerRef.current = setTimeout(() => {
-            if (desiredPhotoRef.current === targetPhotoSrc) {
-              setCurrentPhoto(targetPhotoSrc)
-              
-              requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                  if (desiredPhotoRef.current === targetPhotoSrc) {
-                    setPhotoOpacity(1)
-                  } else {
-                    // Отменили по дороге — вернуть видимость
-                    setPhotoOpacity(1)
-                  }
-                  isChangingPhotoRef.current = false
-                })
-              })
-            } else {
-              // Пока грузили — цель сменилась
-              isChangingPhotoRef.current = false
-              setPhotoOpacity(1)
-            }
-          }, ANIMATION_CONFIG.PHOTO_TRANSITION_DURATION)
-        } else {
-          // Пока грузили — цель уже другая; просто выходим и восстанавливаем видимость
-          isChangingPhotoRef.current = false
-          setPhotoOpacity(1)
-        }
-      }
-      
-      img.onerror = () => {
-        console.error(`Failed to load image: ${targetPhotoSrc}`)
-        isChangingPhotoRef.current = false
-        // Возвращаемся к групповому фото и гарантируем видимость
-        if (targetPhotoSrc !== '/team.webp') {
-          desiredPhotoRef.current = '/team.webp'
-          setPhotoOpacity(1)
-          changePhotoSafely('/team.webp')
-        } else {
-          setPhotoOpacity(1)
-        }
-      }
-      
-      img.src = targetPhotoSrc
-    }
-  }
-
-  // Отслеживание изменения hover состояния - ОСНОВНАЯ ЛОГИКА
-  useEffect(() => {
-    // КРИТИЧЕСКИ ВАЖНО: Если никто не выделен (ни hover, ни lock), показываем фото команды
-    let newDesiredPhoto
-    
-    if (!hasHover || !hovered) {
-      // Никто не выделен - ВСЕГДА фото команды
-      newDesiredPhoto = '/team.webp'
-    } else {
-      // Кто-то выделен - показываем его фото
-      newDesiredPhoto = `/${hovered.photo}`
-    }
-    
-    // Обновляем желаемую фотографию
-    desiredPhotoRef.current = newDesiredPhoto
-    
-    // Если фото нужно сменить
-    if (newDesiredPhoto !== currentPhoto) {
-      changePhotoSafely(newDesiredPhoto)
-    }
-  }, [hasHover, hovered, currentPhoto])
-
   const handleMouseLeave = () => {
     if (lockedIndex === null && !isTransitioning) {
       setHoveredIndex(null)
-      // Подстраховка: мгновенно возвращаем видимость
-      setPhotoOpacity(1)
     }
   }
 
@@ -299,11 +180,9 @@ export default function Team() {
     if (isTransitioning) return
     setIsTransitioning(true)
     if (lockedIndex === index) {
-      // Разлочиваем - возвращаемся к фото команды
       setLockedIndex(null)
       setHoveredIndex(null)
     } else {
-      // Лочим выбранного человека
       setLockedIndex(index)
       setHoveredIndex(index)
     }
@@ -313,7 +192,6 @@ export default function Team() {
   const handleTitleClick = () => {
     if (isTransitioning) return
     setIsTransitioning(true)
-    // Сброс - возвращаемся к фото команды
     setLockedIndex(null)
     setHoveredIndex(null)
     setTimeout(() => setIsTransitioning(false), ANIMATION_CONFIG.CLICK_LOCK_DURATION)
@@ -344,16 +222,36 @@ export default function Team() {
           }}
         >
           <div className="team-photo-large fade-text">
+            {/* Групповое фото */}
             <img
-              src={currentPhoto}
-              alt={hasHover ? hovered?.name : "Команда firma'"}
+              src="/team.webp"
+              alt="Команда firma'"
               className="team-photo-img"
               style={{ 
-                opacity: photoOpacity,
-                transition: `opacity ${ANIMATION_CONFIG.PHOTO_TRANSITION_DURATION}ms ${ANIMATION_CONFIG.EASING}`
+                opacity: !hasHover ? 1 : 0,
+                transition: `opacity ${ANIMATION_CONFIG.PHOTO_TRANSITION_DURATION}ms ${ANIMATION_CONFIG.EASING}`,
+                objectFit: 'cover',
+                objectPosition: 'center center'
               }}
               draggable="false"
             />
+
+            {/* Фотографии всех членов команды */}
+            {teamMembers.map((member, index) => (
+              <img
+                key={member.photo}
+                src={`/${member.photo}`}
+                alt={member.name}
+                className="team-photo-img"
+                style={{ 
+                  opacity: hasHover && activeIndex === index ? 1 : 0,
+                  transition: `opacity ${ANIMATION_CONFIG.PHOTO_TRANSITION_DURATION}ms ${ANIMATION_CONFIG.EASING}`,
+                  objectFit: 'cover',
+                  objectPosition: `${member.cropPosition * 100}% center`
+                }}
+                draggable="false"
+              />
+            ))}
             
             {/* Показываем overlay с "9 человек" ТОЛЬКО когда никто не выделен */}
             {!hasHover && (
