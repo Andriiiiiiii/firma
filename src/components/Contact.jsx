@@ -2,11 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import SphericalLattice from './SphericalLattice.jsx'
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    contact: '',
-    message: '',
-  })
+  const [formData, setFormData] = useState({ name: '', contact: '', message: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
 
@@ -16,27 +12,21 @@ export default function Contact() {
   const [shouldRenderGlobe, setShouldRenderGlobe] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
+  // Во время ввода блокируем интеракции со сферой
+  const [formActive, setFormActive] = useState(false)
+
   useEffect(() => {
     const checkDevice = () => {
-      const mobile = window.innerWidth < 1024 || 
-                      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      const mobile =
+        window.innerWidth < 1024 ||
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
       setIsMobile(mobile)
     }
-
     checkDevice()
-    
     const handleResize = () => checkDevice()
     window.addEventListener('resize', handleResize)
-    
     return () => window.removeEventListener('resize', handleResize)
   }, [])
-
-  const params =
-    typeof window !== 'undefined'
-      ? new URLSearchParams(window.location.search)
-      : new URLSearchParams('')
-  const SPIN_Y = Number(params.get('spin')) || 0.35
-  const SPIN_X = Number(params.get('spinX')) || 0.22
 
   useEffect(() => {
     const node = sectionRef.current
@@ -44,10 +34,8 @@ export default function Contact() {
     const appearThreshold = 0.45
     const observer = new IntersectionObserver(
       ([entry]) => {
-        const ratio = entry.intersectionRatio
-        const visible = ratio >= appearThreshold
+        const visible = entry.intersectionRatio >= appearThreshold
         setIsVisible(visible)
-
         if (visible && !hasBeenVisibleRef.current) {
           hasBeenVisibleRef.current = true
           setShouldRenderGlobe(true)
@@ -66,21 +54,23 @@ export default function Contact() {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitStatus(null)
-
     try {
-      // Формируем mailto ссылку
-      const subject = encodeURIComponent('Новая заявка с сайта firma\'')
-      const body = encodeURIComponent(
-        `Имя: ${formData.name}\n\nКонтакт: ${formData.contact}\n\nСообщение:\n${formData.message}`
-      )
-      
-      // Открываем почтовый клиент
-      window.location.href = `mailto:zakaz@ne-firma.ru?subject=${subject}&body=${body}`
-      
-      setSubmitStatus('success')
-      setFormData({ name: '', contact: '', message: '' })
+      const response = await fetch('http://localhost:3001/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+      const data = await response.json()
+      if (response.ok && data.success) {
+        setSubmitStatus('success')
+        setFormData({ name: '', contact: '', message: '' })
+        setTimeout(() => setSubmitStatus(null), 5000)
+      } else {
+        setSubmitStatus('error')
+        console.error('Ошибка отправки:', data.error)
+      }
     } catch (error) {
-      console.error('Error:', error)
+      console.error('Ошибка сети:', error)
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -95,42 +85,45 @@ export default function Contact() {
       style={{ position: 'relative', overflow: 'hidden', background: '#000' }}
     >
       {shouldRenderGlobe && (
-        <div style={{ 
-          opacity: isVisible ? 1 : 0, 
-          transition: 'opacity 0.3s ease',
-          pointerEvents: 'none'
-        }}>
+        <div
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transition: 'opacity 0.3s ease',
+            pointerEvents: 'none',
+          }}
+        >
           <SphericalLattice
+            // механика/параметры НЕ меняем
             pointsPerRow={25}
             pointsPerCol={70}
-            rotationSpeed={SPIN_Y}
-            rotationSpeedX={SPIN_X}
+            rotationSpeed={0.35}
+            rotationSpeedX={0.22}
             initialYawVel={2}
             initialPitchVel={2}
             rotFriction={0.35}
             rotSpring={0.5}
             pullToTarget={false}
+            // ключ: во время ввода блокируем любое взаимодействие курсора
+            interactionEnabled={!formActive}
           />
         </div>
       )}
 
       <div className="container contact-container" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="section-label fade-text">/ 06 / Связаться с нами</div>
-        <h2 className="section-title fade-text">Начнём работу вместе</h2>
+        <div className="section-head">
+          <div className="section-label fade-text">/ 06 / Связаться с нами</div>
+          <h2 className="section-title fade-text">Начнём работу вместе</h2>
+        </div>
 
         <div className="contact-wrapper">
           <div className="contact-info fade-text">
             <div className="info-item">
               <h3 className="info-label">Email</h3>
-              <a href="mailto:zakaz@ne-firma.ru" className="info-link">
-                zakaz@ne-firma.ru
-              </a>
+              <a href="mailto:zakaz@ne-firma.ru" className="info-link">zakaz@ne-firma.ru</a>
             </div>
             <div className="info-item">
               <h3 className="info-label">Телефон</h3>
-              <a href="tel:+79001234567" className="info-link">
-                +7 (900) 123-45-67
-              </a>
+              <a href="tel:+79175958184" className="info-link">+7 (917) 595-81-84</a>
             </div>
             <div className="info-item">
               <h3 className="info-label">Реквизиты</h3>
@@ -150,6 +143,9 @@ export default function Contact() {
                   onChange={handleChange}
                   required
                   disabled={isSubmitting}
+                  maxLength={100}
+                  onFocus={() => setFormActive(true)}
+                  onBlur={() => setFormActive(false)}
                 />
                 <label className="form-label">Ваше имя</label>
               </div>
@@ -164,6 +160,9 @@ export default function Contact() {
                   onChange={handleChange}
                   required
                   disabled={isSubmitting}
+                  maxLength={100}
+                  onFocus={() => setFormActive(true)}
+                  onBlur={() => setFormActive(false)}
                 />
                 <label className="form-label">Email/Telegram</label>
               </div>
@@ -178,25 +177,27 @@ export default function Contact() {
                   onChange={handleChange}
                   required
                   disabled={isSubmitting}
+                  maxLength={1000}
+                  onFocus={() => setFormActive(true)}
+                  onBlur={() => setFormActive(false)}
                 />
                 <label className="form-label">Расскажите о вашем проекте</label>
               </div>
             </div>
 
             {submitStatus === 'success' && (
-              <p className="submit-message success">Открываем почтовый клиент для отправки...</p>
+              <p className="submit-message success">✓ Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.</p>
             )}
             {submitStatus === 'error' && (
-              <p className="submit-message error">Ошибка. Попробуйте позже.</p>
+              <p className="submit-message error">✗ Ошибка отправки. Попробуйте позже или свяжитесь с нами напрямую.</p>
             )}
 
             <button type="submit" className="submit-button" disabled={isSubmitting}>
-              <span>{isSubmitting ? 'Открываем почту...' : 'Отправить'}</span>
+              <span>{isSubmitting ? 'Отправка...' : 'Отправить'}</span>
             </button>
           </form>
         </div>
 
-        {/* Footer в правом нижнем углу */}
         <div className="contact-footer-corner">
           <p className="contact-footer-text">© 2025 фирма́. Все права защищены.</p>
         </div>

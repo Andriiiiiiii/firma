@@ -11,6 +11,11 @@ dist-ssr
 .env.*
 !.env.example
 
+# Server environment
+server/.env
+server/.env.*
+!server/.env.example
+
 # Logs
 *.log
 npm-debug.log*
@@ -30,3 +35,6 @@ Thumbs.db
 
 # Local development
 *.local
+
+# Production
+server/node_modules
