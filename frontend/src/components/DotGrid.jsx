@@ -6,18 +6,17 @@ export default function CrystalLattice(props) {
     style,
   } = props
 
-  // БАЗОВАЯ ЕДИНИЦА: расстояние между точками = 5% от ширины экрана (ФИКСИРОВАНО)
-  const SPACING_RATIO = 0.015 // 5% от ширины экрана
+  // БАЗОВАЯ ЕДИНИЦА для ДЕСКТОПА: расстояние между точками = 1.5% от ширины экрана
+  const SPACING_RATIO = 0.015
   
   // ВСЕ ПАРАМЕТРЫ В ОТНОСИТЕЛЬНЫХ ЕДИНИЦАХ (кратные spacing)
-  const DOT_SIZE_RATIO = 0.05 // размер точки = 5% от spacing
-  const DOT_OPACITY = 0.7 // прозрачность (константа)
-  const MOUSE_RADIUS_RATIO = 20 // радиус взаимодействия = 20 × spacing
-  const MOUSE_FORCE_RATIO = 100 // сила взаимодействия = 100 × spacing
-  const MOUSE_FALLOFF = 2 // степень затухания (константа)
-  const VIGNETTE_WIDTH_X_RATIO = 8.75 // ширина затемнения X = 8.75 × spacing
-  const VIGNETTE_WIDTH_Y_RATIO = 7.5 // ширина затемнения Y = 7.5 × spacing
-  const WAVE_FORCE_RATIO = 400 // сила волны при открытии = 400 × spacing
+  const DOT_SIZE_RATIO = 0.05
+  const MOUSE_RADIUS_RATIO = 20
+  const MOUSE_FORCE_RATIO = 200
+  const MOUSE_FALLOFF = 2
+  const VIGNETTE_WIDTH_X_RATIO = 8.75
+  const VIGNETTE_WIDTH_Y_RATIO = 7.5
+  const WAVE_FORCE_RATIO = 400
   
   // Физические параметры (константы)
   const STIFFNESS = 90
@@ -34,6 +33,10 @@ export default function CrystalLattice(props) {
 
     const ctx = canvas.getContext("2d", { alpha: true })
 
+    // Проверка на мобильное устройство
+    const isMobile = window.innerWidth < 1024 || 
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+
     const S = {
       w: 0, 
       h: 0, 
@@ -41,8 +44,9 @@ export default function CrystalLattice(props) {
       cols: 0,
       rows: 0,
       count: 0,
-      spacing: 0, // будет вычислено на основе ширины экрана
+      spacing: 0,
       dotSize: 0,
+      dotOpacity: isMobile ? 0.85 : 0.7, // Ярче для мобильных
       mouseRadius: 0,
       mouseForce: 0,
       waveForce: 0,
@@ -58,13 +62,13 @@ export default function CrystalLattice(props) {
       dotSprite: null, 
       dotSpriteSize: 0,
       waveTriggered: false,
+      isMobile: isMobile,
     }
 
     const neighborOffsets = new Int8Array([
       -1, 0, 1, 0, 0, -1, 0, 1, -1, -1, 1, -1, -1, 1, 1, 1
     ])
 
-    // Построение виньетки с относительными размерами
     const buildVignette = () => {
       const vw = S.w, vh = S.h
       if (vw <= 0 || vh <= 0) return
@@ -114,7 +118,6 @@ export default function CrystalLattice(props) {
       S.vignetteCanvas = vCan
     }
 
-    // Построение спрайта точки с относительным размером
     const buildDotSprite = () => {
       const r = S.dotSize
       const size = Math.max(1, (r * 2 + 2) | 0)
@@ -125,7 +128,7 @@ export default function CrystalLattice(props) {
       dCtx.clearRect(0, 0, size, size)
       dCtx.beginPath()
       dCtx.arc(size * 0.5, size * 0.5, r, 0, Math.PI * 2)
-      dCtx.fillStyle = `rgba(255,255,255,${DOT_OPACITY})`
+      dCtx.fillStyle = `rgba(255,255,255,${S.dotOpacity})`
       dCtx.fill()
       S.dotSprite = dCan
       S.dotSpriteSize = size
@@ -136,8 +139,13 @@ export default function CrystalLattice(props) {
       S.w = Math.max(1, width | 0)
       S.h = Math.max(1, height | 0)
 
-      // ВЫЧИСЛЯЕМ ВСЕ ПАРАМЕТРЫ НА ОСНОВЕ ШИРИНЫ ЭКРАНА (5% - ФИКСИРОВАНО)
-      S.spacing = S.w * SPACING_RATIO
+      // КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: для мобильных используем высоту экрана
+      if (S.isMobile) {
+        S.spacing = S.h * 0.02 // 2% от высоты экрана для мобильных
+      } else {
+        S.spacing = S.w * SPACING_RATIO // 1.5% от ширины для десктопа
+      }
+
       S.dotSize = S.spacing * DOT_SIZE_RATIO
       S.mouseRadius = S.spacing * MOUSE_RADIUS_RATIO
       S.mouseForce = S.spacing * MOUSE_FORCE_RATIO
@@ -152,7 +160,6 @@ export default function CrystalLattice(props) {
       canvas.style.height = `${S.h}px`
       ctx.scale(S.dpr, S.dpr)
 
-      // Количество точек на основе spacing
       S.cols = Math.max(2, Math.ceil(S.w / S.spacing) + 1)
       S.rows = Math.max(2, Math.ceil(S.h / S.spacing) + 1)
       S.count = S.cols * S.rows
@@ -166,7 +173,6 @@ export default function CrystalLattice(props) {
       S.nbr = new Int32Array(S.count * 8)
       S.rest = new Float32Array(S.count * 8)
 
-      // Расстановка точек с относительным интервалом
       let k = 0
       for (let r = 0; r < S.rows; r++) {
         const y = r * S.spacing
@@ -177,7 +183,6 @@ export default function CrystalLattice(props) {
         }
       }
 
-      // Построение соседей
       const cols = S.cols, rows = S.rows
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
@@ -207,7 +212,6 @@ export default function CrystalLattice(props) {
       S.waveTriggered = false
     }
 
-    // Волна от центра при открытии (с относительной силой)
     const triggerInitialWave = () => {
       if (S.waveTriggered) return
       S.waveTriggered = true

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { preloadAllImages } from './utils/imageLoader'
 import Cover from './components/Cover'
 import Hero from './components/Hero'
@@ -14,6 +14,7 @@ export default function App() {
   const [showMenu, setShowMenu] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [imagesLoaded, setImagesLoaded] = useState(false)
+  const scrollPositionRef = useRef(0)
 
   // ✨ КРИТИЧНО: Загружаем ВСЕ фото при монтировании App
   useEffect(() => {
@@ -24,7 +25,6 @@ export default function App() {
       })
       .catch((err) => {
         console.error('Ошибка загрузки фото:', err)
-        // Всё равно продолжаем работу, фото загружатся при необходимости
         setImagesLoaded(true)
       })
   }, [])
@@ -57,28 +57,44 @@ export default function App() {
   }, [])
 
   const scrollToSection = useCallback((sectionId) => {
-  setMenuOpen(false) // Сначала закрываем меню
-  
-  // Ждем, пока body восстановит нормальные стили (убрать position: fixed)
-  setTimeout(() => {
-    const section = document.getElementById(sectionId)
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }, 100) // Небольшая задержка для применения стилей
-}, [])
+    setMenuOpen(false)
+    
+    setTimeout(() => {
+      const section = document.getElementById(sectionId)
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 100)
+  }, [])
 
+  // Обработка открытия/закрытия меню - ИСПРАВЛЕНО
   useEffect(() => {
-    if (menuOpen && isMobile) {
+    if (menuOpen) {
+      // Сохраняем текущую позицию скролла
+      scrollPositionRef.current = window.pageYOffset || document.documentElement.scrollTop
+      
+      // Блокируем скролл
       document.body.style.overflow = 'hidden'
       document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollPositionRef.current}px`
       document.body.style.width = '100%'
+      document.body.style.left = '0'
+      document.body.style.right = '0'
     } else {
+      // Восстанавливаем скролл
+      const scrollY = scrollPositionRef.current
+      
       document.body.style.overflow = ''
       document.body.style.position = ''
+      document.body.style.top = ''
       document.body.style.width = ''
+      document.body.style.left = ''
+      document.body.style.right = ''
+      
+      // Возвращаем позицию скролла БЕЗ анимации
+      window.scrollTo(0, scrollY)
     }
-  }, [menuOpen, isMobile])
+  }, [menuOpen])
 
   return (
     <>

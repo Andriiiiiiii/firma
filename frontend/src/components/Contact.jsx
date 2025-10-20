@@ -52,19 +52,33 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    // Сохраняем текущую позицию скролла ДО начала отправки
+    const scrollY = window.scrollY
+    
     setIsSubmitting(true)
     setSubmitStatus(null)
+    
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || '/api'; 
+      const apiUrl = import.meta.env.VITE_API_URL || '/api'
       const response = await fetch(`${apiUrl}/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
       const data = await response.json()
+      
       if (response.ok && data.success) {
         setSubmitStatus('success')
         setFormData({ name: '', contact: '', message: '' })
+        
+        // Возвращаем позицию скролла если она изменилась
+        setTimeout(() => {
+          if (Math.abs(window.scrollY - scrollY) > 50) {
+            window.scrollTo({ top: scrollY, behavior: 'instant' })
+          }
+        }, 0)
+        
         setTimeout(() => setSubmitStatus(null), 5000)
       } else {
         setSubmitStatus('error')
@@ -94,7 +108,6 @@ export default function Contact() {
           }}
         >
           <SphericalLattice
-            // механика/параметры НЕ меняем
             pointsPerRow={25}
             pointsPerCol={70}
             rotationSpeed={0.35}
@@ -104,7 +117,6 @@ export default function Contact() {
             rotFriction={0.35}
             rotSpring={0.5}
             pullToTarget={false}
-            // ключ: во время ввода блокируем любое взаимодействие курсора
             interactionEnabled={!formActive}
           />
         </div>

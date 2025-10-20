@@ -7,7 +7,11 @@
 .menu-trigger {
   position: fixed;
   top: 2.5vh;
-  right: 5vw;
+
+  /* вместо right — логическое свойство: всегда справа для LTR/RTL */
+  inset-inline-end: 5vw;
+  inset-inline-start: auto !important; /* на всякий случай сбиваем любой left */
+
   width: 2.5vw;
   height: 2.5vw;
   display: inline-flex;
@@ -19,6 +23,8 @@
   cursor: pointer;
   z-index: 2001;
   -webkit-tap-highlight-color: transparent;
+
+  /* анимация появления (на десктопе) */
   opacity: 0;
   transform: translateY(-1vh);
   pointer-events: none;
