@@ -7,11 +7,11 @@ export default function CrystalLattice(props) {
   } = props
 
   // БАЗОВАЯ ЕДИНИЦА: расстояние между точками = 5% от ширины экрана (ФИКСИРОВАНО)
-  const SPACING_RATIO = 0.02 // 5% от ширины экрана
+  const SPACING_RATIO = 0.015 // 5% от ширины экрана
   
   // ВСЕ ПАРАМЕТРЫ В ОТНОСИТЕЛЬНЫХ ЕДИНИЦАХ (кратные spacing)
   const DOT_SIZE_RATIO = 0.05 // размер точки = 5% от spacing
-  const DOT_OPACITY = 0.5 // прозрачность (константа)
+  const DOT_OPACITY = 0.7 // прозрачность (константа)
   const MOUSE_RADIUS_RATIO = 20 // радиус взаимодействия = 20 × spacing
   const MOUSE_FORCE_RATIO = 100 // сила взаимодействия = 100 × spacing
   const MOUSE_FALLOFF = 2 // степень затухания (константа)

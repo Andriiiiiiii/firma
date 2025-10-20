@@ -57,12 +57,16 @@ export default function App() {
   }, [])
 
   const scrollToSection = useCallback((sectionId) => {
+  setMenuOpen(false) // Сначала закрываем меню
+  
+  // Ждем, пока body восстановит нормальные стили (убрать position: fixed)
+  setTimeout(() => {
     const section = document.getElementById(sectionId)
     if (section) {
       section.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      setMenuOpen(false)
     }
-  }, [])
+  }, 100) // Небольшая задержка для применения стилей
+}, [])
 
   useEffect(() => {
     if (menuOpen && isMobile) {

@@ -1,4 +1,3 @@
-// OverlayMenu.jsx
 import React, { useEffect } from 'react'
 
 export default function OverlayMenu({ open, onClose, onNav }) {
@@ -18,15 +17,19 @@ export default function OverlayMenu({ open, onClose, onNav }) {
     { id: 'contact',  label: 'Контакты',  number: '06' },
   ]
 
-  const handleItemClick = (id) => {
-    onNav?.(id)
+  const handleItemClick = (e, id) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (onNav) {
+      onNav(id)
+    }
   }
 
   return (
     <div className={`menu-overlay ${open ? 'open' : ''}`} aria-hidden={!open}>
       <div className="menu-top">
         <div className="menu-logo">
-          <img src="/logo.svg" alt="firma' logo" className="menu-logo-img" />
+          <img src="/logo.webp" alt="firma' logo" className="menu-logo-img" />
         </div>
       </div>
 
@@ -41,10 +44,7 @@ export default function OverlayMenu({ open, onClose, onNav }) {
               >
                 <a
                   href={`#${item.id}`}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    handleItemClick(item.id)
-                  }}
+                  onClick={(e) => handleItemClick(e, item.id)}
                 >
                   <span className="menu-text">{item.label}</span>
                   <sup className="menu-sup">{item.number}</sup>
