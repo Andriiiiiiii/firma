@@ -200,112 +200,11 @@
     min-height: 100vh;
     min-height: 100dvh;
   }
-  
-  .team-container {
-    max-width: 100%;
-    padding: 0 var(--container-padding);
-    justify-content: flex-start;
-    padding-top: 48px;
-    padding-bottom: 48px;
-  }
-  
-  .team-header {
-    margin-bottom: 16px;
-  }
-  
-  .team-header .section-label {
-    font-size: 11px;
-    margin-bottom: 6px;
-  }
-  
-  .team-header .section-title {
-    font-size: 28px;
-    margin-bottom: 0;
-  }
-  
-  .team-layout {
-    grid-template-columns: 1fr;
-    gap: 16px;
-    height: auto;
-  }
-  
-  .team-layout.has-hover {
-    grid-template-columns: 1fr;
-  }
-  
-  .team-photo-large {
-    height: 220px;
-    min-height: auto;
-  }
-  
-  .team-photo-img {
-    position: absolute;
-    inset: 0;
-  }
-  
-  .team-count {
-    font-size: 14px;
-  }
-  
-  .team-experience {
-    display: none !important;
-  }
-  
-  .team-members-list {
-    height: auto;
-    max-height: calc(100vh - 480px);
-    width: 100%;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  .team-names {
-    gap: 8px;
-    padding-right: 8px;
-  }
-  
-  .team-member-item {
-    padding: 8px 0;
-    gap: 10px;
-  }
-  
-  .team-member-item:hover {
-    padding-left: 6px;
-  }
-  
-  .member-number {
-    font-size: 11px;
-    min-width: 18px;
-  }
-  
-  .member-name {
-    font-size: 14px;
-  }
-  
-  .member-role {
-    font-size: 12px;
-  }
 }
 
 @media (max-width: 767px) {
   .team-photo-large {
-    height: 200px;
-  }
-  
-  .team-members-list {
-    max-height: calc(100vh - 440px);
-  }
-  
-  .member-info {
-    gap: 3px;
-  }
-  
-  .member-name {
-    font-size: 15px;
-  }
-  
-  .member-role {
-    font-size: 12px;
+    height: 200px !important;
   }
 }
 
@@ -572,7 +471,6 @@
 
 /* ===== MENU - СКРЫТО НА МОБИЛЬНЫХ ===== */
 @media (max-width: 1023px) {
-  /* Полностью скрываем меню на мобильных */
   .menu-trigger,
   .menu-overlay {
     display: none !important;
@@ -595,7 +493,8 @@
 @media (hover: none) and (pointer: coarse) {
   .submit-button,
   .team-member-item,
-  .stat-item {
+  .stat-item,
+  .team-nav-button {
     min-height: 44px;
     position: relative;
   }

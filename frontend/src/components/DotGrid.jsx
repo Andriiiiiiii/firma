@@ -4,7 +4,7 @@ export default function CrystalLattice(props) {
   const {
     className,
     style,
-    enableInitialWave = true, // Новый проп для управления начальной волной
+    enableInitialWave = true,
   } = props
 
   // БАЗОВАЯ ЕДИНИЦА для ДЕСКТОПА: расстояние между точками = 1.5% от ширины экрана
@@ -64,7 +64,7 @@ export default function CrystalLattice(props) {
       dotSpriteSize: 0,
       waveTriggered: false,
       isMobile: isMobile,
-      enableInitialWave: enableInitialWave, // Сохраняем проп в состояние
+      enableInitialWave: enableInitialWave,
     }
 
     const neighborOffsets = new Int8Array([
@@ -354,7 +354,7 @@ export default function CrystalLattice(props) {
       S.last = t
       S.acc += dt
 
-      // КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: запускаем волну только если enableInitialWave === true
+      // Запускаем волну ТОЛЬКО если enableInitialWave === true и волна еще не запускалась
       if (!S.waveTriggered && S.enableInitialWave) {
         setTimeout(() => triggerInitialWave(), 100)
       }
@@ -397,7 +397,7 @@ export default function CrystalLattice(props) {
       canvas.removeEventListener("pointerenter", onPointerEnter)
       canvas.removeEventListener("pointerleave", onPointerLeave)
     }
-  }, [enableInitialWave]) // Добавляем зависимость от пропа
+  }, [enableInitialWave])
 
   return (
     <div

@@ -8,32 +8,35 @@ export default function Cover({ isMobile }) {
   const [shouldPlayWave, setShouldPlayWave] = useState(true)
   const sectionRef = useRef(null)
   const hasCheckedVisit = useRef(false)
+  const hasPlayedWave = useRef(false)
 
-  // Проверяем первый визит для мобильных
+  // Проверяем первый визит для мобильных ОДИН РАЗ при монтировании
   useEffect(() => {
-    if (!isMobile || hasCheckedVisit.current) return
-    
+    if (hasCheckedVisit.current) return
     hasCheckedVisit.current = true
     
-    const isFirstVisit = !localStorage.getItem(FIRST_VISIT_KEY)
-    
-    if (isFirstVisit) {
-      // Первый визит - будет начальная волна
-      setShouldPlayWave(true)
-      localStorage.setItem(FIRST_VISIT_KEY, 'true')
+    if (isMobile) {
+      // На мобильных: проверяем первый визит
+      const isFirstVisit = !localStorage.getItem(FIRST_VISIT_KEY)
+      
+      if (isFirstVisit) {
+        // Первый визит - будет начальная волна
+        setShouldPlayWave(true)
+        hasPlayedWave.current = false
+        localStorage.setItem(FIRST_VISIT_KEY, 'true')
+      } else {
+        // Повторный визит - без начальной волны
+        setShouldPlayWave(false)
+        hasPlayedWave.current = true
+      }
     } else {
-      // Повторный визит - без начальной волны
-      setShouldPlayWave(false)
-    }
-  }, [isMobile])
-
-  // На десктопе волна всегда запускается
-  useEffect(() => {
-    if (!isMobile) {
+      // На десктопе волна всегда запускается
       setShouldPlayWave(true)
+      hasPlayedWave.current = false
     }
   }, [isMobile])
 
+  // Отслеживаем видимость секции
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -45,12 +48,32 @@ export default function Cover({ isMobile }) {
     return () => observer.disconnect()
   }, [])
 
+  // Управляем воспроизведением волны
+  useEffect(() => {
+    if (!isVisible) return
+    
+    if (isMobile) {
+      // На мобильных: волна играет только если не играла ранее и shouldPlayWave = true
+      if (!hasPlayedWave.current && shouldPlayWave) {
+        hasPlayedWave.current = true
+      }
+    } else {
+      // На десктопе: волна играет при каждом появлении секции
+      hasPlayedWave.current = false
+    }
+  }, [isVisible, isMobile, shouldPlayWave])
+
+  // Определяем, нужно ли запускать волну для решетки
+  const enableWaveForGrid = isMobile 
+    ? (isVisible && shouldPlayWave && !hasPlayedWave.current) 
+    : (isVisible && shouldPlayWave)
+
   return (
     <section ref={sectionRef} id="cover" className="cover snap-section">
       {/* Решетка показывается ВСЕГДА когда секция видима */}
       {isVisible ? (
         <div className="cover-background">
-          <CrystalLattice enableInitialWave={shouldPlayWave} />
+          <CrystalLattice enableInitialWave={enableWaveForGrid} />
         </div>
       ) : (
         <div className="cover-background" style={{ background: '#000' }} />
