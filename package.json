@@ -13,7 +13,11 @@
     "build:frontend": "cd frontend && npm run build",
     "build:backend": "cd backend && npm run build",
     "build": "npm run build:frontend && npm run build:backend",
-    "deploy": "bash deploy.sh"
+    "deploy": "bash deploy.sh",
+    "validate:images": "node validate-images.js",
+    "check:images": "bash check-images.sh",
+    "predev": "npm run validate:images",
+    "prebuild": "npm run validate:images"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
