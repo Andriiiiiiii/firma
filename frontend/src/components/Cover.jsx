@@ -5,7 +5,7 @@ const FIRST_VISIT_KEY = 'firma_first_visit'
 
 export default function Cover({ isMobile }) {
   const [isVisible, setIsVisible] = useState(false)
-  const [shouldAnimate, setShouldAnimate] = useState(true)
+  const [shouldPlayWave, setShouldPlayWave] = useState(true)
   const sectionRef = useRef(null)
   const hasCheckedVisit = useRef(false)
 
@@ -18,19 +18,19 @@ export default function Cover({ isMobile }) {
     const isFirstVisit = !localStorage.getItem(FIRST_VISIT_KEY)
     
     if (isFirstVisit) {
-      // Первый визит - будет анимация
-      setShouldAnimate(true)
+      // Первый визит - будет начальная волна
+      setShouldPlayWave(true)
       localStorage.setItem(FIRST_VISIT_KEY, 'true')
     } else {
-      // Повторный визит - без анимации
-      setShouldAnimate(false)
+      // Повторный визит - без начальной волны
+      setShouldPlayWave(false)
     }
   }, [isMobile])
 
-  // На десктопе анимация всегда работает
+  // На десктопе волна всегда запускается
   useEffect(() => {
     if (!isMobile) {
-      setShouldAnimate(true)
+      setShouldPlayWave(true)
     }
   }, [isMobile])
 
@@ -47,10 +47,10 @@ export default function Cover({ isMobile }) {
 
   return (
     <section ref={sectionRef} id="cover" className="cover snap-section">
-      {/* Показываем анимацию только если нужно */}
-      {isVisible && shouldAnimate ? (
+      {/* Решетка показывается ВСЕГДА когда секция видима */}
+      {isVisible ? (
         <div className="cover-background">
-          <CrystalLattice />
+          <CrystalLattice enableInitialWave={shouldPlayWave} />
         </div>
       ) : (
         <div className="cover-background" style={{ background: '#000' }} />
