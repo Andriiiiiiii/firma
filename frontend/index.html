@@ -13,18 +13,20 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     
-    <!-- Отключение автоматического определения номеров телефонов и адресов -->
+    <!-- Отключение автоматического определения -->
     <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
     
     <!-- SEO и описание -->
-    <meta name="description" content="firma' — веб-решения мирового класса. Ускоряем развитие бизнеса на годы вперёд." />
-    <meta name="keywords" content="веб-разработка, дизайн, разработка сайтов, digital agency" />
+    <meta name="description" content="firma' — веб-решения мирового класса. Ускоряем развитие бизнеса на годы вперёд. Разработка сайтов, веб-приложений и кастомного ПО." />
+    <meta name="keywords" content="веб-разработка, дизайн, разработка сайтов, digital agency, веб-приложения, кастомное ПО, UI/UX дизайн" />
     <meta name="author" content="firma'" />
     
     <!-- Open Graph для соцсетей -->
     <meta property="og:title" content="firma' — Веб-решения мирового класса" />
-    <meta property="og:description" content="Ускоряем развитие бизнеса на годы вперёд" />
+    <meta property="og:description" content="Ускоряем развитие бизнеса на годы вперёд. Разработка сайтов, веб-приложений и кастомного ПО." />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ne-firma.ru" />
+    <meta property="og:image" content="https://ne-firma.ru/logo.webp" />
     
     <!-- PWA и theme color -->
     <meta name="theme-color" content="#000000" />
@@ -32,38 +34,26 @@
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="apple-touch-icon" href="/logo.webp" />
     
     <!-- Preconnect для улучшения производительности -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     
     <!-- ============================================
-         КРИТИЧНО: ПРЕДЗАГРУЗКА ФОТОГРАФИЙ
-         Загружаются браузером параллельно при открытии сайта
+         КРИТИЧНО: ПРЕДЗАГРУЗКА КЛЮЧЕВЫХ ИЗОБРАЖЕНИЙ
          ============================================ -->
     
     <!-- Главное фото команды -->
     <link rel="preload" as="image" href="/team.webp" type="image/webp" />
     
-    <!-- Фото членов команды -->
-    <link rel="preload" as="image" href="/karpenko.webp" type="image/webp" />
-    <link rel="preload" as="image" href="/terentev.webp" type="image/webp" />
-    <link rel="preload" as="image" href="/blokhin.webp" type="image/webp" />
-    <link rel="preload" as="image" href="/shcherbakov.webp" type="image/webp" />
-    <link rel="preload" as="image" href="/voronov.webp" type="image/webp" />
-    <link rel="preload" as="image" href="/nemirovskiy.webp" type="image/webp" />
-    <link rel="preload" as="image" href="/panov.webp" type="image/webp" />
-    <link rel="preload" as="image" href="/kozlov.webp" type="image/webp" />
-    <link rel="preload" as="image" href="/zhivetev.webp" type="image/webp" />
-    
     <!-- Логотип и колесо -->
-    <link rel="preload" as="image" href="/logo.png" type="image/png" />
-    <link rel="preload" as="image" href="/wheel.png" type="image/png" />
+    <link rel="preload" as="image" href="/logo.webp" type="image/webp" />
+    <link rel="preload" as="image" href="/wheel.webp" type="image/webp" />
     
     <title>Фирма́ — Веб-решения мирового класса</title>
     
-    <!-- Встроенный критический CSS для улучшения производительности на мобильных -->
+    <!-- Встроенный критический CSS -->
     <style>
-      /* Критический CSS для начальной загрузки */
       * {
         margin: 0;
         padding: 0;
@@ -89,7 +79,7 @@
         min-height: 100dvh;
       }
       
-      /* Loader для улучшения UX */
+      /* Loader */
       .initial-loader {
         position: fixed;
         inset: 0;
@@ -128,7 +118,7 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     
-    <!-- Скрипт для скрытия loader после загрузки -->
+    <!-- Скрипт для скрытия loader -->
     <script>
       window.addEventListener('load', function() {
         setTimeout(function() {

@@ -1,9 +1,38 @@
 import React, { useState, useEffect, useRef } from 'react'
 import CrystalLattice from './DotGrid.jsx'
 
-export default function Cover() {
+const FIRST_VISIT_KEY = 'firma_first_visit'
+
+export default function Cover({ isMobile }) {
   const [isVisible, setIsVisible] = useState(false)
+  const [shouldAnimate, setShouldAnimate] = useState(true)
   const sectionRef = useRef(null)
+  const hasCheckedVisit = useRef(false)
+
+  // Проверяем первый визит для мобильных
+  useEffect(() => {
+    if (!isMobile || hasCheckedVisit.current) return
+    
+    hasCheckedVisit.current = true
+    
+    const isFirstVisit = !localStorage.getItem(FIRST_VISIT_KEY)
+    
+    if (isFirstVisit) {
+      // Первый визит - будет анимация
+      setShouldAnimate(true)
+      localStorage.setItem(FIRST_VISIT_KEY, 'true')
+    } else {
+      // Повторный визит - без анимации
+      setShouldAnimate(false)
+    }
+  }, [isMobile])
+
+  // На десктопе анимация всегда работает
+  useEffect(() => {
+    if (!isMobile) {
+      setShouldAnimate(true)
+    }
+  }, [isMobile])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -18,7 +47,8 @@ export default function Cover() {
 
   return (
     <section ref={sectionRef} id="cover" className="cover snap-section">
-      {isVisible ? (
+      {/* Показываем анимацию только если нужно */}
+      {isVisible && shouldAnimate ? (
         <div className="cover-background">
           <CrystalLattice />
         </div>
@@ -26,7 +56,6 @@ export default function Cover() {
         <div className="cover-background" style={{ background: '#000' }} />
       )}
 
-      {/* Лого из public/logo.webp */}
       <div className="cover-logo">
         <img
           src="/logo.webp"

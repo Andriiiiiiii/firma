@@ -60,12 +60,12 @@
   }
   
   .hero-layout {
-  flex-direction: column;
-  gap: 0;
-  padding: 0;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
   }
   
   .hero-content {
@@ -570,86 +570,12 @@
   }
 }
 
-/* ===== MENU ===== */
+/* ===== MENU - СКРЫТО НА МОБИЛЬНЫХ ===== */
 @media (max-width: 1023px) {
-  /* На мобильных меню всегда видно */
-  .menu-trigger {
-    width: 48px;
-    height: 48px;
-    z-index: 2001;
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-    pointer-events: auto !important;
-  }
-  
-  .menu-trigger .line {
-    left: 10px;
-    right: 10px;
-    height: 2px;
-  }
-  
-  .menu-trigger .line-top { top: 14px; }
-  .menu-trigger .line-mid { top: 22px; }
-  .menu-trigger .line-bot { top: 30px; }
-  
-  .menu-trigger.open .line-top,
-  .menu-trigger.open .line-bot { top: 22px; }
-  
+  /* Полностью скрываем меню на мобильных */
+  .menu-trigger,
   .menu-overlay {
-    z-index: 2000;
-  }
-  
-  .menu-top {
-    padding: 20px var(--container-padding);
-  }
-  
-  .menu-logo { 
-    font-size: 14px;
-  }
-  
-  .menu-center {
-    padding: 80px var(--container-padding) 56px;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .menu-grid-two-rows {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, auto);
-    gap: 20px 16px;
-    max-width: none;
-  }
-  
-  .menu-text {
-    font-size: 22px;
-    line-height: 1.1;
-  }
-  
-  .menu-sup {
-    font-size: 13px;
-    margin-top: 3px;
-  }
-  
-  .menu-item a {
-    gap: 6px;
-  }
-}
-
-@media (max-width: 767px) {
-  .menu-text { 
-    font-size: 24px; 
-  }
-  
-  .menu-sup { 
-    font-size: 13px; 
-  }
-  
-  .menu-center { 
-    padding: 72px var(--container-padding) 48px; 
-  }
-  
-  .menu-grid-two-rows {
-    gap: 18px 14px;
+    display: none !important;
   }
 }
 
@@ -667,17 +593,11 @@
 
 /* ===== TOUCH OPTIMIZATION ===== */
 @media (hover: none) and (pointer: coarse) {
-  .menu-trigger,
-  .menu-item a,
   .submit-button,
   .team-member-item,
   .stat-item {
     min-height: 44px;
     position: relative;
-  }
-  
-  .menu-item a:hover .menu-text {
-    opacity: 0.92;
   }
   
   .stat-item:hover {
@@ -728,10 +648,6 @@
   }
   
   .hero-title {
-    font-size: 24px;
-  }
-  
-  .menu-text {
     font-size: 24px;
   }
   

@@ -16,19 +16,20 @@ export default function App() {
   const [imagesLoaded, setImagesLoaded] = useState(false)
   const scrollPositionRef = useRef(0)
 
-  // ✨ КРИТИЧНО: Загружаем ВСЕ фото при монтировании App
+  // Загружаем ВСЕ фото при монтировании App
   useEffect(() => {
     preloadAllImages()
       .then(() => {
         setImagesLoaded(true)
-        console.log('🎉 Приложение готово к работе')
+        console.log('✅ Приложение готово к работе')
       })
       .catch((err) => {
-        console.error('Ошибка загрузки фото:', err)
+        console.error('❌ Ошибка загрузки фото:', err)
         setImagesLoaded(true)
       })
   }, [])
 
+  // Определяем мобильное устройство
   useEffect(() => {
     const checkMobile = () => {
       const mobile =
@@ -37,16 +38,16 @@ export default function App() {
           navigator.userAgent
         )
       setIsMobile(mobile)
-      if (mobile) {
-        setShowMenu(true)
-      }
     }
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+  // Показываем меню при скролле (ТОЛЬКО для десктопа)
   useEffect(() => {
+    if (isMobile) return // На мобильных меню не нужно
+
     const handleScroll = () => {
       const scrollY = window.scrollY
       const threshold = window.innerHeight * 0.5
@@ -54,7 +55,7 @@ export default function App() {
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isMobile])
 
   const scrollToSection = useCallback((sectionId) => {
     setMenuOpen(false)
@@ -67,13 +68,11 @@ export default function App() {
     }, 100)
   }, [])
 
-  // Обработка открытия/закрытия меню - ИСПРАВЛЕНО
+  // Обработка открытия/закрытия меню
   useEffect(() => {
     if (menuOpen) {
-      // Сохраняем текущую позицию скролла
       scrollPositionRef.current = window.pageYOffset || document.documentElement.scrollTop
       
-      // Блокируем скролл
       document.body.style.overflow = 'hidden'
       document.body.style.position = 'fixed'
       document.body.style.top = `-${scrollPositionRef.current}px`
@@ -81,7 +80,6 @@ export default function App() {
       document.body.style.left = '0'
       document.body.style.right = '0'
     } else {
-      // Восстанавливаем скролл
       const scrollY = scrollPositionRef.current
       
       document.body.style.overflow = ''
@@ -91,27 +89,31 @@ export default function App() {
       document.body.style.left = ''
       document.body.style.right = ''
       
-      // Возвращаем позицию скролла БЕЗ анимации
       window.scrollTo(0, scrollY)
     }
   }, [menuOpen])
 
   return (
     <>
-      <MenuButton
-        open={menuOpen}
-        visible={showMenu || menuOpen}
-        onClick={() => setMenuOpen((o) => !o)}
-      />
+      {/* Меню показываем ТОЛЬКО на десктопе */}
+      {!isMobile && (
+        <>
+          <MenuButton
+            open={menuOpen}
+            visible={showMenu || menuOpen}
+            onClick={() => setMenuOpen((o) => !o)}
+          />
 
-      <OverlayMenu
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        onNav={scrollToSection}
-      />
+          <OverlayMenu
+            open={menuOpen}
+            onClose={() => setMenuOpen(false)}
+            onNav={scrollToSection}
+          />
+        </>
+      )}
 
       <div className="main-container">
-        <Cover />
+        <Cover isMobile={isMobile} />
         <Hero />
         <Services />
         <Team />

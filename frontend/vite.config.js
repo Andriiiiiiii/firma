@@ -7,7 +7,6 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
-    // Проксируем API запросы на backend
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
@@ -28,24 +27,38 @@ export default defineConfig({
     terserOptions: {
       compress: {
         drop_console: true,
-        drop_debugger: true
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn']
+      },
+      mangle: {
+        safari10: true
       }
     },
     
     rollupOptions: {
       output: {
         manualChunks: {
-          react: ['react', 'react-dom'],
-          three: ['three']
-        }
+          'react-vendor': ['react', 'react-dom'],
+          'three-vendor': ['three']
+        },
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
       }
     },
     
     assetsInlineLimit: 4096,
     emptyOutDir: true,
+    reportCompressedSize: false,
+    chunkSizeWarningLimit: 1000,
   },
   
   optimizeDeps: {
     include: ['react', 'react-dom', 'three'],
+    exclude: []
   },
+  
+  css: {
+    devSourcemap: false
+  }
 })
