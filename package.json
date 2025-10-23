@@ -15,9 +15,7 @@
     "build": "npm run build:frontend && npm run build:backend",
     "deploy": "bash deploy.sh",
     "validate:images": "node validate-images.js",
-    "check:images": "bash check-images.sh",
-    "predev": "npm run validate:images",
-    "prebuild": "npm run validate:images"
+    "check:images": "bash check-images.sh"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

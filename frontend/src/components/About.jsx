@@ -31,19 +31,21 @@ export default function About() {
   }, [])
 
   const handleMouseEnter = (type) => {
+    // ИСПРАВЛЕНО: Отключаем hover на мобильных полностью
     if (!isMobile && lockedType === null) {
       setSelectedType(type)
     }
   }
 
   const handleMouseLeave = () => {
+    // ИСПРАВЛЕНО: Отключаем hover на мобильных полностью
     if (!isMobile && lockedType === null) {
       setSelectedType(null)
     }
   }
 
   const handleStatClick = (type, e) => {
-    e.stopPropagation()
+    // ИСПРАВЛЕНО: На мобильных используем только клики без preventDefault
     if (lockedType === type) {
       setLockedType(null)
       setSelectedType(null)
@@ -59,7 +61,8 @@ export default function About() {
   }
 
   const handleBackgroundClick = (e) => {
-    if (e.target === e.currentTarget || e.target.classList.contains('about-text')) {
+    // ИСПРАВЛЕНО: Упрощаем логику для мобильных
+    if (!isMobile && (e.target === e.currentTarget || e.target.classList.contains('about-text'))) {
       setLockedType(null)
       setSelectedType(null)
     }
@@ -145,31 +148,31 @@ export default function About() {
 
           <div 
             className="stats fade-text fade-delayed"
-            onMouseLeave={handleMouseLeave}
+            onMouseLeave={isMobile ? undefined : handleMouseLeave}
           >
             <div 
               className={`stat-item ${activeType === 'fund' ? 'active' : ''}`}
-              onMouseEnter={() => handleMouseEnter('fund')}
+              onMouseEnter={isMobile ? undefined : () => handleMouseEnter('fund')}
               onClick={(e) => handleStatClick('fund', e)}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', touchAction: 'manipulation' }}
             >
               <div className="stat-line"></div>
               <div className="stat-label">Фундаментальный подход</div>
             </div>
             <div 
               className={`stat-item ${activeType === 'eng' ? 'active' : ''}`}
-              onMouseEnter={() => handleMouseEnter('eng')}
+              onMouseEnter={isMobile ? undefined : () => handleMouseEnter('eng')}
               onClick={(e) => handleStatClick('eng', e)}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', touchAction: 'manipulation' }}
             >
               <div className="stat-line"></div>
               <div className="stat-label">Инженерная точность</div>
             </div>
             <div 
               className={`stat-item ${activeType === 'inn' ? 'active' : ''}`}
-              onMouseEnter={() => handleMouseEnter('inn')}
+              onMouseEnter={isMobile ? undefined : () => handleMouseEnter('inn')}
               onClick={(e) => handleStatClick('inn', e)}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', touchAction: 'manipulation' }}
             >
               <div className="stat-line"></div>
               <div className="stat-label">Инновационные решения</div>

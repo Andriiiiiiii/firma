@@ -3,8 +3,6 @@
    ============================================ */
 
 :root {
-  /* фикс высоты текстового блока — достаточно для самого длинного текста,
-     чтобы не было «прыжков» и одновременно ничего не обрезалось */
   --about-text-height: 36vh;
 }
 
@@ -15,7 +13,7 @@
 
 .about-content {
   display: grid;
-  grid-template-columns: 1.3fr 1fr;   /* слева текст, справа пункты */
+  grid-template-columns: 1.3fr 1fr;
   gap: 5vw;
   align-items: start;
 }
@@ -25,13 +23,11 @@
 .about-text {
   position: relative;
   min-height: var(--about-text-height);
-  height: var(--about-text-height);         /* фикс высоты → нет сдвигов */
-  padding-bottom: 1.2vh;                    /* страховка от «среза» снизу */
-  overflow: visible;                        /* не обрезаем контент */
+  height: var(--about-text-height);
+  padding-bottom: 1.2vh;
+  overflow: visible;
 }
 
-/* Контейнер для перекрытия — все состояния кладём поверх,
-   чтобы высота не менялась при наведении */
 .about-swap {
   position: relative;
   width: 100%;
@@ -39,7 +35,6 @@
   overflow: visible;
 }
 
-/* По умолчанию кладём слои друг на друга и плавно меняем прозрачность */
 .about-swap-inner {
   position: absolute;
   inset: 0;
@@ -48,14 +43,11 @@
   transition: opacity 0.35s ease;
 }
 
-/* Активный слой просто проявляем, НО не меняем позиционирование —
-   это убирает «прыжки» всего макета */
 .about-swap-inner.active {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Карточка текста */
 .about-card {
   padding: 2vh 2vw;
   background: transparent;
@@ -75,8 +67,6 @@
   opacity: 0.9;
 }
 
-/* Заголовок «Наша миссия»/и пр. фиксирован: не «едет»,
-   т.к. высота левой колонки постоянная */
 .about-title-fixed {
   margin: 0 0 1.2vh 0;
   line-height: 1.2;
@@ -90,7 +80,6 @@
   gap: 3.5vh;
   padding-left: 0;
   align-self: stretch;
-  /* фиксируем визуальную высоту колонки — список не «подпрыгивает» */
   min-height: var(--about-text-height);
 }
 
@@ -107,7 +96,6 @@
   transition: transform 0.35s ease, border-color 0.35s ease;
 }
 
-/* оставляем прежнюю механику наведения — лёгкий сдвиг по X */
 .stat-item:hover,
 .stat-item.active {
   transform: translateX(0.3vw);
@@ -161,12 +149,101 @@
   .stat-label { font-size: 1.6vw; }
 }
 
+/* ИСПРАВЛЕНО: Мобильная версия оптимизирована для плавного скролла */
 @media (max-width: 767px) {
-  .about-content { grid-template-columns: 1fr; gap: 4vh; }
-  :root { --about-text-height: auto; }       /* на мобайле даём естественную высоту */
-  .about-text { height: auto; min-height: 0; }
+  .about-content { 
+    grid-template-columns: 1fr; 
+    gap: 4vh;
+  }
+  
+  :root { 
+    --about-text-height: auto; 
+  }
+  
+  .about-text { 
+    height: auto; 
+    min-height: 0;
+    /* ИСПРАВЛЕНО: Отключаем pointer-events на контейнере */
+    pointer-events: none;
+  }
+  
+  /* ИСПРАВЛЕНО: Включаем pointer-events только на активном элементе */
+  .about-text * {
+    pointer-events: auto;
+  }
+  
   .about-swap-inner,
-  .about-swap-inner.active { position: relative; }
-  .stat-label { font-size: 4.4vw; }
-  .about-card p { font-size: 3.9vw; }
+  .about-swap-inner.active { 
+    position: relative;
+    /* ИСПРАВЛЕНО: Ускоряем transitions */
+    transition: opacity 0.15s ease;
+  }
+  
+  .stat-label { 
+    font-size: 4.4vw;
+  }
+  
+  .about-card p { 
+    font-size: 3.9vw;
+  }
+  
+  /* ИСПРАВЛЕНО: Упрощаем интерактивность для мобильных */
+  .stats {
+    gap: 2vh;
+  }
+  
+  .stat-item {
+    /* ИСПРАВЛЕНО: Убираем сложные transitions */
+    transition: border-color 0.15s ease;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 44px; /* iOS рекомендует минимум 44px для touch */
+  }
+  
+  /* ИСПРАВЛЕНО: Убираем hover-эффекты на мобильных */
+  .stat-item:hover {
+    transform: none;
+  }
+  
+  .stat-item.active {
+    transform: none;
+    background: rgba(232, 230, 225, 0.05);
+  }
+  
+  /* ИСПРАВЛЕНО: Упрощаем stat-line */
+  .stat-line {
+    width: 3px;
+    transition: background 0.15s ease;
+  }
+  
+  /* ИСПРАВЛЕНО: Убираем сложные градиенты на мобильных */
+  .stat-line {
+    background: rgba(232, 230, 225, 0.5);
+  }
+  
+  .stat-item:hover .stat-line,
+  .stat-item.active .stat-line {
+    background: rgba(232, 230, 225, 0.8);
+  }
+}
+
+/* ИСПРАВЛЕНО: Специальные фиксы для iOS */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 767px) {
+    .stat-item {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+    
+    /* Убираем все transitions на iOS для максимальной плавности */
+    .about-swap-inner {
+      transition: none;
+    }
+    
+    .stat-item,
+    .stat-line,
+    .stat-label {
+      transition: none;
+    }
+  }
 }

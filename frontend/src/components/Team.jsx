@@ -171,12 +171,19 @@ export default function Team() {
     [hasHover, activeIndex]
   )
 
+  // ИСПРАВЛЕНО: Отключаем hover на мобильных полностью
   const handleMouseLeave = () => {
-    if (lockedIndex === null && !isTransitioning) setHoveredIndex(null)
+    if (!isMobile && lockedIndex === null && !isTransitioning) {
+      setHoveredIndex(null)
+    }
   }
+  
   const handleMouseMove = (_e, index) => {
-    if (lockedIndex === null && !isTransitioning) setHoveredIndex(index)
+    if (!isMobile && lockedIndex === null && !isTransitioning) {
+      setHoveredIndex(index)
+    }
   }
+  
   const handleClick = (index) => {
     if (isTransitioning) return
     setIsTransitioning(true)
@@ -189,6 +196,7 @@ export default function Team() {
     }
     setTimeout(() => setIsTransitioning(false), ANIMATION_CONFIG.CLICK_LOCK_DURATION)
   }
+  
   const handleTitleClick = () => {
     if (isTransitioning) return
     setIsTransitioning(true)
@@ -207,6 +215,7 @@ export default function Team() {
       scrollToSlide(next)
     }
   }
+  
   const handlePrev = () => {
     if (currentSlide > 0) {
       const prev = currentSlide - 1
@@ -214,6 +223,7 @@ export default function Team() {
       scrollToSlide(prev)
     }
   }
+  
   const scrollToSlide = (slideIndex) => {
     if (!scrollContainerRef.current) return
     const container = scrollContainerRef.current
@@ -331,6 +341,7 @@ export default function Team() {
                   onClick={handlePrev}
                   disabled={currentSlide === 0}
                   aria-label="Предыдущие"
+                  style={{ touchAction: 'manipulation' }}
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -347,6 +358,7 @@ export default function Team() {
                         scrollToSlide(i)
                       }}
                       aria-label={`Страница ${i + 1}`}
+                      style={{ touchAction: 'manipulation' }}
                     />
                   ))}
                 </div>
@@ -356,6 +368,7 @@ export default function Team() {
                   onClick={handleNext}
                   disabled={currentSlide === totalPages - 1}
                   aria-label="Следующие"
+                  style={{ touchAction: 'manipulation' }}
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -367,17 +380,20 @@ export default function Team() {
             <div 
               ref={scrollContainerRef}
               className={`team-names-wrapper ${isMobile ? 'mobile-scroll' : ''}`}
-              onMouseLeave={handleMouseLeave}
+              onMouseLeave={isMobile ? undefined : handleMouseLeave}
             >
               <ul className="team-names">
                 {teamMembers.map((member, i) => (
                   <li
                     key={i}
                     className={`team-member-item ${lockedIndex === i ? 'locked' : ''}`}
-                    onMouseEnter={(e) => handleMouseMove(e, i)}
-                    onMouseMove={(e) => handleMouseMove(e, i)}
+                    onMouseEnter={isMobile ? undefined : (e) => handleMouseMove(e, i)}
+                    onMouseMove={isMobile ? undefined : (e) => handleMouseMove(e, i)}
                     onClick={() => handleClick(i)}
-                    style={{ cursor: 'pointer' }}
+                    style={{ 
+                      cursor: 'pointer',
+                      touchAction: 'manipulation'
+                    }}
                   >
                     <span className="member-number">{String(i + 1).padStart(2, '0')}</span>
                     <div className="member-info">

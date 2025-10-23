@@ -64,44 +64,49 @@
 /* Mobile nav hidden on desktop */
 .team-mobile-navigation { display:none; }
 
-/* ========= MOBILE & TABLET ========= */
+/* ========= MOBILE & TABLET - ИСПРАВЛЕНО ========= */
 @media (max-width: 1023px) {
-  :root { --team-transition-fast:.2s; --team-transition-medium:.3s; --team-transition-slow:.4s; }
+  :root { 
+    /* ИСПРАВЛЕНО: Ускоряем все transitions */
+    --team-transition-fast:.15s; 
+    --team-transition-medium:.2s; 
+    --team-transition-slow:.3s; 
+  }
 
-  /* Высота секции = экран; дальше flex-колонка: header (auto), photo (flex:1), list (30svh) */
   .team-container {
     max-width:100vw; width:100vw; height:100svh; max-height:100svh;
     padding:0; margin:0; display:flex; flex-direction:column;
   }
 
   .team-header {
-    /* авто-высота под контент; можно тонко регулировать паддингами */
     padding:3vh 5vw 2vh; margin:0; display:flex; flex-direction:column; gap:.8vh;
   }
   .team-header .section-label { font-size:11px; line-height:1.1; letter-spacing:.05em; }
   .team-header .team-title, .team-header .section-title { font-size:28px; line-height:1.1; margin:0; }
 
-  /* Layout: вместо grid — flex-колонка, чтобы блок фото занимал всё пространство между header и списком */
   .team-layout {
     display:flex; flex-direction:column; gap:0; width:100%; height:auto; flex:1 1 auto; min-height:0;
   }
   .team-layout.has-hover { display:flex; }
 
-  /* Фото — тянется, занимает всё пространство до списка */
   .team-photo-large {
     width:90vw; margin:0 auto; border-radius:2vw;
-    flex:1 1 auto;           /* ключевой момент */
-    min-height:0;            /* чтобы изображение могло сжиматься */
-    position:relative;       /* уже есть выше */
+    flex:0.95 1 auto;
+    min-height:0;
+    position:relative;
   }
-  .team-photo-img { border-radius:2vw; object-fit:cover !important; }
+  .team-photo-img { 
+    border-radius:2vw; 
+    object-fit:cover !important;
+    /* ИСПРАВЛЕНО: Упрощаем transitions */
+    transition: opacity 0.15s ease;
+  }
 
   .team-count { font-size:3.5vw; }
   .team-experience { display:none !important; }
 
-  /* Список — фиксированная высота 30svh внизу экрана */
   .team-members-list {
-    flex:0 0 30svh; height:30svh; width:100vw; overflow:hidden; padding:0; margin:0;
+    flex:0 0 35svh; height:35svh; width:100vw; overflow:hidden; padding:0; margin:0;
     display:flex; flex-direction:column; justify-content:flex-start;
   }
 
@@ -110,24 +115,51 @@
     gap:3vw; padding:1.2vh 5vw 1vh; width:100%; box-sizing:border-box; flex:0 0 auto;
   }
 
+  /* ИСПРАВЛЕНО: Оптимизация кнопок навигации */
   .team-nav-button {
     background:transparent; border:1px solid rgba(232,230,225,.3); border-radius:50%;
     width:10vw; height:10vw; min-width:44px; min-height:44px; max-width:44px; max-height:44px;
-    display:flex; align-items:center; justify-content:center; cursor:pointer; color:#e8e6e1; transition:all .3s ease; flex-shrink:0; padding:0; box-sizing:border-box;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; color:#e8e6e1; 
+    /* ИСПРАВЛЕНО: Упрощаем transition */
+    transition: opacity 0.15s ease, transform 0.15s ease; 
+    flex-shrink:0; padding:0; box-sizing:border-box;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
   .team-nav-button svg { width:20px; height:20px; }
   .team-nav-button:disabled { opacity:.2; cursor:not-allowed; border-color:rgba(232,230,225,.1); }
-  .team-nav-button:not(:disabled):active { transform:scale(.92); background:rgba(232,230,225,.1); }
+  .team-nav-button:not(:disabled):active { 
+    transform:scale(.92); 
+    background:rgba(232,230,225,.1); 
+  }
 
-  .team-pagination { display:flex; gap:2vw; align-items:center; justify-content:center; flex:1; min-width:0; }
-  .team-pagination-dot { width:8px; height:8px; border-radius:999px; background:rgba(232,230,225,.3); border:none; padding:0; cursor:pointer; transition:all .3s ease; }
-  .team-pagination-dot.active { background:rgba(232,230,225,.9); width:24px; }
+  .team-pagination { 
+    display:flex; gap:2vw; align-items:center; justify-content:center; flex:1; min-width:0; 
+  }
+  
+  /* ИСПРАВЛЕНО: Оптимизация pagination dots */
+  .team-pagination-dot { 
+    width:8px; height:8px; border-radius:999px; background:rgba(232,230,225,.3); 
+    border:none; padding:0; cursor:pointer; 
+    /* ИСПРАВЛЕНО: Упрощаем transition */
+    transition: width 0.15s ease, background 0.15s ease; 
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .team-pagination-dot.active { 
+    background:rgba(232,230,225,.9); 
+    width:24px; 
+  }
 
-  /* Горизонтальный список: добавляем отступы у контейнера, а не у карточек */
+  /* ИСПРАВЛЕНО: Оптимизация горизонтального скролла */
   .team-names-wrapper.mobile-scroll {
-    width:100vw; height:calc(30svh - 56px); /* 56px ~ высота навигации, при необходимости подстрой */
-    overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none; -ms-overflow-style:none;
+    width:100vw; height:calc(35svh - 56px);
+    overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory; 
+    -webkit-overflow-scrolling:touch; 
+    scrollbar-width:none; -ms-overflow-style:none;
     flex:1 1 auto; padding-left:6vw; padding-right:6vw; box-sizing:border-box;
+    /* ИСПРАВЛЕНО: Критично для производительности */
+    will-change: scroll-position;
   }
   .team-names-wrapper.mobile-scroll::-webkit-scrollbar { display:none; }
 
@@ -137,24 +169,71 @@
     height:100%; width:max-content; min-width:100%; box-sizing:border-box; align-items:flex-start;
   }
 
-  /* Карточки — НЕ растягиваем по высоте */
+  /* ИСПРАВЛЕНО: Оптимизация карточек */
   .team-names-wrapper.mobile-scroll .team-member-item {
     flex:0 0 28vw; min-width:28vw; max-width:28vw;
     scroll-snap-align:start;
     flex-direction:column; align-items:flex-start; gap:6px;
-    padding:12px 10px; border:1px solid rgba(232,230,225,.15); border-radius:8px; background:rgba(232,230,225,.03);
+    padding:12px 10px; border:1px solid rgba(232,230,225,.15); border-radius:8px; 
+    background:rgba(232,230,225,.03);
     box-sizing:border-box;
-    height:auto;            /* ключевой момент — авто, а не 100% */
+    height:auto;
+    /* ИСПРАВЛЕНО: Убираем сложные transitions */
+    transition: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
-  .team-names-wrapper.mobile-scroll .team-member-item:hover { padding:12px 10px; transform:none; }
+  
+  /* ИСПРАВЛЕНО: Убираем hover-эффекты */
+  .team-names-wrapper.mobile-scroll .team-member-item:hover { 
+    padding:12px 10px; 
+    transform:none; 
+  }
 
-  .team-names-wrapper.mobile-scroll .member-number { font-size:11px; min-width:auto; margin-top:0; opacity:.5; }
-  .team-names-wrapper.mobile-scroll .member-info { gap:4px; width:100%; }
-  .team-names-wrapper.mobile-scroll .member-name { font-size:14px; line-height:1.25; word-break:break-word; }
-  .team-names-wrapper.mobile-scroll .member-role { font-size:12px; line-height:1.3; word-break:break-word; opacity:.7; }
+  .team-names-wrapper.mobile-scroll .member-number { 
+    font-size:11px; min-width:auto; margin-top:0; opacity:.5;
+    transition: none;
+  }
+  
+  .team-names-wrapper.mobile-scroll .member-info { 
+    gap:4px; width:100%; 
+  }
+  
+  .team-names-wrapper.mobile-scroll .member-name { 
+    font-size:14px; line-height:1.25; word-break:break-word;
+    transition: none;
+  }
+  
+  .team-names-wrapper.mobile-scroll .member-role { 
+    font-size:12px; line-height:1.3; word-break:break-word; opacity:.7;
+    transition: none;
+  }
 }
 
-/* Сверхузкие экраны — немного ужимаем элементы, чтобы не «ехало» */
+/* ИСПРАВЛЕНО: Специальные фиксы для iOS */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 1023px) {
+    .team-names-wrapper.mobile-scroll {
+      -webkit-overflow-scrolling: touch;
+      /* ИСПРАВЛЕНО: Дополнительная оптимизация для iOS */
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+    
+    .team-member-item {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+    
+    .team-nav-button,
+    .team-pagination-dot {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+  }
+}
+
+/* Сверхузкие экраны */
 @media (max-width: 360px) {
   .team-mobile-navigation { gap:2vw; }
   .team-nav-button { min-width:36px; min-height:36px; max-width:36px; max-height:36px; }

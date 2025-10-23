@@ -15,22 +15,19 @@
   flex-direction: column;
   justify-content: space-between;
   min-height: 100vh;
-  padding-top: 14vh;   /* ← добавлено */
+  padding-top: 14vh;
   padding-bottom: 3vh;
   position: relative;
 }
-
 
 /* Единый блок заголовков как на других слайдах */
 .section-head {
   display: flex;
   flex-direction: column;
-  gap: 0.6vh;            /* плотный вертикальный ритм */
-  margin-bottom: 2.2vh;  /* общий отступ вниз */
+  gap: 0.6vh;
+  margin-bottom: 2.2vh;
 }
 
-/* Сбрасываем внешние отступы внутри хэдера,
-   чтобы не было искусственного большого разрыва */
 .contact-section .section-head .section-label {
   margin: 0;
   opacity: 0.7;
@@ -43,7 +40,6 @@
   line-height: 1.15;
 }
 
-/* (оставлено для обратной совместимости, если где-то используется вне .section-head) */
 .contact-section .section-label { margin-bottom: 1.2vh; }
 .contact-section .section-title { margin-bottom: 3vh; }
 
@@ -132,10 +128,33 @@
   outline: none;
 }
 
+/* ИСПРАВЛЕНО: Улучшена textarea для предотвращения переполнения */
 .form-textarea {
   resize: vertical;
   min-height: 8vh;
-  max-height: 12vh;
+  max-height: 20vh; /* Увеличена максимальная высота */
+  overflow-y: auto; /* Добавлен скролл при переполнении */
+  line-height: 1.5; /* Добавлена высота строки */
+  word-wrap: break-word; /* Перенос длинных слов */
+  overflow-wrap: break-word; /* Современный синтаксис */
+}
+
+/* ИСПРАВЛЕНО: Стилизация скроллбара для textarea */
+.form-textarea::-webkit-scrollbar {
+  width: 0.3vw;
+}
+
+.form-textarea::-webkit-scrollbar-track {
+  background: rgba(232, 230, 225, 0.05);
+}
+
+.form-textarea::-webkit-scrollbar-thumb {
+  background: rgba(232, 230, 225, 0.3);
+  border-radius: 0.15vw;
+}
+
+.form-textarea::-webkit-scrollbar-thumb:hover {
+  background: rgba(232, 230, 225, 0.5);
 }
 
 .form-label {
@@ -297,9 +316,15 @@
     font-size: 3vw;
   }
 
+  /* ИСПРАВЛЕНО: Улучшена textarea для мобильных */
   .form-textarea {
     min-height: 15vh;
-    max-height: 20vh;
+    max-height: 25vh; /* Увеличена максимальная высота для мобильных */
+    line-height: 1.5;
+  }
+
+  .form-textarea::-webkit-scrollbar {
+    width: 4px;
   }
 
   .submit-button {

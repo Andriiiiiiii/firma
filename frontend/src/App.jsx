@@ -44,17 +44,15 @@ export default function App() {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  // Показываем меню при скролле (ТОЛЬКО для десктопа)
+  // ИСПРАВЛЕНО: Показываем меню сразу на десктопе (убран threshold)
   useEffect(() => {
-    if (isMobile) return // На мобильных меню не нужно
-
-    const handleScroll = () => {
-      const scrollY = window.scrollY
-      const threshold = window.innerHeight * 0.5
-      setShowMenu(scrollY > threshold)
+    if (isMobile) {
+      setShowMenu(false)
+      return
     }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    
+    // На десктопе меню всегда видимо
+    setShowMenu(true)
   }, [isMobile])
 
   const scrollToSection = useCallback((sectionId) => {

@@ -72,16 +72,44 @@ body {
   line-height: 1.1;
 }
 
+/* ============================================
+   MOBILE OPTIMIZATIONS
+   ============================================ */
+
 /* Tablet */
 @media (max-width: 1023px) {
   html {
     font-size: 2vw;
+    /* ИСПРАВЛЕНО: Оптимизация скролла для iOS */
+    -webkit-overflow-scrolling: touch;
   }
   
   body {
     -webkit-user-select: text;
     user-select: text;
     font-size: 4vw;
+    /* ИСПРАВЛЕНО: Улучшение скролла */
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* ИСПРАВЛЕНО: Глобальное отключение hover-эффектов на touch-устройствах */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+  
+  /* ИСПРАВЛЕНО: Оптимизация интерактивных элементов */
+  button,
+  a,
+  [role="button"] {
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  /* ИСПРАВЛЕНО: Ускорение transitions на мобильных */
+  * {
+    transition-duration: 0.2s !important;
   }
   
   .section-label {
@@ -107,6 +135,45 @@ body {
   
   .section-title {
     font-size: 9vw;
+  }
+}
+
+/* ИСПРАВЛЕНО: Специальные фиксы для iOS */
+@supports (-webkit-touch-callout: none) {
+  html {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Фикс для резинового скролла на iOS */
+  .snap-section {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Убираем задержку на всех кликабельных элементах */
+  a, button, input, select, textarea, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+}
+
+/* ИСПРАВЛЕНО: Оптимизация производительности для мобильных */
+@media (max-width: 1023px) {
+  /* Отключаем сложные transforms и effects на мобильных */
+  *:not(.team-photo-img):not(.hero-wheel-img) {
+    will-change: auto !important;
+  }
+  
+  /* Упрощаем тени */
+  * {
+    filter: none !important;
+  }
+  
+  .hero-wheel-img {
+    filter: none !important;
   }
 }
 

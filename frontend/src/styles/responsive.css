@@ -1,18 +1,29 @@
 /* ============================================
    АДАПТИВНЫЕ СТИЛИ - ФИКСИРОВАННЫЕ РАЗМЕРЫ
    При масштабировании ничего не меняется
+   ИСПРАВЛЕНО: Добавлены оптимизации для плавного скролла
    ============================================ */
 
 /* ===== BASE OVERRIDES ===== */
 @media (max-width: 1023px) {
   html {
     font-size: 16px;
+    /* ИСПРАВЛЕНО: Оптимизация скролла */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: auto; /* Отключаем smooth для лучшей производительности */
   }
   
   body {
     -webkit-user-select: text;
     user-select: text;
     font-size: 16px;
+    /* ИСПРАВЛЕНО: Оптимизация скролла */
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* ИСПРАВЛЕНО: Глобальное ускорение для мобильных */
+  * {
+    transition-duration: 0.15s !important;
   }
 }
 
@@ -199,6 +210,8 @@
     height: 100dvh;
     min-height: 100vh;
     min-height: 100dvh;
+    /* ИСПРАВЛЕНО: Оптимизация */
+    -webkit-overflow-scrolling: touch;
   }
 }
 
@@ -215,6 +228,8 @@
     height: 100dvh;
     min-height: 100vh;
     min-height: 100dvh;
+    /* ИСПРАВЛЕНО: Оптимизация */
+    -webkit-overflow-scrolling: touch;
   }
   
   .about-section .container {
@@ -293,6 +308,8 @@
     gap: 6px;
     flex-direction: column;
     align-items: flex-start;
+    /* ИСПРАВЛЕНО: Убираем hover на мобильных */
+    transition: none;
   }
   
   .stat-item:hover {
@@ -418,7 +435,7 @@
   
   .form-textarea {
     min-height: 90px;
-    max-height: 120px;
+    max-height: 150px; /* ИСПРАВЛЕНО: Увеличена высота */
   }
   
   .submit-button {
@@ -489,18 +506,22 @@
   }
 }
 
-/* ===== TOUCH OPTIMIZATION ===== */
+/* ИСПРАВЛЕНО: Оптимизация для touch-устройств */
 @media (hover: none) and (pointer: coarse) {
+  /* Убираем hover-эффекты */
+  .submit-button:hover,
+  .team-member-item:hover,
+  .stat-item:hover {
+    transform: none !important;
+  }
+  
+  /* Минимальные размеры для touch */
   .submit-button,
   .team-member-item,
   .stat-item,
   .team-nav-button {
     min-height: 44px;
     position: relative;
-  }
-  
-  .stat-item:hover {
-    transform: none;
   }
   
   .stat-item:hover .stat-line {
@@ -515,6 +536,12 @@
   .team-member-item:hover {
     padding-left: 0;
     transform: none;
+  }
+  
+  /* ИСПРАВЛЕНО: Убираем pointer-events для плавного скролла */
+  .team-photo-img,
+  .hero-wheel-img {
+    pointer-events: none !important;
   }
 }
 
@@ -556,6 +583,41 @@
   }
 }
 
+/* ИСПРАВЛЕНО: Специальные фиксы для iOS Safari */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 1023px) {
+    html, body {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: none;
+    }
+    
+    /* Фикс для резинового скролла */
+    .snap-section {
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Убираем задержку кликов */
+    a, button, input, select, textarea, [role="button"] {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      touch-action: manipulation;
+    }
+    
+    /* Оптимизация для GPU */
+    .team-names-wrapper.mobile-scroll,
+    .about-section .container {
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      will-change: scroll-position;
+    }
+    
+    /* Убираем все сложные эффекты */
+    * {
+      will-change: auto !important;
+    }
+  }
+}
+
 /* ===== PERFORMANCE OPTIMIZATION ===== */
 @media (max-width: 1023px) {
   .about-gradient-overlay {
@@ -565,5 +627,16 @@
   
   .services-section {
     background: #000 !important;
+  }
+  
+  /* ИСПРАВЛЕНО: Отключаем сложные эффекты на мобильных */
+  .hero-wheel-img {
+    filter: none !important;
+  }
+  
+  /* ИСПРАВЛЕНО: Упрощаем тени */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
   }
 }
