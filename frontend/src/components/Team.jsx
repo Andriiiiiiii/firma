@@ -283,7 +283,7 @@ export default function Team() {
               className="team-photo-img"
               style={{ 
                 opacity: !hasHover ? 1 : 0,
-                transition: `opacity ${ANIMATION_CONFIG.PHOTO_TRANSITION_DURATION}ms ${ANIMATION_CONFIG.EASING}`,
+                transition: isMobile ? 'none' : `opacity ${ANIMATION_CONFIG.PHOTO_TRANSITION_DURATION}ms ${ANIMATION_CONFIG.EASING}`,
                 objectFit: 'cover',
                 objectPosition: 'center center'
               }}
@@ -298,7 +298,7 @@ export default function Team() {
                 className="team-photo-img"
                 style={{ 
                   opacity: hasHover && activeIndex === index ? 1 : 0,
-                  transition: `opacity ${ANIMATION_CONFIG.PHOTO_TRANSITION_DURATION}ms ${ANIMATION_CONFIG.EASING}`,
+                  transition: isMobile ? 'none' : `opacity ${ANIMATION_CONFIG.PHOTO_TRANSITION_DURATION}ms ${ANIMATION_CONFIG.EASING}`,
                   objectFit: 'cover',
                   objectPosition: `${member.cropPosition * 100}% center`
                 }}
@@ -317,7 +317,7 @@ export default function Team() {
             className="team-experience fade-text" 
             aria-hidden={!hasHover}
             style={{
-              transition: `opacity ${ANIMATION_CONFIG.EXPERIENCE_TRANSITION_DURATION}ms ${ANIMATION_CONFIG.EASING}, 
+              transition: isMobile ? 'none' : `opacity ${ANIMATION_CONFIG.EXPERIENCE_TRANSITION_DURATION}ms ${ANIMATION_CONFIG.EASING}, 
                            transform ${ANIMATION_CONFIG.EXPERIENCE_TRANSITION_DURATION}ms ${ANIMATION_CONFIG.EASING}, 
                            padding ${ANIMATION_CONFIG.EXPERIENCE_TRANSITION_DURATION}ms ${ANIMATION_CONFIG.EASING}`
             }}

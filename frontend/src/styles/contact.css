@@ -79,7 +79,13 @@
   color: #e8e6e1;
   text-decoration: none;
   opacity: 0.85;
-  transition: opacity 0.3s ease;
+}
+
+/* Добавляем transition только для desktop */
+@media (min-width: 768px) {
+  .info-link {
+    transition: opacity 0.3s ease;
+  }
 }
 
 .info-link:hover {
@@ -124,8 +130,15 @@
   font-weight: 400;
   color: #ffffff;
   font-family: inherit;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
+}
+
+/* Добавляем transitions только для desktop */
+@media (min-width: 768px) {
+  .form-input,
+  .form-textarea {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 
 /* ИСПРАВЛЕНО: Улучшена textarea для предотвращения переполнения */
@@ -164,7 +177,13 @@
   font-size: 1vw;
   color: #666666;
   pointer-events: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Добавляем transition только для desktop */
+@media (min-width: 768px) {
+  .form-label {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 
 .form-input:focus ~ .form-label,
@@ -197,8 +216,14 @@
   letter-spacing: 0.03vw;
   cursor: pointer;
   align-self: flex-start;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+}
+
+/* Добавляем transitions только для desktop */
+@media (min-width: 768px) {
+  .submit-button {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 
 .submit-button::before {
@@ -209,7 +234,13 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.5s ease;
+}
+
+/* Добавляем transition только для desktop */
+@media (min-width: 768px) {
+  .submit-button::before {
+    transition: left 0.5s ease;
+  }
 }
 
 .submit-button:hover::before {

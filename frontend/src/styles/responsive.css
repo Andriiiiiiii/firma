@@ -20,11 +20,6 @@
     /* ИСПРАВЛЕНО: Оптимизация скролла */
     -webkit-overflow-scrolling: touch;
   }
-  
-  /* ИСПРАВЛЕНО: Глобальное ускорение для мобильных */
-  * {
-    transition-duration: 0.15s !important;
-  }
 }
 
 /* ===== COVER SECTION ===== */
@@ -276,7 +271,6 @@
     opacity: 1;
     transform: none;
     display: none;
-    transition: none;
   }
 
   .about-swap-inner.active {
@@ -308,8 +302,6 @@
     gap: 6px;
     flex-direction: column;
     align-items: flex-start;
-    /* ИСПРАВЛЕНО: Убираем hover на мобильных */
-    transition: none;
   }
   
   .stat-item:hover {
@@ -495,6 +487,16 @@
 }
 
 /* ===== ANIMATIONS ===== */
+@media (max-width: 1023px) {
+  /* ИСПРАВЛЕНО: Отключаем все transitions на мобильных */
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

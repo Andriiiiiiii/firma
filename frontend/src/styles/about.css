@@ -40,7 +40,13 @@
   inset: 0;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.35s ease;
+}
+
+/* Добавляем transition только для desktop */
+@media (min-width: 768px) {
+  .about-swap-inner {
+    transition: opacity 0.35s ease;
+  }
 }
 
 .about-swap-inner.active {
@@ -93,7 +99,13 @@
   position: relative;
   border-bottom: 1px solid rgba(232, 230, 225, 0.08);
   padding: 0;
-  transition: transform 0.35s ease, border-color 0.35s ease;
+}
+
+/* Добавляем transitions только для desktop */
+@media (min-width: 768px) {
+  .stat-item {
+    transition: transform 0.35s ease, border-color 0.35s ease;
+  }
 }
 
 .stat-item:hover,
@@ -112,7 +124,13 @@
     rgba(232, 230, 225, 0.7) 100%
   );
   flex-shrink: 0;
-  transition: background 0.3s ease;
+}
+
+/* Добавляем transition только для desktop */
+@media (min-width: 768px) {
+  .stat-line {
+    transition: background 0.3s ease;
+  }
 }
 
 .stat-item:hover .stat-line,
@@ -132,7 +150,13 @@
   opacity: 0.95;
   line-height: 1.5;
   flex: 1;
-  transition: opacity 0.3s ease;
+}
+
+/* Добавляем transition только для desktop */
+@media (min-width: 768px) {
+  .stat-label {
+    transition: opacity 0.3s ease;
+  }
 }
 
 .stat-item:hover .stat-label,
@@ -163,20 +187,11 @@
   .about-text { 
     height: auto; 
     min-height: 0;
-    /* ИСПРАВЛЕНО: Отключаем pointer-events на контейнере */
-    pointer-events: none;
-  }
-  
-  /* ИСПРАВЛЕНО: Включаем pointer-events только на активном элементе */
-  .about-text * {
-    pointer-events: auto;
   }
   
   .about-swap-inner,
   .about-swap-inner.active { 
     position: relative;
-    /* ИСПРАВЛЕНО: Ускоряем transitions */
-    transition: opacity 0.15s ease;
   }
   
   .stat-label { 
@@ -187,20 +202,16 @@
     font-size: 3.9vw;
   }
   
-  /* ИСПРАВЛЕНО: Упрощаем интерактивность для мобильных */
   .stats {
     gap: 2vh;
   }
   
   .stat-item {
-    /* ИСПРАВЛЕНО: Убираем сложные transitions */
-    transition: border-color 0.15s ease;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-    min-height: 44px; /* iOS рекомендует минимум 44px для touch */
+    min-height: 44px;
   }
   
-  /* ИСПРАВЛЕНО: Убираем hover-эффекты на мобильных */
   .stat-item:hover {
     transform: none;
   }
@@ -210,14 +221,8 @@
     background: rgba(232, 230, 225, 0.05);
   }
   
-  /* ИСПРАВЛЕНО: Упрощаем stat-line */
   .stat-line {
     width: 3px;
-    transition: background 0.15s ease;
-  }
-  
-  /* ИСПРАВЛЕНО: Убираем сложные градиенты на мобильных */
-  .stat-line {
     background: rgba(232, 230, 225, 0.5);
   }
   
@@ -233,17 +238,6 @@
     .stat-item {
       -webkit-tap-highlight-color: transparent;
       -webkit-touch-callout: none;
-    }
-    
-    /* Убираем все transitions на iOS для максимальной плавности */
-    .about-swap-inner {
-      transition: none;
-    }
-    
-    .stat-item,
-    .stat-line,
-    .stat-label {
-      transition: none;
     }
   }
 }
